@@ -76,6 +76,9 @@ steps:
 
 - pwsh: |
     $packageInfoJson = '${{ convertToJson(parameters.PackageInfoLocations) }}'.Trim('"')
+    Write-Host "2"
+    Write-Host $packageInfoJson
+    Write-Host $packageInfoJson.GetType()
     $packageInfoLocations = ConvertFrom-Json $packageInfoJson
     Write-Host "1"
     Write-Host $packageInfoLocations
