@@ -75,9 +75,8 @@ steps:
       DefaultBranchVariableName: TargetBranchName
 
 - pwsh: |
-    Write-Host "3"
-    ${{ parameters.PackageInfoLocations}}.GetType()
     $packageInfoJson = '${{ convertToJson(parameters.PackageInfoLocations) }}'.Trim('"')
+    Write-Host $packageInfoJson
     $packageInfoLocations = ConvertFrom-Json $packageInfoJson
     Write-Host "1"
     Write-Host $packageInfoLocations
