@@ -60,7 +60,9 @@ module.exports = function(config) {
       "APPCONFIG_TEST_SETTING_EXPECTED_VALUE",
       "AZURE_CLIENT_ID",
       "AZURE_CLIENT_SECRET",
-      "AZURE_TENANT_ID"
+      "AZURE_TENANT_ID",
+      "TABLES_SAS_CONNECTION_STRING",
+      "STORAGE_SAS_URL"
     ],
 
     // test results reporter to use
