@@ -1,0 +1,42 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/SpecialCharacterTestNode(PartitionKey=\u0027foo{}\u0027,RowKey=\u0027{}bar\u0027)",
+      "RequestMethod": "PUT",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "c0014681-19e2-4c82-b894-7e481b66b17f",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": {
+        "PartitionKey": "foo{}",
+        "RowKey": "{}bar",
+        "value": "test{}"
+      },
+      "StatusCode": 204,
+      "ResponseHeaders": {
+        "Cache-Control": "no-cache",
+        "Content-Length": "0",
+        "Date": "Fri, 07 Jan 2022 19:30:44 GMT",
+        "ETag": "W/\u0022datetime\u00272022-01-07T19%3A30%3A45.341465Z\u0027\u0022",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "c0014681-19e2-4c82-b894-7e481b66b17f",
+        "x-ms-request-id": "abb36d53-b002-0124-51fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": null
+    }
+  ],
+  "Variables": {}
+}

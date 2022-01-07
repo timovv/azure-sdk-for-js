@@ -1,0 +1,47 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?sv=2020-08-04\u0026ss=bfqt\u0026srt=sco\u0026sp=rwdlacuptfx\u0026se=2022-09-04T03:03:27Z\u0026st=2021-09-03T19:03:27Z\u0026spr=https\u0026sig=kq7OcqQ80AARZSxGdovmen9lc%2Bvso4Xn3YqscjvMDoM%3D",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Connection": "keep-alive",
+        "Content-Length": "53",
+        "Content-Type": "application/json;odata=nometadata",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "da676b07-6a78-4b7e-8ea5-77b3bd9a38db",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": {
+        "TableName": "batchTableTestSASConnectionStringnode"
+      },
+      "StatusCode": 409,
+      "ResponseHeaders": {
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:35:30 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "da676b07-6a78-4b7e-8ea5-77b3bd9a38db",
+        "x-ms-request-id": "c487f7d5-7002-00be-15fd-039434000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.error": {
+          "code": "TableAlreadyExists",
+          "message": {
+            "lang": "en-US",
+            "value": "The table specified already exists.\nRequestId:c487f7d5-7002-00be-15fd-039434000000\nTime:2022-01-07T19:35:30.7497961Z"
+          }
+        }
+      }
+    }
+  ],
+  "Variables": {}
+}

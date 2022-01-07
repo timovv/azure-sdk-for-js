@@ -57,6 +57,7 @@ export class Recorder {
   private sessionFile?: string;
   private sanitizer?: Sanitizer;
   private variables: Record<string, string>;
+  private client: { pipeline: Pipeline } | undefined;
 
   constructor(private testContext?: Test | undefined) {
     if (isRecordMode() || isPlaybackMode()) {
@@ -175,6 +176,10 @@ export class Recorder {
   async stop(): Promise<void> {
     if (isLiveMode()) return;
     this.stateManager.state = "stopped";
+    if (this.client) {
+      this.client.pipeline.removePolicy({ name: "recording policy" });
+    }
+
     if (this.recordingId !== undefined) {
       const stopUri = `${this.url}${isPlaybackMode() ? paths.playback : paths.record}${paths.stop}`;
       const req = this._createRecordingRequest(stopUri);
@@ -234,6 +239,7 @@ export class Recorder {
    */
   public configureClient(client: { pipeline: Pipeline }): void {
     if (isLiveMode()) return;
+    this.client = client;
     client.pipeline.addPolicy(this.recorderHttpPolicy());
   }
 

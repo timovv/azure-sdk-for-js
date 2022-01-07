@@ -1,0 +1,188 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?sv=2020-08-04\u0026ss=bfqt\u0026srt=sco\u0026sp=rwdlacuptfx\u0026se=2022-09-04T03:03:27Z\u0026st=2021-09-03T19:03:27Z\u0026spr=https\u0026sig=kq7OcqQ80AARZSxGdovmen9lc%2Bvso4Xn3YqscjvMDoM%3D",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "0fab2490-f91f-40d6-94c9-4cba47f3da33",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:25 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "0fab2490-f91f-40d6-94c9-4cba47f3da33",
+        "x-ms-request-id": "abb402b6-b002-0124-3efd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "batchTableTestSASConnectionStringnode"
+          },
+          {
+            "TableName": "batchTableTestTokenCredentialnode"
+          },
+          {
+            "TableName": "byPageTest"
+          },
+          {
+            "TableName": "CreateSimpleEntityBatchPerf"
+          },
+          {
+            "TableName": "createTableNew"
+          },
+          {
+            "TableName": "createTableNew2"
+          },
+          {
+            "TableName": "createTableOld"
+          },
+          {
+            "TableName": "DeleteTestAccountConnectionStringnode"
+          },
+          {
+            "TableName": "DeleteTestAccountKeynode"
+          },
+          {
+            "TableName": "DeleteTestSASConnectionStringbrowser"
+          },
+          {
+            "TableName": "DeleteTestSASConnectionStringnode"
+          },
+          {
+            "TableName": "DeleteTestSASTokenbrowser"
+          },
+          {
+            "TableName": "DeleteTestSASTokennode"
+          },
+          {
+            "TableName": "DeleteTestTokenCredentialbrowser"
+          },
+          {
+            "TableName": "doublesTest"
+          },
+          {
+            "TableName": "existsAccountConnectionStringnode"
+          },
+          {
+            "TableName": "existsAccountKeynode"
+          },
+          {
+            "TableName": "existsSASConnectionStringbrowser"
+          },
+          {
+            "TableName": "existsSASConnectionStringnode"
+          },
+          {
+            "TableName": "existsSASTokenbrowser"
+          },
+          {
+            "TableName": "existsSASTokennode"
+          },
+          {
+            "TableName": "existsTokenCredentialbrowser"
+          },
+          {
+            "TableName": "existsTokenCredentialnode"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode0"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode1"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode10"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode11"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode12"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode13"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode14"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode15"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode16"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode17"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode18"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode19"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode2"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode3"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode4"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode5"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode6"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode7"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode8"
+          },
+          {
+            "TableName": "ListTableTestSASConnectionStringnode9"
+          },
+          {
+            "TableName": "manualListByPage"
+          },
+          {
+            "TableName": "TestChars"
+          },
+          {
+            "TableName": "TestChars2"
+          },
+          {
+            "TableName": "TestChars3"
+          },
+          {
+            "TableName": "testTable"
+          },
+          {
+            "TableName": "TestTestTest"
+          }
+        ]
+      }
+    }
+  ],
+  "Variables": {}
+}

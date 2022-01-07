@@ -2,20 +2,16 @@
 // Licensed under the MIT license.
 
 import * as sinon from "sinon";
-import {
-  CreateClientMode,
-  createTableClient,
-  recordedEnvironmentSetup,
-} from "./utils/recordedClient";
-import { Recorder, isLiveMode, isPlaybackMode, record } from "@azure-tools/test-recorder";
+import { CreateClientMode, createTableClient, envSetupForPlayback } from "./utils/recordedClient";
 import { TableClient, TableTransaction, TransactionAction, odata } from "../../src";
 import { Context } from "mocha";
 import { Uuid } from "../../src/utils/uuid";
 import { assert } from "chai";
 import { isNode } from "@azure/test-utils";
+import { isLiveMode, isPlaybackMode, Recorder } from "@azure-tools/test-recorder-new";
 
 // SASConnectionString and SASToken are supported in both node and browser
-const authModes: CreateClientMode[] = ["TokenCredential", "SASConnectionString"];
+const authModes: CreateClientMode[] = ["TokenCredential"];
 
 // Validate all supported auth strategies when running in live mode
 if (isLiveMode()) {
@@ -42,8 +38,10 @@ authModes.forEach((authMode) => {
 
     beforeEach(async function (this: Context) {
       sinon.stub(Uuid, "generateUuid").returns("fakeId");
-      recorder = record(this, recordedEnvironmentSetup);
-      client = createTableClient(tableName, authMode);
+      recorder = new Recorder(this.currentTest);
+      await recorder.start({ envSetupForPlayback });
+
+      client = createTableClient(recorder, tableName, authMode);
 
       try {
         if (!isPlaybackMode()) {
@@ -173,7 +171,7 @@ authModes.forEach((authMode) => {
     });
 
     it("should handle sub request error", async () => {
-      const testClient = createTableClient("noExistingTable", authMode);
+      const testClient = createTableClient(recorder, "noExistingTable", authMode);
       const actions: TransactionAction[] = [];
 
       for (const entity of testEntities) {

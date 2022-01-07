@@ -1,0 +1,89 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "Content-Length": "40",
+        "Content-Type": "application/json;odata=nometadata",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "69a174e3-9362-4061-b35a-7ba890dd57f6",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": {
+        "TableName": "SpecialCharacterTestNode"
+      },
+      "StatusCode": 409,
+      "ResponseHeaders": {
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:31:28 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "69a174e3-9362-4061-b35a-7ba890dd57f6",
+        "x-ms-request-id": "abb39cdc-b002-0124-80fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.error": {
+          "code": "TableAlreadyExists",
+          "message": {
+            "lang": "en-US",
+            "value": "The table specified already exists.\nRequestId:abb39cdc-b002-0124-80fd-035ea4000000\nTime:2022-01-07T19:31:29.1836349Z"
+          }
+        }
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/SpecialCharacterTestNode",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "Content-Length": "55",
+        "Content-Type": "application/json;odata=nometadata",
+        "DataServiceVersion": "3.0",
+        "Prefer": "return-no-content",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "2944cac6-f6d1-4720-aca5-c0a4d0eb229f",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": {
+        "PartitionKey": "foo$",
+        "RowKey": "$bar",
+        "value": "test$"
+      },
+      "StatusCode": 204,
+      "ResponseHeaders": {
+        "Cache-Control": "no-cache",
+        "Content-Length": "0",
+        "DataServiceId": "https://fakeaccount.table.core.windows.net/SpecialCharacterTestNode(PartitionKey=\u0027foo%24\u0027,RowKey=\u0027%24bar\u0027)",
+        "Date": "Fri, 07 Jan 2022 19:31:28 GMT",
+        "ETag": "W/\u0022datetime\u00272022-01-07T19%3A31%3A29.2685867Z\u0027\u0022",
+        "Location": "https://fakeaccount.table.core.windows.net/SpecialCharacterTestNode(PartitionKey=\u0027foo%24\u0027,RowKey=\u0027%24bar\u0027)",
+        "Preference-Applied": "return-no-content",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "2944cac6-f6d1-4720-aca5-c0a4d0eb229f",
+        "x-ms-request-id": "abb39cf5-b002-0124-17fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": null
+    }
+  ],
+  "Variables": {}
+}

@@ -2,16 +2,30 @@
 // Licensed under the MIT license.
 
 import { RestError, TableClient, TableServiceClient } from "../../src";
-import { createTableClient, createTableServiceClient } from "./utils/recordedClient";
+import {
+  createTableClient,
+  createTableServiceClient,
+  envSetupForPlayback,
+} from "./utils/recordedClient";
 import { Context } from "mocha";
 import { TableServiceErrorResponse } from "../../src/utils/errorHelpers";
 import { assert } from "chai";
 import { createHttpHeaders } from "@azure/core-rest-pipeline";
+import { Recorder } from "@azure-tools/test-recorder-new";
 
 describe("TableClient CreationHandling", () => {
   let client: TableClient;
-  beforeEach(function (this: Context) {
-    client = createTableClient("testTable");
+  let recorder: Recorder;
+
+  beforeEach(async function (this: Context) {
+    recorder = new Recorder(this.currentTest);
+    await recorder.start({ envSetupForPlayback });
+
+    client = createTableClient(recorder, "testTable");
+  });
+
+  afterEach(async function () {
+    await recorder.stop();
   });
 
   it("should not thorw if table already exists", async function () {
@@ -71,8 +85,17 @@ describe("TableClient CreationHandling", () => {
 
 describe("TableServiceClient CreationHandling", () => {
   let client: TableServiceClient;
-  beforeEach(function (this: Context) {
-    client = createTableServiceClient();
+  let recorder: Recorder;
+
+  beforeEach(async function (this: Context) {
+    recorder = new Recorder(this.currentTest);
+    await recorder.start({ envSetupForPlayback });
+
+    client = createTableServiceClient(recorder);
+  });
+
+  afterEach(async function () {
+    await recorder.stop();
   });
 
   it("should not thorw if table already exists", async function () {

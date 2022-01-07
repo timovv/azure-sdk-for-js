@@ -1,13 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import {
-  CreateClientMode,
-  createTableClient,
-  recordedEnvironmentSetup,
-} from "./utils/recordedClient";
+import { CreateClientMode, createTableClient, envSetupForPlayback } from "./utils/recordedClient";
 import { Edm, TableClient, TableEntity, TableEntityResult, odata } from "../../src";
-import { Recorder, isLiveMode, isPlaybackMode, record } from "@azure-tools/test-recorder";
+import { isLiveMode, isPlaybackMode, Recorder } from "@azure-tools/test-recorder-new";
+
 import { isNode, isNode8 } from "@azure/test-utils";
 import { Context } from "mocha";
 import { FullOperationResponse } from "@azure/core-client";
@@ -26,14 +23,21 @@ if (isLiveMode()) {
 }
 
 describe("special characters", () => {
+  let client: TableClient;
+  let recorder: Recorder;
+
+  beforeEach(async function (this: Context) {
+    recorder = new Recorder(this.currentTest);
+    await recorder.start({ envSetupForPlayback });
+
+    client = createTableClient(recorder, `SpecialChars`);
+  });
+
+  afterEach(async function () {
+    await recorder.stop();
+  });
+
   it("should handle partition and row keys with special chars", async function (this: Context) {
-    if (!isLiveMode()) {
-      // Currently the recorder is having issues with the encoding of single qoutes in the
-      // query request and generates invalid JS code. Disabling this test on playback mode
-      // while these issues are resolved. #18534
-      this.skip();
-    }
-    const client = createTableClient(`SpecialChars`);
     await client.createTable();
 
     try {
@@ -65,15 +69,16 @@ authModes.forEach((authMode) => {
     const tableName = `tableClientTest${authMode}${suffix}`;
     const listPartitionKey = "listEntitiesTest";
 
-    beforeEach(function (this: Context) {
-      recorder = record(this, recordedEnvironmentSetup);
+    beforeEach(async function (this: Context) {
+      recorder = new Recorder(this.currentTest);
+      await recorder.start({ envSetupForPlayback });
 
-      client = createTableClient(tableName, authMode);
+      client = createTableClient(recorder, tableName, authMode);
     });
 
-    before(async () => {
+    before(async function () {
       if (!isPlaybackMode()) {
-        client = createTableClient(tableName, authMode);
+        client = createTableClient(undefined, tableName, authMode);
         await client.createTable();
       }
     });

@@ -1,0 +1,88 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/tableClientTestTokenCredentialnode",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "Content-Length": "80",
+        "Content-Type": "application/json;odata=nometadata",
+        "DataServiceVersion": "3.0",
+        "Prefer": "return-no-content",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "54ca5cc8-98f6-4ad6-88a3-c309a48e24a8",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": {
+        "PartitionKey": "P2_node",
+        "RowKey": "R1",
+        "foo": "testEntity",
+        "bar": 123,
+        "baz": true
+      },
+      "StatusCode": 204,
+      "ResponseHeaders": {
+        "Cache-Control": "no-cache",
+        "Content-Length": "0",
+        "DataServiceId": "https://fakeaccount.table.core.windows.net/tableClientTestTokenCredentialnode(PartitionKey=\u0027P2_node\u0027,RowKey=\u0027R1\u0027)",
+        "Date": "Fri, 07 Jan 2022 19:32:57 GMT",
+        "ETag": "W/\u0022datetime\u00272022-01-07T19%3A32%3A57.6613442Z\u0027\u0022",
+        "Location": "https://fakeaccount.table.core.windows.net/tableClientTestTokenCredentialnode(PartitionKey=\u0027P2_node\u0027,RowKey=\u0027R1\u0027)",
+        "Preference-Applied": "return-no-content",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "54ca5cc8-98f6-4ad6-88a3-c309a48e24a8",
+        "x-ms-request-id": "abb3eb1e-b002-0124-22fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": null
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/tableClientTestTokenCredentialnode(PartitionKey=\u0027P2_node\u0027,RowKey=\u0027R1\u0027)?$select=baz%2CPartitionKey%2CRowKey",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "1c11c63b-2c83-4513-8cb6-f952c06f0c6b",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,ETag,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:32:57 GMT",
+        "ETag": "W/\u0022datetime\u00272022-01-07T19%3A32%3A57.6613442Z\u0027\u0022",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "1c11c63b-2c83-4513-8cb6-f952c06f0c6b",
+        "x-ms-request-id": "abb3eb32-b002-0124-35fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#tableClientTestTokenCredentialnode/@Element\u0026$select=baz,PartitionKey,RowKey",
+        "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A32%3A57.6613442Z\u0027\u0022",
+        "PartitionKey": "P2_node",
+        "RowKey": "R1",
+        "baz": true
+      }
+    }
+  ],
+  "Variables": {}
+}

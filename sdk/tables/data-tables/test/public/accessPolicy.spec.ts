@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { Recorder, isPlaybackMode, record } from "@azure-tools/test-recorder";
-import { createTableClient, recordedEnvironmentSetup } from "./utils/recordedClient";
+import { Recorder, isPlaybackMode } from "@azure-tools/test-recorder-new";
+import { createTableClient, envSetupForPlayback } from "./utils/recordedClient";
 import { Context } from "mocha";
 import { TableClient } from "../../src";
 import { assert } from "chai";
@@ -14,13 +14,14 @@ describe(`Access Policy operations`, () => {
   const tableName = `AccessPolicy`;
 
   beforeEach(async function (this: Context) {
-    recorder = record(this, recordedEnvironmentSetup);
+    recorder = new Recorder(this.currentTest);
+    await recorder.start({ envSetupForPlayback });
 
     if (!isNode) {
       this.skip();
     }
 
-    client = createTableClient(tableName, "AccountKey");
+    client = createTableClient(recorder, tableName, "AccountKey");
 
     try {
       if (!isPlaybackMode()) {

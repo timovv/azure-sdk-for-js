@@ -1,0 +1,49 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/SpecialCharacterTestNode()?$filter=PartitionKey eq %27foo%3A%27",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "03fe7908-6578-45d7-a540-de55ab83d3d4",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:31:04 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "03fe7908-6578-45d7-a540-de55ab83d3d4",
+        "x-ms-request-id": "abb380cc-b002-0124-34fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#SpecialCharacterTestNode",
+        "value": [
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A31%3A03.6159693Z\u0027\u0022",
+            "PartitionKey": "foo:",
+            "RowKey": ":bar",
+            "Timestamp": "2022-01-07T19:31:03.6159693Z",
+            "value": "test:"
+          }
+        ]
+      }
+    }
+  ],
+  "Variables": {}
+}

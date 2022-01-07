@@ -1,0 +1,113 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "Content-Length": "49",
+        "Content-Type": "application/json;odata=nometadata",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "4887a69e-e001-4dfe-9af9-5f85447c0ddf",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": {
+        "TableName": "batchTableTestTokenCredentialnode"
+      },
+      "StatusCode": 409,
+      "ResponseHeaders": {
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:59:52 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "4887a69e-e001-4dfe-9af9-5f85447c0ddf",
+        "x-ms-request-id": "05e60ff4-c002-00e8-4201-047c44000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.error": {
+          "code": "TableAlreadyExists",
+          "message": {
+            "lang": "en-US",
+            "value": "The table specified already exists.\nRequestId:05e60ff4-c002-00e8-4201-047c44000000\nTime:2022-01-07T19:59:53.1313986Z"
+          }
+        }
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/batchTableTestTokenCredentialnode()?$filter=PartitionKey eq %27batchTest%27",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "7846c52f-f263-43d3-b23a-7b5bb39774c6",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:59:52 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "7846c52f-f263-43d3-b23a-7b5bb39774c6",
+        "x-ms-request-id": "05e61082-c002-00e8-4901-047c44000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#batchTableTestTokenCredentialnode",
+        "value": [
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A59%3A53.2442882Z\u0027\u0022",
+            "PartitionKey": "batchTest",
+            "RowKey": "1",
+            "Timestamp": "2022-01-07T19:59:53.2442882Z",
+            "name": "upserted"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A59%3A53.2442882Z\u0027\u0022",
+            "PartitionKey": "batchTest",
+            "RowKey": "2",
+            "Timestamp": "2022-01-07T19:59:53.2442882Z",
+            "name": "upserted"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A59%3A53.2442882Z\u0027\u0022",
+            "PartitionKey": "batchTest",
+            "RowKey": "3",
+            "Timestamp": "2022-01-07T19:59:53.2442882Z",
+            "name": "upserted"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A59%3A53.2452877Z\u0027\u0022",
+            "PartitionKey": "batchTest",
+            "RowKey": "4",
+            "Timestamp": "2022-01-07T19:59:53.2452877Z",
+            "name": "upserted"
+          }
+        ]
+      }
+    }
+  ],
+  "Variables": {}
+}

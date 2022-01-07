@@ -1,0 +1,189 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/tableClientTestSASConnectionStringnode()?sv=2020-08-04\u0026ss=bfqt\u0026srt=sco\u0026sp=rwdlacuptfx\u0026se=2022-09-04T03:03:27Z\u0026st=2021-09-03T19:03:27Z\u0026spr=https\u0026sig=fakeKey\u0026$filter=PartitionKey eq %27listEntitiesTest%27",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "6774f2e4-d1a5-4bf9-bd75-164aff8831de",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:05 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "6774f2e4-d1a5-4bf9-bd75-164aff8831de",
+        "x-ms-request-id": "abb3f238-b002-0124-28fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#tableClientTestSASConnectionStringnode",
+        "value": [
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.2493584Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "0",
+            "Timestamp": "2022-01-07T19:33:04.2493584Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.3323106Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "1",
+            "Timestamp": "2022-01-07T19:33:04.3323106Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.0579025Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "10",
+            "Timestamp": "2022-01-07T19:33:05.0579025Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.165841Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "11",
+            "Timestamp": "2022-01-07T19:33:05.165841Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.237801Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "12",
+            "Timestamp": "2022-01-07T19:33:05.237801Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.3127584Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "13",
+            "Timestamp": "2022-01-07T19:33:05.3127584Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.3847174Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "14",
+            "Timestamp": "2022-01-07T19:33:05.3847174Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.4686704Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "15",
+            "Timestamp": "2022-01-07T19:33:05.4686704Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.5406297Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "16",
+            "Timestamp": "2022-01-07T19:33:05.5406297Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.6125897Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "17",
+            "Timestamp": "2022-01-07T19:33:05.6125897Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.6875473Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "18",
+            "Timestamp": "2022-01-07T19:33:05.6875473Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A05.758507Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "19",
+            "Timestamp": "2022-01-07T19:33:05.758507Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.408268Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "2",
+            "Timestamp": "2022-01-07T19:33:04.408268Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.4842254Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "3",
+            "Timestamp": "2022-01-07T19:33:04.4842254Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.574175Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "4",
+            "Timestamp": "2022-01-07T19:33:04.574175Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.6701203Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "5",
+            "Timestamp": "2022-01-07T19:33:04.6701203Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.7650674Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "6",
+            "Timestamp": "2022-01-07T19:33:04.7650674Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.8400247Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "7",
+            "Timestamp": "2022-01-07T19:33:04.8400247Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.9129836Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "8",
+            "Timestamp": "2022-01-07T19:33:04.9129836Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.9849434Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "9",
+            "Timestamp": "2022-01-07T19:33:04.9849434Z",
+            "foo": "testEntity"
+          },
+          {
+            "odata.etag": "W/\u0022datetime\u00272022-01-07T19%3A33%3A04.1624071Z\u0027\u0022",
+            "PartitionKey": "listEntitiesTest",
+            "RowKey": "binary1",
+            "Timestamp": "2022-01-07T19:33:04.1624071Z",
+            "foo@odata.type": "Edm.Binary",
+            "foo": "QmFy"
+          }
+        ]
+      }
+    }
+  ],
+  "Variables": {}
+}

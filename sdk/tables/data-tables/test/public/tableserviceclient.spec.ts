@@ -4,14 +4,14 @@
 import {
   CreateClientMode,
   createTableServiceClient,
-  recordedEnvironmentSetup,
+  envSetupForPlayback,
 } from "./utils/recordedClient";
-import { Recorder, isLiveMode, isPlaybackMode, record } from "@azure-tools/test-recorder";
 import { TableItem, TableItemResultPage, TableServiceClient } from "../../src";
 import { Context } from "mocha";
 import { FullOperationResponse } from "@azure/core-client";
 import { assert } from "chai";
 import { isNode } from "@azure/test-utils";
+import { isLiveMode, isPlaybackMode, Recorder } from "@azure-tools/test-recorder-new";
 
 // SASConnectionString and SASToken are supported in both node and browser
 const authModes: CreateClientMode[] = ["TokenCredential", "SASConnectionString"];
@@ -31,9 +31,11 @@ authModes.forEach((authMode) => {
     let recorder: Recorder;
     const suffix = isNode ? `${authMode}node` : `${authMode}browser`;
 
-    beforeEach(function (this: Context) {
-      recorder = record(this, recordedEnvironmentSetup);
-      client = createTableServiceClient(authMode);
+    beforeEach(async function (this: Context) {
+      recorder = new Recorder(this.currentTest);
+      await recorder.start({ envSetupForPlayback });
+
+      client = createTableServiceClient(recorder, authMode);
     });
 
     afterEach(async function () {

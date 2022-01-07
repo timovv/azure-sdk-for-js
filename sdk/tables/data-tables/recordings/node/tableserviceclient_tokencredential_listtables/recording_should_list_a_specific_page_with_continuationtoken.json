@@ -1,0 +1,1141 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "4460e466-9625-4d74-8245-5ae4bc8bf56a",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:18 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "4460e466-9625-4d74-8245-5ae4bc8bf56a",
+        "x-ms-continuation-NextTableName": "1!36!YnlwYWdldGVzdAEwMWQ3YzExZWU4YTgyOWQ5",
+        "x-ms-request-id": "abb3fce3-b002-0124-5ffd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "batchTableTestSASConnectionStringnode"
+          },
+          {
+            "TableName": "batchTableTestTokenCredentialnode"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!36!YnlwYWdldGVzdAEwMWQ3YzExZWU4YTgyOWQ5",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "4a4d1f33-e48a-4481-87f4-91fb359176f8",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:18 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "4a4d1f33-e48a-4481-87f4-91fb359176f8",
+        "x-ms-continuation-NextTableName": "1!44!Y3JlYXRldGFibGVuZXcBMDFkNzY2YmM1MmE5N2JhMA--",
+        "x-ms-request-id": "abb3fcf7-b002-0124-71fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "byPageTest"
+          },
+          {
+            "TableName": "CreateSimpleEntityBatchPerf"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!44!Y3JlYXRldGFibGVuZXcBMDFkNzY2YmM1MmE5N2JhMA--",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "c9d69440-b1d2-46ab-9fef-15e104f019e7",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:18 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "c9d69440-b1d2-46ab-9fef-15e104f019e7",
+        "x-ms-continuation-NextTableName": "1!44!Y3JlYXRldGFibGVvbGQBMDFkNzY2YmQ2ZWMzODZlYQ--",
+        "x-ms-request-id": "abb3fd0d-b002-0124-01fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "createTableNew"
+          },
+          {
+            "TableName": "createTableNew2"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!44!Y3JlYXRldGFibGVvbGQBMDFkNzY2YmQ2ZWMzODZlYQ--",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "5eda0c14-d935-4ec7-ba9c-ae53e0456d52",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:18 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "5eda0c14-d935-4ec7-ba9c-ae53e0456d52",
+        "x-ms-continuation-NextTableName": "1!56!ZGVsZXRldGVzdGFjY291bnRrZXlub2RlATAxZDdlNzAwOGQwNTk1NGI-",
+        "x-ms-request-id": "abb3fd20-b002-0124-13fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "createTableOld"
+          },
+          {
+            "TableName": "DeleteTestAccountConnectionStringnode"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!56!ZGVsZXRldGVzdGFjY291bnRrZXlub2RlATAxZDdlNzAwOGQwNTk1NGI-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "91098302-4748-4e33-bf2f-b4144dd80366",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:18 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "91098302-4748-4e33-bf2f-b4144dd80366",
+        "x-ms-continuation-NextTableName": "1!68!ZGVsZXRldGVzdHNhc2Nvbm5lY3Rpb25zdHJpbmdub2RlATAxZDdlNzAwOGNiZDRkNTI-",
+        "x-ms-request-id": "abb3fd39-b002-0124-2bfd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "DeleteTestAccountKeynode"
+          },
+          {
+            "TableName": "DeleteTestSASConnectionStringbrowser"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!ZGVsZXRldGVzdHNhc2Nvbm5lY3Rpb25zdHJpbmdub2RlATAxZDdlNzAwOGNiZDRkNTI-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "e05ceb8f-7fe9-4705-8d98-6beebea5ba61",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:18 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "e05ceb8f-7fe9-4705-8d98-6beebea5ba61",
+        "x-ms-continuation-NextTableName": "1!52!ZGVsZXRldGVzdHNhc3Rva2Vubm9kZQEwMWQ3ZTcwMDhkMjk0NDI4",
+        "x-ms-request-id": "abb3fd54-b002-0124-45fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "DeleteTestSASConnectionStringnode"
+          },
+          {
+            "TableName": "DeleteTestSASTokenbrowser"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!52!ZGVsZXRldGVzdHNhc3Rva2Vubm9kZQEwMWQ3ZTcwMDhkMjk0NDI4",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "dc28929d-9830-47aa-ba89-d87e7dea6d20",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:18 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "dc28929d-9830-47aa-ba89-d87e7dea6d20",
+        "x-ms-continuation-NextTableName": "1!40!ZG91Ymxlc3Rlc3QBMDFkN2MxNWM0OGQ3MmUyNQ--",
+        "x-ms-request-id": "abb3fd70-b002-0124-5efd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "DeleteTestSASTokennode"
+          },
+          {
+            "TableName": "DeleteTestTokenCredentialbrowser"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!40!ZG91Ymxlc3Rlc3QBMDFkN2MxNWM0OGQ3MmUyNQ--",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "955d1b09-8714-4cbe-880f-864242ff4e8c",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "955d1b09-8714-4cbe-880f-864242ff4e8c",
+        "x-ms-continuation-NextTableName": "1!52!ZXhpc3RzYWNjb3VudGtleW5vZGUBMDFkN2U2NTA5Y2NjMGE1Mw--",
+        "x-ms-request-id": "abb3fd88-b002-0124-75fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "doublesTest"
+          },
+          {
+            "TableName": "existsAccountConnectionStringnode"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!52!ZXhpc3RzYWNjb3VudGtleW5vZGUBMDFkN2U2NTA5Y2NjMGE1Mw--",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "ec8b1695-1de4-4de7-a7d8-dd87b91eef30",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "ec8b1695-1de4-4de7-a7d8-dd87b91eef30",
+        "x-ms-continuation-NextTableName": "1!64!ZXhpc3Rzc2FzY29ubmVjdGlvbnN0cmluZ25vZGUBMDFkN2U2NTA5OTM5MTJjNQ--",
+        "x-ms-request-id": "abb3fd9d-b002-0124-09fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "existsAccountKeynode"
+          },
+          {
+            "TableName": "existsSASConnectionStringbrowser"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!64!ZXhpc3Rzc2FzY29ubmVjdGlvbnN0cmluZ25vZGUBMDFkN2U2NTA5OTM5MTJjNQ--",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "f1ffae37-0d5d-4b31-9969-e39252f6accc",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "f1ffae37-0d5d-4b31-9969-e39252f6accc",
+        "x-ms-continuation-NextTableName": "1!48!ZXhpc3Rzc2FzdG9rZW5ub2RlATAxZDdlNjUwOWU2ZTdjNGE-",
+        "x-ms-request-id": "abb3fdaa-b002-0124-15fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "existsSASConnectionStringnode"
+          },
+          {
+            "TableName": "existsSASTokenbrowser"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!48!ZXhpc3Rzc2FzdG9rZW5ub2RlATAxZDdlNjUwOWU2ZTdjNGE-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "167b1347-404b-4913-ba4c-2167da6e1dee",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "167b1347-404b-4913-ba4c-2167da6e1dee",
+        "x-ms-continuation-NextTableName": "1!56!ZXhpc3RzdG9rZW5jcmVkZW50aWFsbm9kZQEwMWQ3ZTY1MDk2NGU5Y2Zm",
+        "x-ms-request-id": "abb3fdc3-b002-0124-2dfd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "existsSASTokennode"
+          },
+          {
+            "TableName": "existsTokenCredentialbrowser"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!56!ZXhpc3RzdG9rZW5jcmVkZW50aWFsbm9kZQEwMWQ3ZTY1MDk2NGU5Y2Zm",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "b17ae9d7-92e2-431d-854b-4c94e4b44f20",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "b17ae9d7-92e2-431d-854b-4c94e4b44f20",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxATAxZDgwM2ZkNjlmYjA5YzY-",
+        "x-ms-request-id": "abb3fddd-b002-0124-44fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "existsTokenCredentialnode"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode0"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxATAxZDgwM2ZkNjlmYjA5YzY-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "e26eb0cc-23b4-4d0b-bb2f-d041ebee942b",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "e26eb0cc-23b4-4d0b-bb2f-d041ebee942b",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxMQEwMWQ4MDNmZDZhODg4ZjFj",
+        "x-ms-request-id": "abb3fe01-b002-0124-66fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode1"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode10"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxMQEwMWQ4MDNmZDZhODg4ZjFj",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "45935ec9-f5d8-4ac9-afd0-9fd60d3c60df",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "45935ec9-f5d8-4ac9-afd0-9fd60d3c60df",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxMwEwMWQ4MDNmZDZhYTM2NjMy",
+        "x-ms-request-id": "abb3fe10-b002-0124-72fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode11"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode12"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxMwEwMWQ4MDNmZDZhYTM2NjMy",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "f65305d4-a4f0-4b93-9252-6f1cb553570a",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "f65305d4-a4f0-4b93-9252-6f1cb553570a",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxNQEwMWQ4MDNmZDZhYmRjODJm",
+        "x-ms-request-id": "abb3fe2f-b002-0124-0bfd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode13"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode14"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxNQEwMWQ4MDNmZDZhYmRjODJm",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "18773369-c8b4-4c2c-adc8-cea8a2ba171b",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "18773369-c8b4-4c2c-adc8-cea8a2ba171b",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxNwEwMWQ4MDNmZDZhZDkxNDYz",
+        "x-ms-request-id": "abb3fe49-b002-0124-24fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode15"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode16"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxNwEwMWQ4MDNmZDZhZDkxNDYz",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "6e969508-389d-4412-b537-8f3c8d6ad662",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "6e969508-389d-4412-b537-8f3c8d6ad662",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxOQEwMWQ4MDNmZDZhZjM3NjVj",
+        "x-ms-request-id": "abb3fe60-b002-0124-3bfd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode17"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode18"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUxOQEwMWQ4MDNmZDZhZjM3NjVj",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "6191c3f9-2241-441f-b004-34241a020442",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:19 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "6191c3f9-2241-441f-b004-34241a020442",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUzATAxZDgwM2ZkNmExNTZiYmQ-",
+        "x-ms-request-id": "abb3fe79-b002-0124-53fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode19"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode2"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGUzATAxZDgwM2ZkNmExNTZiYmQ-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "07ad5b5c-6883-4f4b-9ccb-60f7f1cbd6a1",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:20 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "07ad5b5c-6883-4f4b-9ccb-60f7f1cbd6a1",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGU1ATAxZDgwM2ZkNmEzMTU0MWQ-",
+        "x-ms-request-id": "abb3fe90-b002-0124-69fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode3"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode4"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGU1ATAxZDgwM2ZkNmEzMTU0MWQ-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "cb448a72-7939-4bcd-9edf-353f58126b31",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:20 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "cb448a72-7939-4bcd-9edf-353f58126b31",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGU3ATAxZDgwM2ZkNmE0YjhmMGQ-",
+        "x-ms-request-id": "abb3fea6-b002-0124-7dfd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode5"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode6"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGU3ATAxZDgwM2ZkNmE0YjhmMGQ-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "dce8f7d3-63b9-482d-89b9-cdcac1fb22e3",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:20 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "dce8f7d3-63b9-482d-89b9-cdcac1fb22e3",
+        "x-ms-continuation-NextTableName": "1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGU5ATAxZDgwM2ZkNmE2ZGI4MGI-",
+        "x-ms-request-id": "abb3feb7-b002-0124-0bfd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode7"
+          },
+          {
+            "TableName": "ListTableTestTokenCredentialnode8"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!68!bGlzdHRhYmxldGVzdHRva2VuY3JlZGVudGlhbG5vZGU5ATAxZDgwM2ZkNmE2ZGI4MGI-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "c4a93183-6cd8-4273-baef-9355b6cc994a",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:20 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "c4a93183-6cd8-4273-baef-9355b6cc994a",
+        "x-ms-continuation-NextTableName": "1!56!c3BlY2lhbGNoYXJhY3RlcnRlc3Rub2RlATAxZDgwM2ZkMGE0NjY0YzI-",
+        "x-ms-request-id": "abb3fecc-b002-0124-1dfd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "ListTableTestTokenCredentialnode9"
+          },
+          {
+            "TableName": "manualListByPage"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!56!c3BlY2lhbGNoYXJhY3RlcnRlc3Rub2RlATAxZDgwM2ZkMGE0NjY0YzI-",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "882ab37f-b355-4f59-9cac-512b488bafa3",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:20 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "882ab37f-b355-4f59-9cac-512b488bafa3",
+        "x-ms-continuation-NextTableName": "1!36!dGVzdGNoYXJzMwEwMWQ3YThkYWYwYjJiYjlj",
+        "x-ms-request-id": "abb3fedd-b002-0124-2efd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "TestChars"
+          },
+          {
+            "TableName": "TestChars2"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!36!dGVzdGNoYXJzMwEwMWQ3YThkYWYwYjJiYjlj",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "93c44b84-87d3-44f2-8fb3-ac77d7dd56bb",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,x-ms-continuation-NextTableName,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:20 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "93c44b84-87d3-44f2-8fb3-ac77d7dd56bb",
+        "x-ms-continuation-NextTableName": "1!60!dGVzdHRhYmxldG9rZW5jcmVkZW50aWFsbm9kZQEwMWQ4MDNmZDY5YTdlY2Q5",
+        "x-ms-request-id": "abb3fef3-b002-0124-41fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "TestChars3"
+          },
+          {
+            "TableName": "testTable"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!60!dGVzdHRhYmxldG9rZW5jcmVkZW50aWFsbm9kZQEwMWQ4MDNmZDY5YTdlY2Q5",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "28f5547b-3365-4aca-88f2-42df47c68805",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:20 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "28f5547b-3365-4aca-88f2-42df47c68805",
+        "x-ms-request-id": "abb3ff09-b002-0124-55fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "TestTestTest"
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://fakeaccount.table.core.windows.net/Tables?$top=2\u0026NextTableName=1!60!dGVzdHRhYmxldG9rZW5jcmVkZW50aWFsbm9kZQEwMWQ4MDNmZDY5YTdlY2Q5",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json;odata=minimalmetadata",
+        "Accept-Encoding": "gzip,deflate",
+        "Authorization": "Sanitized",
+        "Connection": "keep-alive",
+        "DataServiceVersion": "3.0",
+        "User-Agent": "azsdk-js-data-tables/13.0.1 core-rest-pipeline/1.3.3 Node/v14.17.4 OS/(x64-Linux-5.10.60.1-microsoft-standard-WSL2)",
+        "x-ms-client-request-id": "a85142c2-85d9-4fa5-9cf0-94509b4db1a8",
+        "x-ms-version": "2019-02-02"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "x-ms-request-id,x-ms-client-request-id,Server,x-ms-version,X-Content-Type-Options,Cache-Control,Content-Type,Content-Length,Date,Transfer-Encoding",
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json; odata=minimalmetadata; streaming=true; charset=utf-8",
+        "Date": "Fri, 07 Jan 2022 19:33:20 GMT",
+        "Server": [
+          "Windows-Azure-Table/1.0",
+          "Microsoft-HTTPAPI/2.0"
+        ],
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+        "x-ms-client-request-id": "a85142c2-85d9-4fa5-9cf0-94509b4db1a8",
+        "x-ms-request-id": "abb3ff18-b002-0124-64fd-035ea4000000",
+        "x-ms-version": "2019-02-02"
+      },
+      "ResponseBody": {
+        "odata.metadata": "https://fakeaccount.table.core.windows.net/$metadata#Tables",
+        "value": [
+          {
+            "TableName": "TestTestTest"
+          }
+        ]
+      }
+    }
+  ],
+  "Variables": {}
+}
