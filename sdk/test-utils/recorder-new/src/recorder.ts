@@ -119,6 +119,15 @@ export class Recorder {
   }
 
   /**
+   * Adds sanitizers that are applied to the entire session (every single test)addSanitizers.
+   */
+  async addSessionLevelSanitizers(options: SanitizerOptions): Promise<void> {
+    if (isRecordMode() && ensureExistence(this.sanitizer, "this.sanitizer")) {
+      return this.sanitizer.addSessionLevelSanitizers(options);
+    }
+  }
+
+  /**
    * Call this method to ping the proxy-tool with a start request
    * signalling to start recording in the record mode
    * or to start playing back in the playback mode.

@@ -12,6 +12,11 @@ import {
   SanitizerOptions
 } from "./utils/utils";
 
+interface SanitizerRequest {
+  sanitizer: ProxyToolSanitizers;
+  body: string | undefined;
+}
+
 /**
  * Sanitizer class to handle communication with the proxy-tool relating to the sanitizers adding/resetting, etc.
  */
@@ -29,7 +34,7 @@ export class Sanitizer {
   async transformsInfo(): Promise<string | null | undefined> {
     if (this.recordingId) {
       const infoUri = `${this.url}${paths.info}${paths.available}`;
-      const req = this._createRecordingRequest(infoUri, "GET");
+      const req = this._createRecordingRequest(infoUri, false, "GET");
       if (!this.httpClient) {
         throw new RecorderError(
           `Something went wrong, Sanitizer.httpClient should not have been undefined in ${getTestMode()} mode.`
@@ -56,70 +61,81 @@ export class Sanitizer {
    * Takes SanitizerOptions as the input, passes on to the proxy-tool.
    */
   async addSanitizers(options: SanitizerOptions): Promise<void> {
+    const sanitizers = this.createSanitizerRequests(options);
+    await Promise.all(
+      sanitizers.map((sanitizer) => this.performAddSanitizerRequest(sanitizer, false))
+    );
+  }
+
+  async addSessionLevelSanitizers(options: SanitizerOptions): Promise<void> {
+    const sanitizers = this.createSanitizerRequests(options);
+    await Promise.all(
+      sanitizers.map((sanitizer) => this.performAddSanitizerRequest(sanitizer, true))
+    );
+  }
+
+  private createSanitizerRequests(options: SanitizerOptions): SanitizerRequest[] {
+    const sanitizersToAdd: SanitizerRequest[] = [];
+
     if (options.connectionStringSanitizers) {
-      await Promise.all(
-        options.connectionStringSanitizers.map((replacer) =>
-          this.addConnectionStringSanitizer(replacer.actualConnString, replacer.fakeConnString)
-        )
-      );
+      for (const { actualConnString, fakeConnString } of options.connectionStringSanitizers) {
+        sanitizersToAdd.push(
+          ...this.createConnectionStringSanitizerRequests(actualConnString, fakeConnString)
+        );
+      }
     }
 
-    await Promise.all(
-      ([
-        // The following sanitizers have similar request bodies and this abstraction avoids duplication
-        "generalRegexSanitizers",
-        "bodyKeySanitizers",
-        "bodyRegexSanitizers",
-        "headerRegexSanitizers",
-        "uriRegexSanitizers"
-      ] as const).map((prop) => {
-        const replacers = options[prop];
-        if (replacers) {
-          return Promise.all(
-            replacers.map((replacer: RegexSanitizer) => {
-              if (
-                // sanitizers where the "regex" is a required attribute
-                [
-                  "bodyKeySanitizers",
-                  "bodyRegexSanitizers",
-                  "generalRegexSanitizers",
-                  "uriRegexSanitizers"
-                ].includes(prop) &&
-                !replacer.regex
-              ) {
-                if (!isRecordMode()) return;
-                throw new RecorderError(
-                  `Attempted to add an invalid sanitizer - ${JSON.stringify(replacer)}`
-                );
-              }
-              return this.addSanitizer({
-                sanitizer: sanitizerKeywordMapping[prop],
-                body: JSON.stringify(replacer)
-              });
-            })
-          );
-        } else return;
-      })
-    );
+    ([
+      // The following sanitizers have similar request bodies and this abstraction avoids duplication
+      "generalRegexSanitizers",
+      "bodyKeySanitizers",
+      "bodyRegexSanitizers",
+      "headerRegexSanitizers",
+      "uriRegexSanitizers"
+    ] as const).map((prop) => {
+      const replacers = options[prop];
+      if (replacers) {
+        replacers.map((replacer: RegexSanitizer) => {
+          if (
+            // sanitizers where the "regex" is a required attribute
+            [
+              "bodyKeySanitizers",
+              "bodyRegexSanitizers",
+              "generalRegexSanitizers",
+              "uriRegexSanitizers"
+            ].includes(prop) &&
+            !replacer.regex
+          ) {
+            if (!isRecordMode()) return;
+            throw new RecorderError(
+              `Attempted to add an invalid sanitizer - ${JSON.stringify(replacer)}`
+            );
+          }
 
-    await Promise.all(
-      ([
-        // The following sanitizers have similar request bodies and this abstraction avoids duplication
-        "resetSanitizer",
-        "oAuthResponseSanitizer"
-      ] as const).map((prop) => {
-        // TODO: Test
-        if (options[prop]) {
-          return this.addSanitizer({
+          sanitizersToAdd.push({
             sanitizer: sanitizerKeywordMapping[prop],
-            body: undefined
+            body: JSON.stringify(replacer)
           });
-        } else return;
-      })
-    );
+        });
+      }
+    });
+
+    ([
+      // The following sanitizers have similar request bodies and this abstraction avoids duplication
+      "resetSanitizer",
+      "oAuthResponseSanitizer"
+    ] as const).map((prop) => {
+      // TODO: Test
+      if (options[prop]) {
+        sanitizersToAdd.push({
+          sanitizer: sanitizerKeywordMapping[prop],
+          body: undefined
+        });
+      }
+    });
 
     if (options.removeHeaderSanitizer) {
-      this.addSanitizer({
+      sanitizersToAdd.push({
         sanitizer: "RemoveHeaderSanitizer",
         body: JSON.stringify({
           headersForRemoval: options.removeHeaderSanitizer.headersForRemoval.toString()
@@ -129,25 +145,25 @@ export class Sanitizer {
 
     if (options.continuationSanitizers) {
       // TODO: Test
-      await Promise.all(
-        options.continuationSanitizers.map((replacer) =>
-          this.addSanitizer({
-            sanitizer: "ContinuationSanitizer",
-            body: JSON.stringify({
-              ...replacer,
-              resetAfterFirst: replacer.resetAfterFirst.toString()
-            })
+      options.continuationSanitizers.map((replacer) =>
+        sanitizersToAdd.push({
+          sanitizer: "ContinuationSanitizer",
+          body: JSON.stringify({
+            ...replacer,
+            resetAfterFirst: replacer.resetAfterFirst.toString()
           })
-        )
+        })
       );
     }
 
     if (options.uriSubscriptionIdSanitizer) {
-      await this.addSanitizer({
+      sanitizersToAdd.push({
         sanitizer: "UriSubscriptionIdSanitizer",
         body: JSON.stringify(options.uriSubscriptionIdSanitizer)
       });
     }
+
+    return sanitizersToAdd;
   }
 
   /**
@@ -156,12 +172,12 @@ export class Sanitizer {
    * - each part of the connection string is mapped with its corresponding fake value
    * - generalRegexSanitizer is applied for each of the parts with the real and fake values that are parsed
    */
-  async addConnectionStringSanitizer(
+  createConnectionStringSanitizerRequests(
     actualConnString: string | undefined,
     fakeConnString: string
-  ): Promise<void> {
+  ): SanitizerRequest[] {
     if (!actualConnString) {
-      if (!isRecordMode()) return;
+      if (!isRecordMode()) return [];
       throw new RecorderError(
         `Attempted to add an invalid sanitizer - ${JSON.stringify({
           actualConnString: actualConnString,
@@ -171,7 +187,7 @@ export class Sanitizer {
     }
     // extract connection string parts and match call
     const pairsMatched = getRealAndFakePairs(actualConnString, fakeConnString);
-    await this.addSanitizers({
+    return this.createSanitizerRequests({
       generalRegexSanitizers: Object.entries(pairsMatched).map(([key, value]) => {
         return { value, regex: key };
       })
@@ -181,15 +197,18 @@ export class Sanitizer {
   /**
    * Atomic method to add a simple sanitizer.
    */
-  private async addSanitizer(options: {
-    sanitizer: ProxyToolSanitizers;
-    body: string | undefined;
-  }): Promise<void> {
-    if (this.recordingId !== undefined) {
+  private async performAddSanitizerRequest(
+    options: {
+      sanitizer: ProxyToolSanitizers;
+      body: string | undefined;
+    },
+    isSessionLevel: boolean
+  ): Promise<void> {
+    if (isSessionLevel || this.recordingId !== undefined) {
       const uri = `${this.url}${paths.admin}${
         options.sanitizer !== "Reset" ? paths.addSanitizer : paths.reset
       }`;
-      const req = this._createRecordingRequest(uri);
+      const req = this._createRecordingRequest(uri, isSessionLevel);
       if (options.sanitizer !== "Reset") {
         req.headers.set("x-abstraction-identifier", options.sanitizer);
       }
@@ -215,9 +234,13 @@ export class Sanitizer {
    * Adds the recording id headers to the requests that are sent to the proxy tool.
    * These are required to appropriately save the recordings in the record mode and picking them up in playback.
    */
-  private _createRecordingRequest(url: string, method: HttpMethods = "POST") {
+  private _createRecordingRequest(
+    url: string,
+    isSessionLevel: boolean,
+    method: HttpMethods = "POST"
+  ) {
     const req = createPipelineRequest({ url: url, method });
-    if (this.recordingId !== undefined) {
+    if (!isSessionLevel && this.recordingId !== undefined) {
       req.headers.set("x-recording-id", this.recordingId);
     }
     return req;
