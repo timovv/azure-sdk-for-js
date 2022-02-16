@@ -111,17 +111,6 @@ export const n: OperationQueryParameter = {
   }
 };
 
-export const apiVersion: OperationQueryParameter = {
-  parameterPath: "apiVersion",
-  mapper: {
-    serializedName: "api-version",
-    required: true,
-    type: {
-      name: "String"
-    }
-  }
-};
-
 export const contentType1: OperationParameter = {
   parameterPath: ["options", "contentType"],
   mapper: {
@@ -320,8 +309,9 @@ export const contentType3: OperationParameter = {
 export const grantType: OperationParameter = {
   parameterPath: "grantType",
   mapper: {
+    defaultValue: "access_token",
+    isConstant: true,
     serializedName: "grant_type",
-    required: true,
     type: {
       name: "String"
     }
@@ -339,30 +329,11 @@ export const service: OperationParameter = {
   }
 };
 
-export const tenant: OperationParameter = {
-  parameterPath: ["options", "tenant"],
-  mapper: {
-    serializedName: "tenant",
-    type: {
-      name: "String"
-    }
-  }
-};
-
-export const refreshToken: OperationParameter = {
-  parameterPath: ["options", "refreshToken"],
-  mapper: {
-    serializedName: "refresh_token",
-    type: {
-      name: "String"
-    }
-  }
-};
-
 export const accessToken: OperationParameter = {
-  parameterPath: ["options", "accessToken"],
+  parameterPath: "accessToken",
   mapper: {
     serializedName: "access_token",
+    required: true,
     type: {
       name: "String"
     }
@@ -392,7 +363,7 @@ export const scope: OperationParameter = {
   }
 };
 
-export const refreshToken1: OperationParameter = {
+export const refreshToken: OperationParameter = {
   parameterPath: "refreshToken",
   mapper: {
     serializedName: "refresh_token",

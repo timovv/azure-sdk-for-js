@@ -25,12 +25,6 @@ export interface AcrErrorInfo {
   detail?: Record<string, unknown>;
 }
 
-/** Returns the requested manifest file */
-export interface Manifest {
-  /** Schema version */
-  schemaVersion?: number;
-}
-
 export interface ManifestListAttributes {
   /** The MIME type of the referenced object. This will generally be application/vnd.docker.image.manifest.v2+json, but it could also be application/vnd.docker.image.manifest.v1+json */
   mediaType?: string;
@@ -146,6 +140,12 @@ export interface JWKHeader {
   y?: string;
 }
 
+/** Returns the requested manifest file */
+export interface Manifest {
+  /** Schema version */
+  schemaVersion?: number;
+}
+
 /** List of repositories */
 export interface Repositories {
   /** Repository names */
@@ -193,6 +193,8 @@ export interface ContainerRepositoryProperties {
   canList?: boolean;
   /** Read enabled */
   canRead?: boolean;
+  /** Enables Teleport functionality on new images in the repository improving Container startup performance */
+  teleportEnabled?: boolean;
 }
 
 /** Changeable attributes for Repository */
@@ -205,6 +207,8 @@ export interface RepositoryWriteableProperties {
   canList?: boolean;
   /** Read enabled */
   canRead?: boolean;
+  /** Enables Teleport functionality on new images in the repository improving Container startup performance */
+  teleportEnabled?: boolean;
 }
 
 /** List of tag details */
@@ -365,6 +369,10 @@ export interface ManifestAttributesBase {
   canList?: boolean;
   /** Read enabled */
   canRead?: boolean;
+  /** Quarantine state */
+  quarantineState?: string;
+  /** Quarantine details */
+  quarantineDetails?: string;
 }
 
 /** The artifact's platform, consisting of operating system and architecture. */
@@ -396,6 +404,10 @@ export interface ManifestWriteableProperties {
   canList?: boolean;
   /** Read enabled */
   canRead?: boolean;
+  /** Quarantine state */
+  quarantineState?: string;
+  /** Quarantine details */
+  quarantineDetails?: string;
 }
 
 /** Manifest attributes details */
@@ -458,6 +470,10 @@ export interface ArtifactManifestProperties {
   canList?: boolean;
   /** Read enabled */
   canRead?: boolean;
+  /** Quarantine state */
+  quarantineState?: string;
+  /** Quarantine details */
+  quarantineDetails?: string;
 }
 
 export interface AcrRefreshToken {
@@ -502,19 +518,17 @@ export interface TagAttributesTag {
 export interface ManifestAttributesManifest {
   /** List of manifest attributes details */
   references?: ArtifactManifestPlatform[];
+  /** Quarantine tag name */
+  quarantineTag?: string;
 }
 
 export interface Paths108HwamOauth2ExchangePostRequestbodyContentApplicationXWwwFormUrlencodedSchema {
-  /** Can take a value of access_token_refresh_token, or access_token, or refresh_token */
-  grantType: PostContentSchemaGrantType;
+  /** Can take a value of access_token */
+  grantType: "access_token";
   /** Indicates the name of your Azure container registry. */
   service: string;
-  /** AAD tenant associated to the AAD credentials. */
-  tenant?: string;
-  /** AAD refresh token, mandatory when grant_type is access_token_refresh_token or refresh_token */
-  refreshToken?: string;
   /** AAD access token, mandatory when grant_type is access_token_refresh_token or access_token. */
-  aadAccessToken?: string;
+  aadAccessToken: string;
 }
 
 export interface PathsV3R3RxOauth2TokenPostRequestbodyContentApplicationXWwwFormUrlencodedSchema {
@@ -738,21 +752,6 @@ export interface ContainerRegistryBlobCheckChunkExistsHeaders {
   contentRange?: string;
 }
 
-/** Known values of {@link ApiVersion20210701} that the service accepts. */
-export enum KnownApiVersion20210701 {
-  /** Api Version '2021-07-01' */
-  TwoThousandTwentyOne0701 = "2021-07-01"
-}
-
-/**
- * Defines values for ApiVersion20210701. \
- * {@link KnownApiVersion20210701} can be used interchangeably with ApiVersion20210701,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **2021-07-01**: Api Version '2021-07-01'
- */
-export type ApiVersion20210701 = string;
-
 /** Known values of {@link ArtifactArchitecture} that the service accepts. */
 export enum KnownArtifactArchitecture {
   /** i386 */
@@ -843,24 +842,6 @@ export enum KnownArtifactOperatingSystem {
  * **windows**
  */
 export type ArtifactOperatingSystem = string;
-
-/** Known values of {@link PostContentSchemaGrantType} that the service accepts. */
-export enum KnownPostContentSchemaGrantType {
-  AccessTokenRefreshToken = "access_token_refresh_token",
-  AccessToken = "access_token",
-  RefreshToken = "refresh_token"
-}
-
-/**
- * Defines values for PostContentSchemaGrantType. \
- * {@link KnownPostContentSchemaGrantType} can be used interchangeably with PostContentSchemaGrantType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **access_token_refresh_token** \
- * **access_token** \
- * **refresh_token**
- */
-export type PostContentSchemaGrantType = string;
 /** Defines values for TokenGrantType. */
 export type TokenGrantType = "refresh_token" | "password";
 /** Defines values for ArtifactTagOrderBy. */
@@ -1169,14 +1150,7 @@ export type ContainerRegistryBlobCheckChunkExistsResponse = ContainerRegistryBlo
 
 /** Optional parameters. */
 export interface AuthenticationExchangeAadAccessTokenForAcrRefreshTokenOptionalParams
-  extends coreClient.OperationOptions {
-  /** AAD tenant associated to the AAD credentials. */
-  tenant?: string;
-  /** AAD refresh token, mandatory when grant_type is access_token_refresh_token or refresh_token */
-  refreshToken?: string;
-  /** AAD access token, mandatory when grant_type is access_token_refresh_token or access_token. */
-  accessToken?: string;
-}
+  extends coreClient.OperationOptions {}
 
 /** Contains response data for the exchangeAadAccessTokenForAcrRefreshToken operation. */
 export type AuthenticationExchangeAadAccessTokenForAcrRefreshTokenResponse = AcrRefreshToken;

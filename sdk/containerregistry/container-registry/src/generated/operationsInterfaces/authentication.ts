@@ -7,7 +7,6 @@
  */
 
 import {
-  PostContentSchemaGrantType,
   AuthenticationExchangeAadAccessTokenForAcrRefreshTokenOptionalParams,
   AuthenticationExchangeAadAccessTokenForAcrRefreshTokenResponse,
   TokenGrantType,
@@ -19,13 +18,14 @@ import {
 export interface Authentication {
   /**
    * Exchange AAD tokens for an ACR refresh Token
-   * @param grantType Can take a value of access_token_refresh_token, or access_token, or refresh_token
    * @param service Indicates the name of your Azure container registry.
+   * @param accessToken AAD access token, mandatory when grant_type is access_token_refresh_token or
+   *                    access_token.
    * @param options The options parameters.
    */
   exchangeAadAccessTokenForAcrRefreshToken(
-    grantType: PostContentSchemaGrantType,
     service: string,
+    accessToken: string,
     options?: AuthenticationExchangeAadAccessTokenForAcrRefreshTokenOptionalParams
   ): Promise<AuthenticationExchangeAadAccessTokenForAcrRefreshTokenResponse>;
   /**

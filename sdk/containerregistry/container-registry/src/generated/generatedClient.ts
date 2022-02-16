@@ -17,22 +17,17 @@ import {
   Authentication
 } from "./operationsInterfaces";
 import { GeneratedClientContext } from "./generatedClientContext";
-import { GeneratedClientOptionalParams, ApiVersion20210701 } from "./models";
+import { GeneratedClientOptionalParams } from "./models";
 
 /** @internal */
 export class GeneratedClient extends GeneratedClientContext {
   /**
    * Initializes a new instance of the GeneratedClient class.
    * @param url Registry login URL
-   * @param apiVersion Api Version
    * @param options The parameter options
    */
-  constructor(
-    url: string,
-    apiVersion: ApiVersion20210701,
-    options?: GeneratedClientOptionalParams
-  ) {
-    super(url, apiVersion, options);
+  constructor(url: string, options?: GeneratedClientOptionalParams) {
+    super(url, options);
     this.containerRegistry = new ContainerRegistryImpl(this);
     this.containerRegistryBlob = new ContainerRegistryBlobImpl(this);
     this.authentication = new AuthenticationImpl(this);

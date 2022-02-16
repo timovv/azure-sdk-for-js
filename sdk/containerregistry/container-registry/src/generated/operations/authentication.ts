@@ -12,7 +12,6 @@ import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { GeneratedClientContext } from "../generatedClientContext";
 import {
-  PostContentSchemaGrantType,
   AuthenticationExchangeAadAccessTokenForAcrRefreshTokenOptionalParams,
   AuthenticationExchangeAadAccessTokenForAcrRefreshTokenResponse,
   TokenGrantType,
@@ -34,17 +33,18 @@ export class AuthenticationImpl implements Authentication {
 
   /**
    * Exchange AAD tokens for an ACR refresh Token
-   * @param grantType Can take a value of access_token_refresh_token, or access_token, or refresh_token
    * @param service Indicates the name of your Azure container registry.
+   * @param accessToken AAD access token, mandatory when grant_type is access_token_refresh_token or
+   *                    access_token.
    * @param options The options parameters.
    */
   exchangeAadAccessTokenForAcrRefreshToken(
-    grantType: PostContentSchemaGrantType,
     service: string,
+    accessToken: string,
     options?: AuthenticationExchangeAadAccessTokenForAcrRefreshTokenOptionalParams
   ): Promise<AuthenticationExchangeAadAccessTokenForAcrRefreshTokenResponse> {
     return this.client.sendOperationRequest(
-      { grantType, service, options },
+      { service, accessToken, options },
       exchangeAadAccessTokenForAcrRefreshTokenOperationSpec
     );
   }
@@ -88,11 +88,8 @@ const exchangeAadAccessTokenForAcrRefreshTokenOperationSpec: coreClient.Operatio
   formDataParameters: [
     Parameters.grantType,
     Parameters.service,
-    Parameters.tenant,
-    Parameters.refreshToken,
     Parameters.accessToken
   ],
-  queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.url],
   headerParameters: [Parameters.contentType3, Parameters.accept4],
   serializer
@@ -111,10 +108,9 @@ const exchangeAcrRefreshTokenForAcrAccessTokenOperationSpec: coreClient.Operatio
   formDataParameters: [
     Parameters.service,
     Parameters.scope,
-    Parameters.refreshToken1,
+    Parameters.refreshToken,
     Parameters.grantType1
   ],
-  queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.url],
   headerParameters: [Parameters.contentType3, Parameters.accept4],
   serializer

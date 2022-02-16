@@ -57,21 +57,6 @@ export const AcrErrorInfo: coreClient.CompositeMapper = {
   }
 };
 
-export const Manifest: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "Manifest",
-    modelProperties: {
-      schemaVersion: {
-        serializedName: "schemaVersion",
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-
 export const ManifestListAttributes: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -407,6 +392,21 @@ export const JWKHeader: coreClient.CompositeMapper = {
   }
 };
 
+export const Manifest: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "Manifest",
+    modelProperties: {
+      schemaVersion: {
+        serializedName: "schemaVersion",
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
 export const Repositories: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -509,6 +509,12 @@ export const ContainerRepositoryProperties: coreClient.CompositeMapper = {
         type: {
           name: "Boolean"
         }
+      },
+      teleportEnabled: {
+        serializedName: "changeableAttributes.teleportEnabled",
+        type: {
+          name: "Boolean"
+        }
       }
     }
   }
@@ -539,6 +545,12 @@ export const RepositoryWriteableProperties: coreClient.CompositeMapper = {
       },
       canRead: {
         serializedName: "readEnabled",
+        type: {
+          name: "Boolean"
+        }
+      },
+      teleportEnabled: {
+        serializedName: "teleportEnabled",
         type: {
           name: "Boolean"
         }
@@ -907,6 +919,18 @@ export const ManifestAttributesBase: coreClient.CompositeMapper = {
         type: {
           name: "Boolean"
         }
+      },
+      quarantineState: {
+        serializedName: "changeableAttributes.quarantineState",
+        type: {
+          name: "String"
+        }
+      },
+      quarantineDetails: {
+        serializedName: "changeableAttributes.quarantineDetails",
+        type: {
+          name: "String"
+        }
       }
     }
   }
@@ -970,6 +994,18 @@ export const ManifestWriteableProperties: coreClient.CompositeMapper = {
         serializedName: "readEnabled",
         type: {
           name: "Boolean"
+        }
+      },
+      quarantineState: {
+        serializedName: "quarantineState",
+        type: {
+          name: "String"
+        }
+      },
+      quarantineDetails: {
+        serializedName: "quarantineDetails",
+        type: {
+          name: "String"
         }
       }
     }
@@ -1089,6 +1125,18 @@ export const ArtifactManifestProperties: coreClient.CompositeMapper = {
         serializedName: "manifest.changeableAttributes.readEnabled",
         type: {
           name: "Boolean"
+        }
+      },
+      quarantineState: {
+        serializedName: "manifest.changeableAttributes.quarantineState",
+        type: {
+          name: "String"
+        }
+      },
+      quarantineDetails: {
+        serializedName: "manifest.changeableAttributes.quarantineDetails",
+        type: {
+          name: "String"
         }
       }
     }
@@ -1215,6 +1263,12 @@ export const ManifestAttributesManifest: coreClient.CompositeMapper = {
             }
           }
         }
+      },
+      quarantineTag: {
+        serializedName: "quarantineTag",
+        type: {
+          name: "String"
+        }
       }
     }
   }
@@ -1227,8 +1281,9 @@ export const Paths108HwamOauth2ExchangePostRequestbodyContentApplicationXWwwForm
       "Paths108HwamOauth2ExchangePostRequestbodyContentApplicationXWwwFormUrlencodedSchema",
     modelProperties: {
       grantType: {
+        defaultValue: "access_token",
+        isConstant: true,
         serializedName: "grant_type",
-        required: true,
         type: {
           name: "String"
         }
@@ -1240,20 +1295,9 @@ export const Paths108HwamOauth2ExchangePostRequestbodyContentApplicationXWwwForm
           name: "String"
         }
       },
-      tenant: {
-        serializedName: "tenant",
-        type: {
-          name: "String"
-        }
-      },
-      refreshToken: {
-        serializedName: "refresh_token",
-        type: {
-          name: "String"
-        }
-      },
       aadAccessToken: {
         serializedName: "access_token",
+        required: true,
         type: {
           name: "String"
         }
