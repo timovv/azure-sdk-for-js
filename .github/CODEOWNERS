@@ -50,7 +50,7 @@
 /sdk/communication/communication-common/ @Azure/acs-identity-sdk
 
 # PRLabel: %Container Registry
-/sdk/containerregistry/ @jeremymeng
+/sdk/containerregistry/ @jeremymeng @timovv
 
 # PRLabel: %Cosmos
 /sdk/cosmosdb/ @kushagraThapar @simorenoh @simplynaveen20 @xinlian12 @moderakh @jay-most
