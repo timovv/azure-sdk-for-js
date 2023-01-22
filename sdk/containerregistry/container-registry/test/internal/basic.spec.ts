@@ -5,10 +5,15 @@
 // as part of our template project.
 import { ContainerRegistryClient, KnownContainerRegistryAudience } from "../../src";
 import { assert } from "chai";
-import { calculateDigest } from "../../src/utils/digest";
+import {
+  calculateDigest,
+  DigestMismatchError,
+  DigestVerifyingTransform,
+} from "../../src/utils/digest";
 import { Readable } from "stream";
 import { parseWWWAuthenticate } from "../../src/utils/wwwAuthenticateParser";
 import { expect } from "@azure/test-utils";
+import { readStreamToEnd } from "../../src/utils/helpers";
 
 describe("ContainerRegistryClient functional test", async function () {
   ["", null, undefined].forEach((value) => {
@@ -115,19 +120,42 @@ describe("RegistryArtifact functional test", async function () {
 });
 
 describe("digest calculation helper", () => {
-  it("should calculate the digest correctly from a buffer", async () => {
+  it("calculateDigest should calculate the digest correctly from a buffer", async () => {
     const buf = Buffer.from("Hello world!", "utf8");
     const expectedChecksum = "c0535e4be2b79ffd93291305436bf889314e4a3faec05ecffcbb7df31ad9e51a";
 
     assert.equal(await calculateDigest(buf), `sha256:${expectedChecksum}`);
   });
 
-  it("should calculate the digest correctly from a stream", async () => {
+  it("calculateDigest should calculate the digest correctly from a stream", async () => {
     const buf = Buffer.from("Hello world!", "utf8");
     const stream = Readable.from(buf);
     const expectedChecksum = "c0535e4be2b79ffd93291305436bf889314e4a3faec05ecffcbb7df31ad9e51a";
 
     assert.equal(await calculateDigest(stream), `sha256:${expectedChecksum}`);
+  });
+
+  it("DigestVerifyingTransform should pass content through when the digest matches", async () => {
+    const buf = Buffer.from("Hello world!", "utf8");
+    const stream = Readable.from(buf);
+    const expectedChecksum = "c0535e4be2b79ffd93291305436bf889314e4a3faec05ecffcbb7df31ad9e51a";
+
+    const output = await readStreamToEnd(
+      stream.pipe(new DigestVerifyingTransform(`sha256:${expectedChecksum}`))
+    );
+
+    assert.equal(output.toString("utf8"), "Hello world!");
+  });
+
+  it("DigestVerifyingTransform should throw when the digest does not match", async () => {
+    const buf = Buffer.from("Hello world!", "utf8");
+    const stream = Readable.from(buf);
+
+    try {
+      await readStreamToEnd(stream.pipe(new DigestVerifyingTransform("blah")));
+    } catch (e: unknown) {
+      assert.equal((e as DigestMismatchError).name, "DigestMismatchError");
+    }
   });
 });
 

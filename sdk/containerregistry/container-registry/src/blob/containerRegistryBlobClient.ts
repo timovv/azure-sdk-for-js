@@ -5,13 +5,15 @@ import {
   InternalPipelineOptions,
   bearerTokenAuthenticationPolicy,
   RestError,
+  redirectPolicyName,
+  createPipelineRequest,
 } from "@azure/core-rest-pipeline";
 import { TokenCredential } from "@azure/core-auth";
 import { GeneratedClient } from "../generated";
 import { ChallengeHandler } from "../containerRegistryChallengeHandler";
 import { ContainerRegistryRefreshTokenCredential } from "../containerRegistryTokenCredential";
 import { logger } from "../logger";
-import { calculateDigest } from "../utils/digest";
+import { DigestMismatchError, calculateDigest, DigestVerifyingTransform } from "../utils/digest";
 import {
   DeleteBlobOptions,
   DeleteManifestOptions,
@@ -50,17 +52,6 @@ function assertHasProperty<T, U extends keyof T>(
 }
 
 /**
- * Error thrown when the Docker content digest returned from the
- * server does not match the digest calculated from the content.
- */
-export class DigestMismatchError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "DigestMismatchError";
-  }
-}
-
-/**
  * Client options used to configure Container Registry Blob API requests.
  */
 export interface ContainerRegistryBlobClientOptions extends CommonClientOptions {
@@ -93,6 +84,7 @@ export class ContainerRegistryBlobClient {
   public readonly repositoryName: string;
 
   private client: GeneratedClient;
+  private redirectlessClient: GeneratedClient;
 
   /**
    * Creates an instance of a ContainerRegistryBlobClient for managing container images and artifacts.
@@ -146,16 +138,24 @@ export class ContainerRegistryBlobClient {
     const defaultScope = `${options.audience}/.default`;
     const serviceVersion = options.serviceVersion ?? LATEST_API_VERSION;
     const authClient = new GeneratedClient(endpoint, serviceVersion, internalPipelineOptions);
+
+    const bearerTokenPolicy = bearerTokenAuthenticationPolicy({
+      credential,
+      scopes: [defaultScope],
+      challengeCallbacks: new ChallengeHandler(
+        new ContainerRegistryRefreshTokenCredential(authClient, defaultScope, credential)
+      ),
+    });
+
     this.client = new GeneratedClient(endpoint, serviceVersion, internalPipelineOptions);
-    this.client.pipeline.addPolicy(
-      bearerTokenAuthenticationPolicy({
-        credential,
-        scopes: [defaultScope],
-        challengeCallbacks: new ChallengeHandler(
-          new ContainerRegistryRefreshTokenCredential(authClient, defaultScope, credential)
-        ),
-      })
+    this.client.pipeline.addPolicy(bearerTokenPolicy);
+    this.redirectlessClient = new GeneratedClient(
+      endpoint,
+      serviceVersion,
+      internalPipelineOptions
     );
+    this.redirectlessClient.pipeline.addPolicy(bearerTokenPolicy);
+    this.redirectlessClient.pipeline.removePolicy({ name: redirectPolicyName });
   }
 
   /**
@@ -369,16 +369,52 @@ export class ContainerRegistryBlobClient {
       "ContainerRegistryBlobClient.downloadBlob",
       options,
       async (updatedOptions) => {
-        const { readableStreamBody } = await this.client.containerRegistryBlob.getBlob(
-          this.repositoryName,
-          digest,
-          updatedOptions
-        );
+        return new Promise<DownloadBlobResult>((resolve, reject) =>
+          this.redirectlessClient.containerRegistryBlob.getBlob(this.repositoryName, digest, {
+            ...updatedOptions,
+            onResponse: async (rawResponse, flatResponse, error) => {
+              updatedOptions.onResponse?.(rawResponse, flatResponse, error);
 
-        return {
-          digest,
-          content: readableStreamBody ?? Readable.from([]),
-        };
+              if (rawResponse.status >= 400 && rawResponse.status <= 599) {
+                // Let promise reject naturally
+                return;
+              }
+
+              const dockerContentDigest = rawResponse.headers.get("docker-content-digest");
+              if (!dockerContentDigest) {
+                reject(new RestError("Expected docker-content-digest header in response"));
+              }
+
+              let content: NodeJS.ReadableStream;
+
+              if (
+                [300, 301, 302, 307].includes(rawResponse.status) &&
+                rawResponse.headers.has("location")
+              ) {
+                const newRequest = createPipelineRequest(rawResponse.request);
+                const newLocation = rawResponse.headers.get("location")!;
+
+                newRequest.headers.set("location", newLocation);
+                const redirectedResponse = await this.client.sendRequest(newRequest);
+
+                assertHasProperty(redirectedResponse, "readableStreamBody");
+                content = redirectedResponse.readableStreamBody;
+              } else {
+                assertHasProperty(rawResponse, "readableStreamBody");
+                content = rawResponse.readableStreamBody;
+              }
+
+              const verifiedContent = content.pipe(
+                new DigestVerifyingTransform(dockerContentDigest!)
+              );
+
+              resolve({
+                digest: dockerContentDigest!,
+                content: verifiedContent,
+              });
+            },
+          })
+        );
       }
     );
   }
