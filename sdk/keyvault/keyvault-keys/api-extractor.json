@@ -8,6 +8,11 @@
     "enabled": true,
     "reportFolder": "./review"
   },
+  "compiler": {
+    // Override the standard tsconfig.json to exclude the DOM lib.
+    // This prevents the type rollup from renaming certain types e.g. JsonWebKey to JsonWebKey_2.
+    "tsconfigFilePath": "./tsconfig.api-extractor.json"
+  },
   "dtsRollup": {
     "enabled": true,
     "untrimmedFilePath": "",
