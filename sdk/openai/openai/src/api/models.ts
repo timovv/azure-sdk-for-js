@@ -10,12 +10,8 @@
  */
 
 import { OperationOptions } from "@azure-rest/core-client";
-import {
-  AzureChatExtensionConfiguration,
-  FunctionDefinition,
-  FunctionCallPreset,
-  FunctionName,
-} from "../models/models.js";
+import { FunctionCallPreset, FunctionName } from "../../generated/src/index.js";
+import { AzureChatExtensionConfiguration, FunctionDefinition } from "../models/models.js";
 
 /**
  * This module contains models that we want to live side-by-side with the

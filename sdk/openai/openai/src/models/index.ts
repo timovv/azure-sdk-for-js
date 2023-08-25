@@ -41,5 +41,11 @@ export {
   ImageSize,
   ImageGenerationResponseFormat,
 } from "./models.js";
-export { GetEmbeddingsOptions, GetCompletionsOptions, ImageGenerationOptions } from "./options.js";
-export { AzureExtensionsOptions, GetChatCompletionsOptions } from "../api/models.js";
+export {
+  GetEmbeddingsOptions,
+  GetCompletionsOptions,
+  GetChatCompletionsOptions,
+  GetChatCompletionsWithAzureExtensionsOptions,
+  GetAzureBatchImageGenerationOperationStatusOptions,
+  BeginAzureBatchImageGenerationOptions,
+} from "./options.js";

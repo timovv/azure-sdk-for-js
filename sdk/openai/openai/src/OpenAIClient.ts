@@ -12,17 +12,23 @@
 import { KeyCredential, TokenCredential, isTokenCredential } from "@azure/core-auth";
 import { PipelinePolicy } from "@azure/core-rest-pipeline";
 import {
-  OpenAIClientOptions,
-  OpenAIContext,
-  createOpenAI,
-  getChatCompletions,
-  getCompletions,
-  getEmbeddings,
   getImages,
   listChatCompletions,
   listCompletions,
+} from "../sources/customizations/api/operations.js";
+import {
+  OpenAIClientOptions,
+  OpenAIContext,
+  beginAzureBatchImageGeneration,
+  createOpenAI,
+  getAzureBatchImageGenerationOperationStatus,
+  getChatCompletions,
+  getChatCompletionsWithAzureExtensions,
+  getCompletions,
+  getEmbeddings,
 } from "./api/index.js";
 import {
+  BatchImageGenerationOperationResponse,
   ChatCompletions,
   ChatMessage,
   Completions,
@@ -30,11 +36,14 @@ import {
   ImageGenerations,
 } from "./models/models.js";
 import {
+  BeginAzureBatchImageGenerationOptions,
+  GetAzureBatchImageGenerationOperationStatusOptions,
+  GetChatCompletionsOptions,
+  GetChatCompletionsWithAzureExtensionsOptions,
   GetCompletionsOptions,
   GetEmbeddingsOptions,
   ImageGenerationOptions,
 } from "./models/options.js";
-import { GetChatCompletionsOptions } from "./api/models.js";
 
 export { OpenAIClientOptions } from "./api/OpenAIContext.js";
 
@@ -110,6 +119,39 @@ export class OpenAIClient {
             ],
           }),
     });
+  }
+
+  /**
+   * Gets chat completions for the provided chat messages.
+   * This is an Azure-specific version of chat completions that supports integration with configured data sources and
+   * other augmentations to the base chat completions capabilities.
+   */
+  getChatCompletionsWithAzureExtensions(
+    messages: ChatMessage[],
+    deploymentId: string,
+    options: GetChatCompletionsWithAzureExtensionsOptions = {
+      requestOptions: {},
+    }
+  ): Promise<ChatCompletions> {
+    return getChatCompletionsWithAzureExtensions(this._client, messages, deploymentId, options);
+  }
+
+  /** Returns the status of the images operation */
+  getAzureBatchImageGenerationOperationStatus(
+    operationId: string,
+    options: GetAzureBatchImageGenerationOperationStatusOptions = {
+      requestOptions: {},
+    }
+  ): Promise<BatchImageGenerationOperationResponse> {
+    return getAzureBatchImageGenerationOperationStatus(this._client, operationId, options);
+  }
+
+  /** Starts the generation of a batch of images from a text caption */
+  beginAzureBatchImageGeneration(
+    prompt: string,
+    options: BeginAzureBatchImageGenerationOptions = { requestOptions: {} }
+  ): Promise<BatchImageGenerationOperationResponse> {
+    return beginAzureBatchImageGeneration(this._client, prompt, options);
   }
 
   /**

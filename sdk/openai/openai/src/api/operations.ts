@@ -11,6 +11,7 @@
 
 import { StreamableMethod, operationOptionsToRequestParameters } from "@azure-rest/core-client";
 import {
+  BatchImageGenerationOperationResponse,
   ChatCompletions,
   ChatMessage,
   Completions,
@@ -19,7 +20,9 @@ import {
   ImageLocation,
 } from "../models/models.js";
 import {
-  GetChatCompletionsOptions as GeneratedGetChatCompletionsOptions,
+  BeginAzureBatchImageGenerationOptions,
+  GetAzureBatchImageGenerationOperationStatusOptions,
+  GetChatCompletionsOptions,
   GetChatCompletionsWithAzureExtensionsOptions,
   GetCompletionsOptions,
   GetEmbeddingsOptions,
@@ -30,6 +33,9 @@ import {
   BeginAzureBatchImageGenerationDefaultResponse,
   BeginAzureBatchImageGenerationLogicalResponse,
   OpenAIContext as Client,
+  GetAzureBatchImageGenerationOperationStatus200Response,
+  GetAzureBatchImageGenerationOperationStatusDefaultResponse,
+  GetAzureBatchImageGenerationOperationStatusLogicalResponse,
   GetChatCompletions200Response,
   GetChatCompletionsDefaultResponse,
   GetChatCompletionsWithAzureExtensions200Response,
@@ -45,7 +51,6 @@ import {
 } from "../rest/index.js";
 import { getChatCompletionsResult, getCompletionsResult } from "./deserializers.js";
 import { getOaiSSEs } from "./oaiSse.js";
-import { GetChatCompletionsOptions } from "./models.js";
 
 export function _getEmbeddingsSend(
   context: Client,
@@ -227,7 +232,7 @@ export function _getChatCompletionsSend(
   context: Client,
   messages: ChatMessage[],
   deploymentId: string,
-  options: GeneratedGetChatCompletionsOptions = { requestOptions: {} }
+  options: GetChatCompletionsOptions = { requestOptions: {} }
 ): StreamableMethod<GetChatCompletions200Response | GetChatCompletionsDefaultResponse> {
   return context.path("/deployments/{deploymentId}/chat/completions", deploymentId).post({
     ...operationOptionsToRequestParameters(options),
@@ -392,7 +397,7 @@ export async function _getChatCompletionsWithAzureExtensionsDeserialize(
     | GetChatCompletionsWithAzureExtensionsDefaultResponse
 ): Promise<ChatCompletions> {
   if (isUnexpected(result)) {
-    throw result.body.error;
+    throw result.body;
   }
 
   return {
@@ -510,10 +515,67 @@ export async function getChatCompletionsWithAzureExtensions(
   return _getChatCompletionsWithAzureExtensionsDeserialize(result);
 }
 
+export function _getAzureBatchImageGenerationOperationStatusSend(
+  context: Client,
+  operationId: string,
+  options: GetAzureBatchImageGenerationOperationStatusOptions = {
+    requestOptions: {},
+  }
+): StreamableMethod<
+  | GetAzureBatchImageGenerationOperationStatus200Response
+  | GetAzureBatchImageGenerationOperationStatusDefaultResponse
+  | GetAzureBatchImageGenerationOperationStatusLogicalResponse
+> {
+  return context
+    .path("/operations/images/{operationId}", operationId)
+    .get({ ...operationOptionsToRequestParameters(options) });
+}
+
+export async function _getAzureBatchImageGenerationOperationStatusDeserialize(
+  result:
+    | GetAzureBatchImageGenerationOperationStatus200Response
+    | GetAzureBatchImageGenerationOperationStatusDefaultResponse
+    | GetAzureBatchImageGenerationOperationStatusLogicalResponse
+): Promise<BatchImageGenerationOperationResponse> {
+  if (isUnexpected(result)) {
+    throw result.body.error;
+  }
+
+  return {
+    id: result.body["id"],
+    created: new Date(result.body["created"]),
+    expires: result.body["expires"],
+    result: !result.body.result
+      ? undefined
+      : {
+          created: new Date(result.body.result?.["created"]),
+          data: result.body.result?.["data"] as any,
+        },
+    status: result.body["status"],
+    error: !result.body.error ? undefined : result.body.error,
+  };
+}
+
+/** Returns the status of the images operation */
+export async function getAzureBatchImageGenerationOperationStatus(
+  context: Client,
+  operationId: string,
+  options: GetAzureBatchImageGenerationOperationStatusOptions = {
+    requestOptions: {},
+  }
+): Promise<BatchImageGenerationOperationResponse> {
+  const result = await _getAzureBatchImageGenerationOperationStatusSend(
+    context,
+    operationId,
+    options
+  );
+  return _getAzureBatchImageGenerationOperationStatusDeserialize(result);
+}
+
 export function _beginAzureBatchImageGenerationSend(
   context: Client,
   prompt: string,
-  options: ImageGenerationOptions = { requestOptions: {} }
+  options: BeginAzureBatchImageGenerationOptions = { requestOptions: {} }
 ): StreamableMethod<
   | BeginAzureBatchImageGeneration202Response
   | BeginAzureBatchImageGenerationDefaultResponse
@@ -529,6 +591,41 @@ export function _beginAzureBatchImageGenerationSend(
       user: options?.user,
     },
   });
+}
+
+export async function _beginAzureBatchImageGenerationDeserialize(
+  result:
+    | BeginAzureBatchImageGeneration202Response
+    | BeginAzureBatchImageGenerationDefaultResponse
+    | BeginAzureBatchImageGenerationLogicalResponse
+): Promise<BatchImageGenerationOperationResponse> {
+  if (isUnexpected(result)) {
+    throw result.body.error;
+  }
+
+  return {
+    id: result.body["id"],
+    created: new Date(result.body["created"]),
+    expires: result.body["expires"],
+    result: !result.body.result
+      ? undefined
+      : {
+          created: new Date(result.body.result?.["created"]),
+          data: result.body.result?.["data"] as any,
+        },
+    status: result.body["status"],
+    error: !result.body.error ? undefined : result.body.error,
+  };
+}
+
+/** Starts the generation of a batch of images from a text caption */
+export async function beginAzureBatchImageGeneration(
+  context: Client,
+  prompt: string,
+  options: BeginAzureBatchImageGenerationOptions = { requestOptions: {} }
+): Promise<BatchImageGenerationOperationResponse> {
+  const result = await _beginAzureBatchImageGenerationSend(context, prompt, options);
+  return _beginAzureBatchImageGenerationDeserialize(result);
 }
 
 export function listCompletions(
@@ -650,4 +747,19 @@ function _getChatCompletionsSendX(
         dataSources: options.azureExtensionOptions?.extensions,
       })
     : _getChatCompletionsSend(context, messages, deploymentName, options);
+}
+
+/**
+ * Gets chat completions for the provided chat messages.
+ * Completions support a wide variety of tasks and generate text that continues from or "completes"
+ * provided prompt data.
+ */
+async function _getChatCompletions(
+  context: Client,
+  messages: ChatMessage[],
+  deploymentId: string,
+  options: GetChatCompletionsOptions = { requestOptions: {} }
+): Promise<ChatCompletions> {
+  const result = await _getChatCompletionsSend(context, messages, deploymentId, options);
+  return _getChatCompletionsDeserialize(result);
 }

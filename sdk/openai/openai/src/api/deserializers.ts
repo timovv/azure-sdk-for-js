@@ -9,14 +9,19 @@
  * If you need to make changes, please do so in the original source file, \{project-root\}/sources/custom
  */
 
-import { ChatMessage, ChatRole, Completions, ContentFilterResults } from "../models/models.js";
+import {
+  ChatMessage,
+  ChatRole,
+  Completions,
+  ContentFilterResults,
+} from "../../generated/src/models/models.js";
 import {
   ChatChoiceOutput,
   ChatMessageOutput,
   ChoiceOutput,
   ContentFilterResultsOutput,
   PromptFilterResultOutput,
-} from "../rest/outputModels.js";
+} from "../../generated/src/rest/outputModels.js";
 import { ChatCompletions } from "../models/models.js";
 
 export function getCompletionsResult(body: Record<string, any>): Omit<Completions, "usage"> {
