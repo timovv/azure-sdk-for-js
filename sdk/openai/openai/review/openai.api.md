@@ -45,6 +45,14 @@ export interface BatchImageGenerationOperationResponse {
     status: AzureOpenAIOperationState;
 }
 
+// @public (undocumented)
+export interface BeginAzureBatchImageGenerationOptions extends OperationOptions {
+    n?: number;
+    responseFormat?: ImageGenerationResponseFormat;
+    size?: ImageSize;
+    user?: string;
+}
+
 // @public
 export interface ChatChoice {
     contentFilterResults?: ContentFilterResults;
@@ -175,9 +183,32 @@ export interface FunctionName {
     name: string;
 }
 
+// @public (undocumented)
+export interface GetAzureBatchImageGenerationOperationStatusOptions extends OperationOptions {
+}
+
 // @public
 export interface GetChatCompletionsOptions extends OperationOptions {
     azureExtensionOptions?: AzureExtensionsOptions;
+    dataSources?: AzureChatExtensionConfiguration[];
+    frequencyPenalty?: number;
+    functionCall?: FunctionCallPreset | FunctionName;
+    functions?: FunctionDefinition[];
+    logitBias?: Record<string, number>;
+    maxTokens?: number;
+    model?: string;
+    n?: number;
+    presencePenalty?: number;
+    stop?: string[];
+    stream?: boolean;
+    temperature?: number;
+    topP?: number;
+    user?: string;
+}
+
+// @public (undocumented)
+export interface GetChatCompletionsWithAzureExtensionsOptions extends OperationOptions {
+    dataSources?: AzureChatExtensionConfiguration[];
     frequencyPenalty?: number;
     functionCall?: FunctionCallPreset | FunctionName;
     functions?: FunctionDefinition[];
@@ -247,12 +278,15 @@ export interface ImagePayload {
 // @public
 export type ImageSize = string;
 
-// @public (undocumented)
+// @public
 export class OpenAIClient {
     constructor(endpoint: string, credential: KeyCredential, options?: OpenAIClientOptions);
     constructor(endpoint: string, credential: TokenCredential, options?: OpenAIClientOptions);
     constructor(openAiApiKey: KeyCredential, options?: OpenAIClientOptions);
+    beginAzureBatchImageGeneration(prompt: string, options?: BeginAzureBatchImageGenerationOptions): Promise<BatchImageGenerationOperationResponse>;
+    getAzureBatchImageGenerationOperationStatus(operationId: string, options?: GetAzureBatchImageGenerationOperationStatusOptions): Promise<BatchImageGenerationOperationResponse>;
     getChatCompletions(deploymentName: string, messages: ChatMessage[], options?: GetChatCompletionsOptions): Promise<ChatCompletions>;
+    getChatCompletionsWithAzureExtensions(messages: ChatMessage[], deploymentId: string, options?: GetChatCompletionsWithAzureExtensionsOptions): Promise<ChatCompletions>;
     getCompletions(deploymentName: string, prompt: string[], options?: GetCompletionsOptions): Promise<Completions>;
     getEmbeddings(deploymentName: string, input: string[], options?: GetEmbeddingsOptions): Promise<Embeddings>;
     getImages(prompt: string, options?: ImageGenerationOptions): Promise<ImageGenerations>;
@@ -276,5 +310,7 @@ export interface PromptFilterResult {
     contentFilterResults?: ContentFilterResults;
     promptIndex: number;
 }
+
+// (No @packageDocumentation comment for this package)
 
 ```

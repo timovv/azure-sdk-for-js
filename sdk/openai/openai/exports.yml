@@ -1,0 +1,6 @@
+esm: true
+exports:
+  - outputPath: src/index.ts
+    sources:
+      - path: sources/generated/src/index.ts
+      - path: sources/customizations/index.ts
