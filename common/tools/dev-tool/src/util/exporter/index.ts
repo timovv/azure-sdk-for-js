@@ -1,12 +1,12 @@
 import { parse as parseYAML } from "yaml";
 import {
   Project,
-  ExportedDeclarations,
   StatementStructures,
   InterfaceDeclarationStructure,
   Structure,
   ClassDeclarationStructure,
   SourceFile,
+  Node,
 } from "ts-morph";
 import fs from "fs-extra";
 import path from "path";
@@ -21,7 +21,7 @@ interface ExportSource extends ExportSourceCommon {
 }
 
 interface ParsedExportSource extends ExportSource {
-  source: SourceFile,
+  source: SourceFile;
 }
 
 interface ExportsFileDefinition {
@@ -34,18 +34,27 @@ interface ExportsYml {
   exports: ExportsFileDefinition[];
 }
 
-type ExportableSymbol =
-  | {
-    kind: "directExport";
-    name: string;
-    sourcePath: string;
-    structure: StatementStructures;
-  }
-  | {
-    kind: "emit";
-    name: string;
-    structure: StatementStructures;
-  };
+interface ReferenceLocator {
+  symbolName: string;
+  sourceFilePath: string;
+}
+
+interface DirectExportableSymbol {
+  kind: "directExport";
+  name: string;
+  sourcePath: string;
+  structure: StatementStructures;
+  references: ReferenceLocator[];
+}
+
+interface EmittedExportableSymbol {
+  kind: "emit";
+  name: string;
+  structure: StatementStructures;
+  references: ReferenceLocator[];
+}
+
+type ExportableSymbol = DirectExportableSymbol | EmittedExportableSymbol;
 
 const EXPORTS_YML = "exports.yml";
 
@@ -64,8 +73,8 @@ const combineSet =
     (a: T[], b: T[]): T[] => {
       // Really we should provide a Combine<T> for this case
       const aIntersectB = b.filter((x) => a.some((y) => eq(x, y)));
-      const aMinusB = a.filter((x) => !aIntersectB.some(y => eq(x, y)));
-      const bMinusA = b.filter((x) => !aIntersectB.some(y => eq(x, y)));
+      const aMinusB = a.filter((x) => !aIntersectB.some((y) => eq(x, y)));
+      const bMinusA = b.filter((x) => !aIntersectB.some((y) => eq(x, y)));
 
       return [...aMinusB, ...aIntersectB, ...bMinusA];
     };
@@ -128,7 +137,6 @@ const combineOr =
       } else if (c2) {
         return c2(a, b);
       } else {
-        console.log(a, b);
         throw new Error("Could not combine");
       }
     };
@@ -146,13 +154,20 @@ const combineExportableSymbol: Combine<ExportableSymbol> = combineObject<Exporta
   // Force kind = emit since we are now emitting the output instead of exporting another symbol
   kind: combineToLiteral("emit"),
   structure: combineStructure,
+  references: combineSet(
+    (a, b) => a.sourceFilePath === b.sourceFilePath && a.symbolName === b.symbolName
+  ),
 });
 
 async function readExportsYml(): Promise<ExportsYml> {
   return parseYAML(await fs.readFile(path.join(process.cwd(), EXPORTS_YML), "utf-8")) as ExportsYml;
 }
 
-async function emitExportsFile(project: Project, esm: boolean, definition: ExportsFileDefinition): Promise<void> {
+async function emitExportsFile(
+  project: Project,
+  esm: boolean,
+  definition: ExportsFileDefinition
+): Promise<void> {
   const output = project.createSourceFile(definition.outputPath, undefined, { overwrite: true });
 
   const sources: ParsedExportSource[] = definition.sources.map((source) => ({
@@ -179,13 +194,27 @@ async function emitExportsFile(project: Project, esm: boolean, definition: Expor
       }
 
       const declaration = declarations[0];
+
       const structure = (declaration as any).getStructure() as StatementStructures;
+
+      const references: ReferenceLocator[] = Node.isReferenceFindable(declaration)
+        ? declaration
+          .findReferencesAsNodes()
+          .map((ref) => ref.getFirstAncestor(Node.isExportable))
+          .filter((x) => x)
+          .filter(Node.isNamed)
+          .map((node) => ({
+            sourceFilePath: path.relative(process.cwd(), node.getSourceFile().getFilePath()),
+            symbolName: node.getName(),
+          }))
+        : [];
 
       const exportableSymbol: ExportableSymbol = {
         kind: "directExport",
         name: symbolName,
         sourcePath: source.path,
         structure,
+        references,
       };
 
       if (symbolNameToExport.has(symbolName)) {
@@ -199,21 +228,51 @@ async function emitExportsFile(project: Project, esm: boolean, definition: Expor
     }
   }
 
-  // 2. For things we can export directly ('directExport', everything at the moment), group by file name and emit a single export statement per file
+  let directExports = Array.from(symbolNameToExport.values()).filter(
+    (x) => x.kind === "directExport"
+  ) as DirectExportableSymbol[];
+  const emitExports = Array.from(symbolNameToExport.values()).filter(
+    (x) => x.kind === "emit"
+  ) as EmittedExportableSymbol[];
+
+  // Inspect references for our direct exports. If anything references an emitted type, then the direct export itself should be emitted.
+  // This should be done recursively.
+  while (true) {
+    const directExportsReferencingEmittedExports = directExports.filter((directExport) =>
+      emitExports.some((emitExport) =>
+        emitExport.references.find(
+          (reference) =>
+            reference.symbolName === directExport.name
+        )
+      )
+    );
+
+    if (directExportsReferencingEmittedExports.length === 0) {
+      break;
+    }
+
+    for (const directExport of directExportsReferencingEmittedExports) {
+      // mark as emit
+      emitExports.push({ ...directExport, kind: "emit" });
+    }
+
+    directExports = directExports.filter(
+      (x) => !directExportsReferencingEmittedExports.includes(x)
+    );
+  }
+
+  // 2. For things which we are now emitting, emit the expected output.
+  for (const exp of emitExports) {
+    output.addStatements([exp.structure]);
+  }
+
+  // 3. For things we can export directly ('directExport', everything at the moment), group by file name and emit a single export statement per file
   const fileToExportSymbols = new Map<string, string[]>();
-  for (const [symbolName, exp] of symbolNameToExport) {
+  for (const exp of directExports) {
     if (exp.kind !== "directExport") continue;
 
     const list = fileToExportSymbols.get(exp.sourcePath) ?? [];
-    fileToExportSymbols.set(exp.sourcePath, [...list, symbolName]);
-  }
-
-  let didEmit = false;
-  for (const [_symbolName, exp] of symbolNameToExport) {
-    if (exp.kind !== "emit") continue;
-
-    didEmit = true;
-    output.addStatements([exp.structure]);
+    fileToExportSymbols.set(exp.sourcePath, [...list, exp.name]);
   }
 
   for (const [fileName, symbolNames] of fileToExportSymbols) {

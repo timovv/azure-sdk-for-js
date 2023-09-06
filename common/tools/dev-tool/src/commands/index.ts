@@ -18,6 +18,7 @@ export const baseCommands = {
   run: () => import("./run"),
   migrate: () => import("./migrate"),
   customization: () => import("./customization"),
+  exports: () => import("./exports"),
 } as const;
 
 /**
