@@ -39,19 +39,19 @@ interface ReferenceLocator {
   sourceFilePath: string;
 }
 
-interface DirectExportableSymbol {
-  kind: "directExport";
+interface ExportableSymbolCommon {
   name: string;
-  sourcePath: string;
   structure: StatementStructures;
   references: ReferenceLocator[];
 }
 
-interface EmittedExportableSymbol {
+interface DirectExportableSymbol extends ExportableSymbolCommon {
+  kind: "directExport";
+  sourcePath: string;
+}
+
+interface EmittedExportableSymbol extends ExportableSymbolCommon {
   kind: "emit";
-  name: string;
-  structure: StatementStructures;
-  references: ReferenceLocator[];
 }
 
 type ExportableSymbol = DirectExportableSymbol | EmittedExportableSymbol;
@@ -141,6 +141,14 @@ const combineOr =
       }
     };
 
+const tryCombine = <T>(attempt: Combine<T>, otherwise: Combine<T>): Combine<T> => (a, b) => {
+  try {
+    return attempt(a, b);
+  } catch (e) {
+    return otherwise(a, b);
+  }
+}
+
 const combineStructure: Combine<StatementStructures> = combineOr<
   StatementStructures,
   InterfaceDeclarationStructure
@@ -150,14 +158,16 @@ const combineStructure: Combine<StatementStructures> = combineOr<
   combineOr<StatementStructures, ClassDeclarationStructure>(Structure.isClass, combineClasses)
 );
 
-const combineExportableSymbol: Combine<ExportableSymbol> = combineObject<ExportableSymbol>({
-  // Force kind = emit since we are now emitting the output instead of exporting another symbol
+const combineToEmit: Combine<ExportableSymbol> = combineObject<ExportableSymbol>({
+  // Force kind = emit since we are now emitting the output instead of exporting another symbol 
   kind: combineToLiteral("emit"),
   structure: combineStructure,
   references: combineSet(
     (a, b) => a.sourceFilePath === b.sourceFilePath && a.symbolName === b.symbolName
   ),
 });
+
+const combineExportableSymbol = tryCombine<ExportableSymbol>(combineToEmit, combineUseRight);
 
 async function readExportsYml(): Promise<ExportsYml> {
   return parseYAML(await fs.readFile(path.join(process.cwd(), EXPORTS_YML), "utf-8")) as ExportsYml;
@@ -169,6 +179,7 @@ async function emitExportsFile(
   definition: ExportsFileDefinition
 ): Promise<void> {
   const output = project.createSourceFile(definition.outputPath, undefined, { overwrite: true });
+  console.log("Emitting", output.getFilePath());
 
   const sources: ParsedExportSource[] = definition.sources.map((source) => ({
     ...source,
@@ -179,6 +190,7 @@ async function emitExportsFile(
 
   // 1. Go through all the source files and gather exports
   for (const source of sources) {
+    console.log("  Processing", source.path);
     for (const [symbolName, declarations] of source.source.getExportedDeclarations()) {
       if (source.omit && source.omit.includes(symbolName)) {
         console.log(`Omitting exported symbol ${symbolName} from ${source.path}`);
@@ -187,7 +199,7 @@ async function emitExportsFile(
 
       if (declarations.length !== 1) {
         console.warn(
-          "Multiple declarations named " +
+          "    Multiple declarations named " +
           symbolName +
           ". Using the first one. This may cause unexpected issues."
         );
@@ -218,9 +230,11 @@ async function emitExportsFile(
       };
 
       if (symbolNameToExport.has(symbolName)) {
+        const combination = combineExportableSymbol(symbolNameToExport.get(symbolName)!, exportableSymbol);
+        console.log(`    Combining`, symbolName, `(got ${combination.kind}, ${combination.kind === 'directExport' ? combination.sourcePath : "emitted"})`);
         symbolNameToExport.set(
           symbolName,
-          combineExportableSymbol(symbolNameToExport.get(symbolName)!, exportableSymbol)
+          combination,
         );
       } else {
         symbolNameToExport.set(symbolName, exportableSymbol);
@@ -287,8 +301,6 @@ async function emitExportsFile(
   // Add the disclaimer
   output.insertText(0, EXPORTS_FILE_FRONTMATTER);
   output.fixMissingImports();
-
-  console.log("Emitting", output.getFilePath());
 }
 
 export async function makeExports(): Promise<void> {
@@ -297,6 +309,11 @@ export async function makeExports(): Promise<void> {
   const tsMorphProject = new Project({
     tsConfigFilePath: path.join(project.path, "tsconfig.json"),
   });
+
+  for (const file of exportsYml.exports) {
+    tsMorphProject.getSourceFile(file.outputPath)?.deleteImmediately();
+  }
+
   for (const file of exportsYml.exports) {
     await emitExportsFile(tsMorphProject, exportsYml.esm ?? false, file);
   }
