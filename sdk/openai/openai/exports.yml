@@ -1,6 +1,17 @@
 esm: true
 exports:
-  - outputPath: src/index.ts
+  - outputPath: src/index.exports.ts
     sources:
-      - path: sources/generated/src/index.ts
-      - path: sources/customizations/index.ts
+      - path: src/generated/src/index.ts
+      - path: src/customizations/index.ts
+  - outputPath: src/api.exports.ts
+    sources:
+      - path: src/generated/src/api/index.ts
+      - path: src/customizations/api/index.ts
+  - outputPath: src/models.exports.ts
+    sources:
+      - path: src/generated/src/models/index.ts
+      - path: src/customizations/models/index.ts
+  - outputPath: src/rest.exports.ts
+    sources:
+      - path: src/generated/src/rest/index.ts

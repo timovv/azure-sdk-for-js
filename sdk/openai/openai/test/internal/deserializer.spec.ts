@@ -5,7 +5,7 @@ import { assert } from "@azure/test-utils";
 import {
   getChatCompletionsResult,
   getCompletionsResult,
-} from "../../sources/customizations/api/deserializers.js";
+} from "../../src/customizations/api/deserializers.js";
 
 describe("deserializers", () => {
   describe("getCompletionsResult", () => {

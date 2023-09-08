@@ -22,7 +22,7 @@ import {
   isLiveMode,
   isPlaybackMode,
 } from "@azure-tools/test-recorder";
-import { OpenAIKeyCredential } from "../../../src/index.js";
+import { OpenAIKeyCredential } from "../../../src/index.exports.js";
 
 export async function withDeployment<T>(
   deployments: string[],

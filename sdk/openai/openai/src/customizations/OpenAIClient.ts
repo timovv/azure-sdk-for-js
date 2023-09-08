@@ -24,11 +24,11 @@ import { GetChatCompletionsOptions } from "./api/models.js";
 import { ImageGenerationOptions } from "./models/options.js";
 import { PipelinePolicy } from "@azure/core-rest-pipeline";
 
-function createOpenAIEndpoint(version: number): string {
+export function createOpenAIEndpoint(version: number): string {
   return `https://api.openai.com/v${version}`;
 }
 
-function isCred(cred: Record<string, any>): cred is TokenCredential | KeyCredential {
+export function isCred(cred: Record<string, any>): cred is TokenCredential | KeyCredential {
   return isTokenCredential(cred) || cred.key !== undefined;
 }
 
@@ -238,7 +238,7 @@ export class OpenAIClient {
   }
 }
 
-function getPolicy(): PipelinePolicy {
+export function getPolicy(): PipelinePolicy {
   const policy: PipelinePolicy = {
     name: "openAiEndpoint",
     sendRequest: (request, next) => {

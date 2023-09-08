@@ -22,7 +22,7 @@ import {
 import { logger } from "./utils/logger.js";
 import { createHttpHeaders, createPipelineRequest } from "@azure/core-rest-pipeline";
 import { getImageDimensions } from "./utils/getImageDimensions.js";
-import { OpenAIClient, ImageLocation } from "../../src/index.js";
+import { OpenAIClient, ImageLocation } from "../../src/index.exports.js";
 
 describe("OpenAI", function () {
   let recorder: Recorder;

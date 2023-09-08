@@ -13,7 +13,7 @@ import {
   ContentFilterResult,
   ContentFilterResults,
   FunctionCall,
-} from "../../../src/index.js";
+} from "../../../src/index.exports.js";
 
 function ifDefined(
   val: any,

@@ -3,8 +3,8 @@
   "version": "1.0.0-beta.6",
   "description": "An isomorphic client library for Azure OpenAI.",
   "sdk-type": "client",
-  "main": "dist/index.cjs",
-  "module": "dist-esm/src/index.js",
+  "main": "dist/index.exports.cjs",
+  "module": "dist-esm/src/index.exports.js",
   "browser": {
     "./dist-esm/src/api/getSSEs.js": "./dist-esm/src/api/getSSEs.browser.js",
     "./dist-esm/test/public/utils/getImageDimensions.js": "./dist-esm/test/public/utils/getImageDimensions.browser.js"
@@ -12,21 +12,21 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./types/src/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist-esm/src/index.js"
+      "types": "./types/src/index.exports.d.ts",
+      "require": "./dist/index.exports.cjs",
+      "import": "./dist-esm/src/index.exports.js"
     },
     "./api": {
-      "types": "./types/src/api/index.d.ts",
-      "import": "./dist-esm/src/api/index.js"
+      "types": "./types/src/api.exports.d.ts",
+      "import": "./dist-esm/src/api/api.exports.js"
     },
     "./models": {
       "types": "./types/src/api/models.d.ts",
       "import": "./dist-esm/src/api/models.js"
     },
     "./rest": {
-      "types": "./types/src/rest/index.d.ts",
-      "import": "./dist-esm/src/rest/index.js"
+      "types": "./types/src/rest.exports.d.ts",
+      "import": "./dist-esm/src/rest.exports.js"
     }
   },
   "//metadata": {
@@ -42,19 +42,19 @@
     "audit": "node ../../../common/scripts/rush-audit.js && rimraf node_modules package-lock.json && npm i --package-lock-only 2>&1 && npm audit",
     "build:samples": "echo Obsolete",
     "generate": "pwsh ../../../eng/common/scripts/TypeSpec-Project-Sync.ps1 . && pwsh ../../../eng/common/scripts/TypeSpec-Project-Generate.ps1 .",
-    "customize": "rimraf src && dev-tool customization apply -s sources/generated/src && npm run format",
+    "customize": "dev-tool exports apply && npm run format",
     "build": "npm run clean && tsc -p . && dev-tool run bundle && api-extractor run --local",
     "build:test": "tsc -p . && dev-tool run bundle",
     "check-format": "prettier --list-different --config ../../../.prettierrc.json --ignore-path ../../../.prettierignore \"src/**/*.ts\" \"test/**/*.ts\" \"*.{js,json}\"",
     "clean": "rimraf dist dist-* temp types *.tgz *.log",
     "execute:samples": "dev-tool samples run samples-dev",
     "extract-api": "tsc -p . && api-extractor run --local",
-    "format": "prettier --write --config ../../../.prettierrc.json --ignore-path ../../../.prettierignore \"sources/customizations/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"samples-dev/**/*.ts\" \"*.{js,json}\"",
+    "format": "prettier --write --config ../../../.prettierrc.json --ignore-path ../../../.prettierignore \"src/**/*.ts\" \"test/**/*.ts\" \"samples-dev/**/*.ts\" \"*.{js,json}\"",
     "integration-test:browser": "npm run unit-test:browser",
     "integration-test:node": "dev-tool run test:node-js-input -- --timeout 5000000 \"dist-esm/test/public/{,!(browser)/**/}/*.spec.js\"",
     "integration-test": "npm run integration-test:node && npm run integration-test:browser",
-    "lint:fix": "eslint README.md package.json api-extractor.json sources src test --ext .ts,.javascript,.js --fix --fix-type [problem,suggestion]",
-    "lint": "eslint README.md package.json api-extractor.json sources src test --ext .ts,.javascript,.js",
+    "lint:fix": "eslint README.md package.json api-extractor.json src test --ext .ts,.javascript,.js --fix --fix-type [problem,suggestion]",
+    "lint": "eslint README.md package.json api-extractor.json src test --ext .ts,.javascript,.js",
     "pack": "npm pack 2>&1",
     "test:browser": "npm run clean && npm run build && npm run integration-test:browser",
     "test:node": "npm run clean && tsc -p . && npm run integration-test:node",

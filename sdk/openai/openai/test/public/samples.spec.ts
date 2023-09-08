@@ -4,9 +4,9 @@
 import { Recorder } from "@azure-tools/test-recorder";
 import { assert } from "@azure/test-utils";
 import { Context } from "mocha";
-import { OpenAIClient } from "../../src/index.js";
+import { OpenAIClient } from "../../src/index.exports.js";
 import { createClient, startRecorder } from "./utils/recordedClient.js";
-import { ImageLocation } from "../../src/index.js";
+import { ImageLocation } from "../../src/index.exports.js";
 describe("README samples", () => {
   let recorder: Recorder;
   let client: OpenAIClient;

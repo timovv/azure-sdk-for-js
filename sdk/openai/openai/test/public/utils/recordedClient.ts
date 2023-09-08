@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { OpenAIClient, OpenAIKeyCredential } from "../../../src/index.js";
+import { OpenAIClient, OpenAIKeyCredential } from "../../../src/index.exports.js";
 import {
   Recorder,
   RecorderStartOptions,

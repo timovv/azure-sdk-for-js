@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { Client } from "@azure-rest/core-client";
-import { getSSEs } from "../../src/api/getSSEs.js";
+import { getSSEs } from "../../src/customizations/api/getSSEs.js";
 import {
   assertAsyncIterable,
   genChunks,
