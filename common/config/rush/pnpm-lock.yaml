@@ -4447,7 +4447,7 @@ packages:
     dependencies:
       semver: 7.5.4
       shelljs: 0.8.5
-      typescript: 5.4.0-dev.20231117
+      typescript: 5.4.0-dev.20231118
     dev: false
 
   /downlevel-dts@0.11.0:
@@ -4456,7 +4456,7 @@ packages:
     dependencies:
       semver: 7.5.4
       shelljs: 0.8.5
-      typescript: 5.4.0-dev.20231117
+      typescript: 5.4.0-dev.20231118
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -9158,8 +9158,8 @@ packages:
     hasBin: true
     dev: false
 
-  /typescript@5.4.0-dev.20231117:
-    resolution: {integrity: sha512-qJs5vq279esPS+UX+NlDaSB8aDc9NiC1VLo6cHGrEVMUV8e9WTMic5T92KgDsExf239vViwmKNvtSMGf90aDOA==}
+  /typescript@5.4.0-dev.20231118:
+    resolution: {integrity: sha512-ZrQd4CI6YXINmXfnDSNG26zo+qAAh3UXig2GREmT9wOqmxceVHE7wbeP4PU3IBIpea8P22WEcB/cP33yPsxjsA==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: false
@@ -9242,6 +9242,11 @@ packages:
   /untildify@4.0.0:
     resolution: {integrity: sha512-KK8xQ1mkzZeg9inewmFVDNkg3l5LUhoq9kN6iWYB/CC9YMG8HA+c1Q8HwDe6dEX7kErrEVNVBO3fWsVq5iDgtw==}
     engines: {node: '>=8'}
+    dev: false
+
+  /upath@2.0.1:
+    resolution: {integrity: sha512-1uEe95xksV1O0CYKXo8vQvN1JEbtJp7lb7C5U9HMsIp6IVwntkH/oNUzyVNQSd4S1sYk2FpSSW44FqMc8qee5w==}
+    engines: {node: '>=4'}
     dev: false
 
   /update-browserslist-db@1.0.13(browserslist@4.22.1):
@@ -17536,7 +17541,7 @@ packages:
     dev: false
 
   file:projects/dev-tool.tgz:
-    resolution: {integrity: sha512-PyKhkqBED7QMfHdGMUq2AFlWDqPeMu/B0cwiLVDRnxME0D0194f9UDKwc8z9XiperEulcnFljkFq+ma7ECIwNg==, tarball: file:projects/dev-tool.tgz}
+    resolution: {integrity: sha512-aCzuk4l/pEYCnxvsuKMeuYxzJJuZOw9pAr3hjFAQ4rqsVYelkfDISULr856k9QjFBDhJmN6xg1Hyxwr/A5m5WQ==, tarball: file:projects/dev-tool.tgz}
     name: '@rush-temp/dev-tool'
     version: 0.0.0
     dependencies:
@@ -17587,6 +17592,7 @@ packages:
       ts-node: 10.9.1(@types/node@18.18.9)(typescript@5.2.2)
       tslib: 2.6.2
       typescript: 5.2.2
+      upath: 2.0.1
       yaml: 2.3.4
     transitivePeerDependencies:
       - '@swc/core'
