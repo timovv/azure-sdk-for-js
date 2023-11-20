@@ -30,6 +30,7 @@ import {
 } from "../rest/index.js";
 import { foo } from "./foo.js";
 import { AnalyzeResult, ColorType, Widget } from "./models.js";
+import { AnalyzeWidgetOptions, analyzeWidget as _analyzeWidget } from "./operations.js";
 
 export interface ListWidgetsOptions extends RequestOptions {}
 

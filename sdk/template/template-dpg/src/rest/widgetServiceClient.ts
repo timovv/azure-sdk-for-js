@@ -13,6 +13,7 @@ import { ClientOptions, addCredentialPipelinePolicy, getClient } from "@azure-re
 import { TokenCredential, isTokenCredential } from "@azure/core-auth";
 import { logger } from "../logger.js";
 import { WidgetServiceContext } from "./clientDefinitions.js";
+import _createClient from "./widgetServiceClient.js";
 
 /**
  * This customization adds credential support to the client. And overloads for when it is optional
