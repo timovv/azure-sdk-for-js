@@ -316,9 +316,9 @@ export type ClientOptions = PipelineOptions & {
     apiKeyHeaderName?: string;
   };
   /**
-   * Base url for the client
+   * Endpoint for the client
    */
-  baseUrl?: string;
+  endpoint?: string;
   /**
    * Options for setting a custom apiVersion.
    */
