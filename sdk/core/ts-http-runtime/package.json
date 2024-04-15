@@ -1,5 +1,5 @@
 {
-  "name": "@typespec/ts-http-runtime",
+  "name": "what-should-the-name-of-this-package-be",
   "version": "1.0.0-beta.1",
   "description": "Isomorphic client library for making HTTP requests in node.js and browser.",
   "sdk-type": "client",
