@@ -84,6 +84,15 @@ export class RestError extends Error {
   [custom](): string {
     return `RestError: ${this.message} \n ${errorSanitizer.sanitize(this)}`;
   }
+
+  /**
+   * custom toJSON implementation for serialization to prevent potential leaked secrets in log output
+   */
+  toJSON(): unknown {
+    // Since toJSON expects an object, the simplest way to sanitize here is to use the
+    // sanitizer to sanitize into JSON, parse it back, and then return it.
+    return JSON.parse(errorSanitizer.sanitize({ ...this, toJSON: undefined }));
+  }
 }
 
 /**
