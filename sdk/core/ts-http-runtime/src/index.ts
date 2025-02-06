@@ -12,11 +12,11 @@ declare global {
 export { AbortSignalLike } from "./abort-controller/AbortSignalLike.js";
 export { AbortError } from "./abort-controller/AbortError.js";
 export {
-  createClientLogger,
   TypeSpecRuntimeLogger,
   type TypeSpecRuntimeClientLogger,
   type Debugger,
-} from "./logger/logger.js";
+} from "./logger/index.js";
+export { createClientLogger } from "./logger/logger.js";
 export type {
   BodyPart,
   FormDataValue,

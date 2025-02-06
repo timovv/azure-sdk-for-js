@@ -3,24 +3,16 @@
 
 import type { PipelinePolicy } from "../pipeline.js";
 import type { TlsSettings } from "../interfaces.js";
+import { __tlsPolicy, __tlsPolicyName } from "@typespec/ts-http-runtime/_internal";
 
 /**
  * Name of the TLS Policy
  */
-export const tlsPolicyName = "tlsPolicy";
+export const tlsPolicyName = __tlsPolicyName;
 
 /**
  * Gets a pipeline policy that adds the client certificate to the HttpClient agent for authentication.
  */
 export function tlsPolicy(tlsSettings?: TlsSettings): PipelinePolicy {
-  return {
-    name: tlsPolicyName,
-    sendRequest: async (req, next) => {
-      // Users may define a request tlsSettings, honor those over the client level one
-      if (!req.tlsSettings) {
-        req.tlsSettings = tlsSettings;
-      }
-      return next(req);
-    },
-  };
+  return __tlsPolicy(tlsSettings);
 }

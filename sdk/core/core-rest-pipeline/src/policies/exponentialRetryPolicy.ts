@@ -2,9 +2,7 @@
 // Licensed under the MIT License.
 
 import type { PipelinePolicy } from "../pipeline.js";
-import { exponentialRetryStrategy } from "../retryStrategies/exponentialRetryStrategy.js";
-import { retryPolicy } from "./retryPolicy.js";
-import { DEFAULT_RETRY_POLICY_COUNT } from "../constants.js";
+import { __exponentialRetryPolicy } from "@typespec/ts-http-runtime/_internal";
 
 /**
  * The programmatic identifier of the exponentialRetryPolicy.
@@ -41,15 +39,5 @@ export interface ExponentialRetryPolicyOptions {
 export function exponentialRetryPolicy(
   options: ExponentialRetryPolicyOptions = {},
 ): PipelinePolicy {
-  return retryPolicy(
-    [
-      exponentialRetryStrategy({
-        ...options,
-        ignoreSystemErrors: true,
-      }),
-    ],
-    {
-      maxRetries: options.maxRetries ?? DEFAULT_RETRY_POLICY_COUNT,
-    },
-  );
+  return __exponentialRetryPolicy(options);
 }

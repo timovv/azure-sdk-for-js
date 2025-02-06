@@ -9,6 +9,10 @@ import type { OperationOptions, RequestParameters } from "./common.js";
  * @returns the result of the conversion in RequestParameters of RLC layer
  */
 export function operationOptionsToRequestParameters(options: OperationOptions): RequestParameters {
+  return __operationOptionsToRequestParameters(options);
+}
+
+export function __operationOptionsToRequestParameters(options: OperationOptions): RequestParameters {
   return {
     allowInsecureConnection: options.requestOptions?.allowInsecureConnection,
     timeout: options.requestOptions?.timeout,

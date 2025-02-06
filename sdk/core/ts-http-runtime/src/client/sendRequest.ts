@@ -61,7 +61,12 @@ export async function sendRequest(
       const { response } = e;
       const rawHeaders = response.headers.toJSON();
       // UNBRANDED DIFFERENCE: onResponse callback does not have a second __legacyError property
-      options?.onResponse({ ...response, request, rawHeaders }, e);
+      if(options.legacyRawResponseCallback) {
+        // @ts-expect-error the third parameter is not on the type in unbranded but is required in compatability mode
+        options?.onResponse({ ...response, request, rawHeaders }, e, e);
+      } else {
+        options?.onResponse({ ...response, request, rawHeaders }, e);
+      }
     }
 
     throw e;
@@ -107,6 +112,7 @@ function getContentType(body: any): string | undefined {
 
 export interface InternalRequestParameters extends RequestParameters {
   responseAsStream?: boolean;
+  legacyRawResponseCallback?: boolean;
 }
 
 function buildPipelineRequest(

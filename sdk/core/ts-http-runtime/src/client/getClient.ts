@@ -19,7 +19,7 @@ import type {
 } from "./common.js";
 import { sendRequest } from "./sendRequest.js";
 import { buildRequestUrl } from "./urlHelpers.js";
-import type { PipelineOptions } from "../createPipelineFromOptions.js";
+import { createPipelineFromOptions, PipelineOptions } from "../createPipelineFromOptions.js";
 
 /**
  * Creates a client with a default pipeline
@@ -42,6 +42,20 @@ export function getClient(
   endpoint: string,
   credentialsOrPipelineOptions?: (TokenCredential | KeyCredential) | ClientOptions,
   clientOptions: ClientOptions = {},
+): Client {
+  return __getClient(endpoint, credentialsOrPipelineOptions, clientOptions, { legacyRawResponseCallback: false, createPipelineFromOptions });
+}
+
+export interface __InternalGetClientOptions {
+  createPipelineFromOptions: typeof createPipelineFromOptions,
+  legacyRawResponseCallback: boolean,
+}
+
+export function __getClient(
+  endpoint: string,
+  credentialsOrPipelineOptions: (TokenCredential | KeyCredential) | ClientOptions | undefined,
+  clientOptions: ClientOptions = {},
+  __internalOptions: __InternalGetClientOptions,
 ): Client {
   let credentials: TokenCredential | KeyCredential | undefined;
   if (credentialsOrPipelineOptions) {
@@ -79,6 +93,7 @@ export function getClient(
           requestOptions,
           allowInsecureConnection,
           httpClient,
+          __internalOptions.legacyRawResponseCallback,
         );
       },
       post: (requestOptions: RequestParameters = {}): StreamableMethod => {
@@ -89,6 +104,7 @@ export function getClient(
           requestOptions,
           allowInsecureConnection,
           httpClient,
+          __internalOptions.legacyRawResponseCallback,
         );
       },
       put: (requestOptions: RequestParameters = {}): StreamableMethod => {
@@ -99,6 +115,7 @@ export function getClient(
           requestOptions,
           allowInsecureConnection,
           httpClient,
+          __internalOptions.legacyRawResponseCallback,
         );
       },
       patch: (requestOptions: RequestParameters = {}): StreamableMethod => {
@@ -109,6 +126,7 @@ export function getClient(
           requestOptions,
           allowInsecureConnection,
           httpClient,
+          __internalOptions.legacyRawResponseCallback,
         );
       },
       delete: (requestOptions: RequestParameters = {}): StreamableMethod => {
@@ -119,6 +137,7 @@ export function getClient(
           requestOptions,
           allowInsecureConnection,
           httpClient,
+          __internalOptions.legacyRawResponseCallback,
         );
       },
       head: (requestOptions: RequestParameters = {}): StreamableMethod => {
@@ -129,6 +148,7 @@ export function getClient(
           requestOptions,
           allowInsecureConnection,
           httpClient,
+          __internalOptions.legacyRawResponseCallback,
         );
       },
       options: (requestOptions: RequestParameters = {}): StreamableMethod => {
@@ -139,6 +159,7 @@ export function getClient(
           requestOptions,
           allowInsecureConnection,
           httpClient,
+          __internalOptions.legacyRawResponseCallback,
         );
       },
       trace: (requestOptions: RequestParameters = {}): StreamableMethod => {
@@ -149,6 +170,7 @@ export function getClient(
           requestOptions,
           allowInsecureConnection,
           httpClient,
+          __internalOptions.legacyRawResponseCallback,
         );
       },
     };
@@ -168,6 +190,7 @@ function buildOperation(
   options: RequestParameters,
   allowInsecureConnection?: boolean,
   httpClient?: HttpClient,
+  legacyRawResponseCallback?: boolean,
 ): StreamableMethod {
   allowInsecureConnection = options.allowInsecureConnection ?? allowInsecureConnection;
   return {
@@ -176,7 +199,7 @@ function buildOperation(
         method,
         url,
         pipeline,
-        { ...options, allowInsecureConnection },
+        { ...options, allowInsecureConnection, legacyRawResponseCallback },
         httpClient,
       ).then(onFulfilled, onrejected);
     },
@@ -185,7 +208,7 @@ function buildOperation(
         method,
         url,
         pipeline,
-        { ...options, allowInsecureConnection, responseAsStream: true },
+        { ...options, allowInsecureConnection, legacyRawResponseCallback, responseAsStream: true },
         httpClient,
       ) as Promise<HttpBrowserStreamResponse>;
     },
@@ -194,7 +217,7 @@ function buildOperation(
         method,
         url,
         pipeline,
-        { ...options, allowInsecureConnection, responseAsStream: true },
+        { ...options, allowInsecureConnection, legacyRawResponseCallback, responseAsStream: true },
         httpClient,
       ) as Promise<HttpNodeStreamResponse>;
     },

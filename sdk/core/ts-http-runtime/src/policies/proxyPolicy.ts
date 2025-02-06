@@ -13,6 +13,7 @@ import type {
 } from "../interfaces.js";
 import type { PipelinePolicy } from "../pipeline.js";
 import { logger } from "../log.js";
+import { TypeSpecRuntimeLogger } from "../logger/index.js";
 
 const HTTPS_PROXY = "HTTPS_PROXY";
 const HTTP_PROXY = "HTTP_PROXY";
@@ -166,6 +167,7 @@ function setProxyAgentOnRequest(
   request: PipelineRequest,
   cachedAgents: CachedAgents,
   proxyUrl: URL,
+  logger: TypeSpecRuntimeLogger
 ): void {
   // Custom Agent should take precedence so if one is present
   // we should skip to avoid overwriting it.
@@ -217,6 +219,28 @@ export function proxyPolicy(
     customNoProxyList?: string[];
   },
 ): PipelinePolicy {
+  return __proxyPolicy(proxySettings, options, { logger });
+}
+
+export interface __ProxyPolicyDependencies {
+  logger: TypeSpecRuntimeLogger;
+}
+
+/**
+ * A policy that allows one to apply proxy settings to all requests.
+ * If not passed static settings, they will be retrieved from the HTTPS_PROXY
+ * or HTTP_PROXY environment variables.
+ * @param proxySettings - ProxySettings to use on each request.
+ * @param options - additional settings, for example, custom NO_PROXY patterns
+ */
+export function __proxyPolicy(
+  proxySettings: ProxySettings | undefined,
+  options: {
+    /** a list of patterns to override those loaded from NO_PROXY environment variable. */
+    customNoProxyList?: string[];
+  } | undefined,
+  __dependencies: __ProxyPolicyDependencies
+): PipelinePolicy {
   if (!noProxyListLoaded) {
     globalNoProxyList.push(...loadNoProxy());
   }
@@ -239,12 +263,13 @@ export function proxyPolicy(
           options?.customNoProxyList ? undefined : globalBypassedMap,
         )
       ) {
-        setProxyAgentOnRequest(request, cachedAgents, defaultProxy);
+        setProxyAgentOnRequest(request, cachedAgents, defaultProxy, __dependencies.logger);
       } else if (request.proxySettings) {
         setProxyAgentOnRequest(
           request,
           cachedAgents,
           getUrlFromProxySettings(request.proxySettings),
+          __dependencies.logger
         );
       }
       return next(request);

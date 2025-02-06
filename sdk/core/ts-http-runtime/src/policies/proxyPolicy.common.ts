@@ -16,6 +16,10 @@ export function proxyPolicy(): never {
   throw new Error(errorMessage);
 }
 
+export function __proxyPolicy(): never {
+  throw new Error(errorMessage);
+}
+
 /**
  * A function to reset the cached agents.
  * proxyPolicy is not supported in the browser and attempting

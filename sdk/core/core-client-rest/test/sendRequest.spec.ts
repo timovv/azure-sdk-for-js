@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { describe, it, assert } from "vitest";
-import { sendRequest } from "../src/sendRequest.js";
+import { sendRequest } from "../src/index.js";
 import type { MultipartRequestBody, Pipeline, PipelineResponse } from "@azure/core-rest-pipeline";
 import { RestError, createEmptyPipeline, createHttpHeaders } from "@azure/core-rest-pipeline";
 import { stringToUint8Array } from "@azure/core-util";

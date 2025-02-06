@@ -159,7 +159,7 @@ export const formDataPolicyName = "formDataPolicy";
 // @public
 export type FormDataValue = string | Blob | File;
 
-// @public @deprecated
+// @public (undocumented)
 export function getDefaultProxySettings(proxyUrl?: string): ProxySettings | undefined;
 
 // @public
@@ -210,7 +210,7 @@ export interface LogPolicyOptions {
 // @public
 export function multipartPolicy(): PipelinePolicy;
 
-// @public
+// @public (undocumented)
 export const multipartPolicyName = "multipartPolicy";
 
 // @public
@@ -365,17 +365,23 @@ export interface RedirectPolicyOptions {
 export type RequestBodyType = NodeJS.ReadableStream | (() => NodeJS.ReadableStream) | ReadableStream<Uint8Array> | (() => ReadableStream<Uint8Array>) | Blob | ArrayBuffer | ArrayBufferView | FormData | string | null;
 
 // @public
-export class RestError extends Error {
-    constructor(message: string, options?: RestErrorOptions);
-    // (undocumented)
-    [x: symbol]: () => string;
+export interface RestError extends Error {
     code?: string;
     details?: unknown;
-    static readonly PARSE_ERROR: string;
     request?: PipelineRequest;
-    static readonly REQUEST_SEND_ERROR: string;
     response?: PipelineResponse;
     statusCode?: number;
+}
+
+// @public (undocumented)
+export const RestError: RestErrorConstructor;
+
+// @public (undocumented)
+export interface RestErrorConstructor {
+    // (undocumented)
+    new (message: string, options?: RestErrorOptions): RestError;
+    readonly PARSE_ERROR: string;
+    readonly REQUEST_SEND_ERROR: string;
 }
 
 // @public

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { TypeSpecRuntimeLogger } from "../logger/logger.js";
+import type { TypeSpecRuntimeLogger } from "../logger/index.js";
 import type { PipelineResponse } from "../interfaces.js";
 import type { RestError } from "../restError.js";
 

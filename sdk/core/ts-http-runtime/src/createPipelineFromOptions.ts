@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { type LogPolicyOptions, logPolicy } from "./policies/logPolicy.js";
-import { type Pipeline, createEmptyPipeline } from "./pipeline.js";
+import { type Pipeline, PipelinePolicy, createEmptyPipeline } from "./pipeline.js";
 import type { PipelineRetryOptions, ProxySettings, TlsSettings } from "./interfaces.js";
 import { type RedirectPolicyOptions, redirectPolicy } from "./policies/redirectPolicy.js";
 import { type UserAgentPolicyOptions, userAgentPolicy } from "./policies/userAgentPolicy.js";
@@ -74,6 +74,17 @@ export interface InternalPipelineOptions extends PipelineOptions {
  * @param options - Options to configure a custom pipeline.
  */
 export function createPipelineFromOptions(options: InternalPipelineOptions): Pipeline {
+  return __createPipelineFromOptions(options, {});
+}
+
+// azure hooks
+// TODO fix stupid name
+export interface __InternalCreatePipelineFromOptionsOptions {
+  policyToAddAfterUserAgentPolicy?: PipelinePolicy;
+  policyToAddAfterDefaultRetryPolicy?: PipelinePolicy;
+}
+
+export function __createPipelineFromOptions(options: InternalPipelineOptions, __internalOptions: __InternalCreatePipelineFromOptionsOptions): Pipeline {
   const pipeline = createEmptyPipeline();
 
   if (isNodeLike) {
@@ -86,11 +97,17 @@ export function createPipelineFromOptions(options: InternalPipelineOptions): Pip
 
   pipeline.addPolicy(formDataPolicy(), { beforePolicies: [multipartPolicyName] });
   pipeline.addPolicy(userAgentPolicy(options.userAgentOptions));
+  if(__internalOptions.policyToAddAfterUserAgentPolicy) {
+    pipeline.addPolicy(__internalOptions.policyToAddAfterUserAgentPolicy);
+  }
   // The multipart policy is added after policies with no phase, so that
   // policies can be added between it and formDataPolicy to modify
   // properties (e.g., making the boundary constant in recorded tests).
   pipeline.addPolicy(multipartPolicy(), { afterPhase: "Deserialize" });
   pipeline.addPolicy(defaultRetryPolicy(options.retryOptions), { phase: "Retry" });
+  if(__internalOptions.policyToAddAfterDefaultRetryPolicy) {
+    pipeline.addPolicy(__internalOptions.policyToAddAfterDefaultRetryPolicy, { afterPhase: "Retry" });
+  }
   if (isNodeLike) {
     // Both XHR and Fetch expect to handle redirects automatically,
     // so only include this policy when we're in Node.

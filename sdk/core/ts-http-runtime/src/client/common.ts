@@ -293,7 +293,7 @@ export interface AdditionalPolicyConfig {
 /**
  * General options that a Rest Level Client can take
  */
-export type ClientOptions = PipelineOptions & {
+export interface ClientOptions extends PipelineOptions {
   /**
    * Credentials information
    */

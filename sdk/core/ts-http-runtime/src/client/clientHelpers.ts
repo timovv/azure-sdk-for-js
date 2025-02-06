@@ -61,6 +61,10 @@ export function addCredentialPipelinePolicy(
   }
 }
 
+export interface __InternalCreateDefaultPipelineOptions {
+  createPipelineFromOptions?: typeof createPipelineFromOptions,
+}
+
 /**
  * Creates a default rest pipeline to re-use accross Rest Level Clients
  */
@@ -68,8 +72,9 @@ export function createDefaultPipeline(
   endpoint: string,
   credential?: TokenCredential | KeyCredential,
   options: ClientOptions = {},
+  __internalOptions?: __InternalCreateDefaultPipelineOptions,
 ): Pipeline {
-  const pipeline = createPipelineFromOptions(options);
+  const pipeline =  (__internalOptions?.createPipelineFromOptions ?? createPipelineFromOptions)(options);
 
   pipeline.addPolicy(apiVersionPolicy(options));
 

@@ -1,16 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { PipelineRequest, PipelineResponse, SendRequest } from "../interfaces.js";
+import { __userAgentPolicy, __userAgentPolicyName } from "@typespec/ts-http-runtime/_internal";
 import type { PipelinePolicy } from "../pipeline.js";
-import { getUserAgentHeaderName, getUserAgentValue } from "../util/userAgent.js";
-
-const UserAgentHeaderName = getUserAgentHeaderName();
 
 /**
  * The programmatic identifier of the userAgentPolicy.
  */
-export const userAgentPolicyName = "userAgentPolicy";
+export const userAgentPolicyName = __userAgentPolicyName;
 
 /**
  * Options for adding user agent details to outgoing requests.
@@ -29,14 +26,6 @@ export interface UserAgentPolicyOptions {
  * @param options - Options to customize the user agent value.
  */
 export function userAgentPolicy(options: UserAgentPolicyOptions = {}): PipelinePolicy {
-  const userAgentValue = getUserAgentValue(options.userAgentPrefix);
-  return {
-    name: userAgentPolicyName,
-    async sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {
-      if (!request.headers.has(UserAgentHeaderName)) {
-        request.headers.set(UserAgentHeaderName, await userAgentValue);
-      }
-      return next(request);
-    },
-  };
+  // TODO add core-rest-pipeline user agent prefix
+  return __userAgentPolicy(options);
 }

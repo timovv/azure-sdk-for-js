@@ -6,6 +6,7 @@ import { RestError } from "../restError.js";
 import { createHttpHeaders } from "../httpHeaders.js";
 import type { PathUncheckedResponse } from "./common.js";
 
+
 /**
  * Creates a rest error from a PathUnchecked response
  */
@@ -18,13 +19,21 @@ export function createRestError(
   messageOrResponse: string | PathUncheckedResponse,
   response?: PathUncheckedResponse,
 ): RestError {
+  return __createRestError(messageOrResponse, response, { RestError });
+}
+
+export interface __InternalCreateRestErrorOptions {
+  RestError: typeof RestError;
+}
+
+export function __createRestError(messageOrResponse: string | PathUncheckedResponse, response: PathUncheckedResponse | undefined, options: __InternalCreateRestErrorOptions): RestError {
   const resp = typeof messageOrResponse === "string" ? response! : messageOrResponse;
   const internalError = resp.body?.error ?? resp.body;
   const message =
     typeof messageOrResponse === "string"
       ? messageOrResponse
       : (internalError.message ?? `Unexpected status code: ${resp.status}`);
-  return new RestError(message, {
+  return new options.RestError(message, {
     statusCode: statusCodeToNumber(resp.status),
     code: internalError?.code,
     request: resp.request,

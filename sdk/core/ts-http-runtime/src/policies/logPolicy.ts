@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { Debugger } from "../logger/logger.js";
+import type { Debugger, TypeSpecRuntimeLogger } from "../logger/index.js";
 import type { PipelineRequest, PipelineResponse, SendRequest } from "../interfaces.js";
 import type { PipelinePolicy } from "../pipeline.js";
 import { logger as coreLogger } from "../log.js";
@@ -43,7 +43,15 @@ export interface LogPolicyOptions {
  * @param options - Options to configure logPolicy.
  */
 export function logPolicy(options: LogPolicyOptions = {}): PipelinePolicy {
-  const logger = options.logger ?? coreLogger.info;
+  return __logPolicy(options, { coreLogger });
+}
+
+export interface __LogPolicyDependencies {
+  coreLogger: TypeSpecRuntimeLogger;
+}
+
+export function __logPolicy(options: LogPolicyOptions = {}, __dependencies: __LogPolicyDependencies): PipelinePolicy {
+  const logger = options.logger ?? __dependencies.coreLogger.info;
   const sanitizer = new Sanitizer({
     additionalAllowedHeaderNames: options.additionalAllowedHeaderNames,
     additionalAllowedQueryParameters: options.additionalAllowedQueryParameters,

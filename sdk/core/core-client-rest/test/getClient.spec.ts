@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { describe, it, assert, vi, afterEach } from "vitest";
-import { getCachedDefaultHttpsClient } from "../src/clientHelpers.js";
-import { getClient } from "../src/getClient.js";
+import { getClient } from "../src/index.js";
 import type {
   HttpClient,
   PipelinePolicy,
@@ -12,6 +11,7 @@ import type {
   SendRequest,
 } from "@azure/core-rest-pipeline";
 import { createHttpHeaders } from "@azure/core-rest-pipeline";
+import { getCachedDefaultHttpsClient } from "../../ts-http-runtime/dist/esm/client/clientHelpers.js";
 
 describe("getClient", () => {
   afterEach(() => {

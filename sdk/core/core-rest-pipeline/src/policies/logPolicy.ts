@@ -2,10 +2,9 @@
 // Licensed under the MIT License.
 
 import type { Debugger } from "@azure/logger";
-import type { PipelineRequest, PipelineResponse, SendRequest } from "../interfaces.js";
 import type { PipelinePolicy } from "../pipeline.js";
 import { logger as coreLogger } from "../log.js";
-import { Sanitizer } from "../util/sanitizer.js";
+import { __logPolicy } from "@typespec/ts-http-runtime/_internal";
 
 /**
  * The programmatic identifier of the logPolicy.
@@ -43,26 +42,5 @@ export interface LogPolicyOptions {
  * @param options - Options to configure logPolicy.
  */
 export function logPolicy(options: LogPolicyOptions = {}): PipelinePolicy {
-  const logger = options.logger ?? coreLogger.info;
-  const sanitizer = new Sanitizer({
-    additionalAllowedHeaderNames: options.additionalAllowedHeaderNames,
-    additionalAllowedQueryParameters: options.additionalAllowedQueryParameters,
-  });
-  return {
-    name: logPolicyName,
-    async sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {
-      if (!logger.enabled) {
-        return next(request);
-      }
-
-      logger(`Request: ${sanitizer.sanitize(request)}`);
-
-      const response = await next(request);
-
-      logger(`Response status code: ${response.status}`);
-      logger(`Headers: ${sanitizer.sanitize(response.headers)}`);
-
-      return response;
-    },
-  };
+  return __logPolicy(options, { coreLogger });
 }

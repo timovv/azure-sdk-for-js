@@ -2,14 +2,12 @@
 // Licensed under the MIT License.
 
 import type { PipelinePolicy } from "../pipeline.js";
-import { throttlingRetryStrategy } from "../retryStrategies/throttlingRetryStrategy.js";
-import { retryPolicy } from "./retryPolicy.js";
-import { DEFAULT_RETRY_POLICY_COUNT } from "../constants.js";
+import { __throttlingRetryPolicy, __throttlingRetryPolicyName } from "@typespec/ts-http-runtime/_internal";
 
 /**
  * Name of the {@link throttlingRetryPolicy}
  */
-export const throttlingRetryPolicyName = "throttlingRetryPolicy";
+export const throttlingRetryPolicyName = __throttlingRetryPolicyName;
 
 /**
  * Options that control how to retry failed requests.
@@ -32,10 +30,5 @@ export interface ThrottlingRetryPolicyOptions {
  * @param options - Options that configure retry logic.
  */
 export function throttlingRetryPolicy(options: ThrottlingRetryPolicyOptions = {}): PipelinePolicy {
-  return {
-    name: throttlingRetryPolicyName,
-    sendRequest: retryPolicy([throttlingRetryStrategy()], {
-      maxRetries: options.maxRetries ?? DEFAULT_RETRY_POLICY_COUNT,
-    }).sendRequest,
-  };
+  return __throttlingRetryPolicy(options);
 }

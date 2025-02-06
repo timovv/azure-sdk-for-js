@@ -12,7 +12,7 @@ describe("TypeSpecRuntimeLogger", function () {
     // This test ensures logs aren't redirected to the root logger.
     // Log redirection works because all the client loggers inherit from the root logger.
     Logger.setLogLevel("verbose");
-    assert.ok(!Logger.TypeSpecRuntimeLogger.enabled);
+    assert.ok(!Logger.logger.enabled);
   });
 });
 
@@ -74,16 +74,16 @@ describe("ClientLoggers", () => {
   it("logs to parent loggers", () => {
     Logger.setLogLevel("verbose");
 
-    const oldLog = Logger.TypeSpecRuntimeLogger.log.bind(Logger.TypeSpecRuntimeLogger);
+    const oldLog = Logger.logger.log.bind(Logger.logger);
     let called = false;
 
-    Logger.TypeSpecRuntimeLogger.log = () => {
+    Logger.logger.log = () => {
       called = true;
     };
 
     testLogger.info("hello");
     assert.ok(called);
 
-    Logger.TypeSpecRuntimeLogger.log = oldLog;
+    Logger.logger.log = oldLog;
   });
 });

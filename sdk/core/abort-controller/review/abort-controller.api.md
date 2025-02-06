@@ -5,8 +5,15 @@
 ```ts
 
 // @public
-export class AbortError extends Error {
-    constructor(message?: string);
+export interface AbortError extends Error {
+}
+
+// @public
+export const AbortError: AbortErrorConstructor;
+
+// @public
+export interface AbortErrorConstructor {
+    new (message?: string): AbortError;
 }
 
 // @public

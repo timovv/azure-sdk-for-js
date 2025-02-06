@@ -60,20 +60,20 @@ export interface Client {
 }
 
 // @public
-export type ClientOptions = PipelineOptions & {
+export interface ClientOptions extends PipelineOptions {
+    additionalPolicies?: AdditionalPolicyConfig[];
+    allowInsecureConnection?: boolean;
+    apiVersion?: string;
     credentials?: {
         scopes?: string[];
         apiKeyHeaderName?: string;
     };
     endpoint?: string;
-    apiVersion?: string;
-    allowInsecureConnection?: boolean;
-    additionalPolicies?: AdditionalPolicyConfig[];
     httpClient?: HttpClient;
     loggingOptions?: LogPolicyOptions;
-};
+}
 
-// @public
+// @public (undocumented)
 export function createClientLogger(namespace: string): TypeSpecRuntimeLogger;
 
 // @public
@@ -459,9 +459,6 @@ export type TransferProgressEvent = {
 
 // @public
 export type TypeSpecRuntimeClientLogger = Debugger;
-
-// @public
-export const TypeSpecRuntimeLogger: TypeSpecRuntimeClientLogger;
 
 // @public
 export interface TypeSpecRuntimeLogger {

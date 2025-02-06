@@ -2,14 +2,12 @@
 // Licensed under the MIT License.
 
 import type { PipelinePolicy } from "../pipeline.js";
-import { exponentialRetryStrategy } from "../retryStrategies/exponentialRetryStrategy.js";
-import { retryPolicy } from "./retryPolicy.js";
-import { DEFAULT_RETRY_POLICY_COUNT } from "../constants.js";
+import { __systemErrorRetryPolicy, __systemErrorRetryPolicyName } from "@typespec/ts-http-runtime/_internal";
 
 /**
  * Name of the {@link systemErrorRetryPolicy}
  */
-export const systemErrorRetryPolicyName = "systemErrorRetryPolicy";
+export const systemErrorRetryPolicyName = __systemErrorRetryPolicyName;
 
 /**
  * Options that control how to retry failed requests.
@@ -43,18 +41,5 @@ export interface SystemErrorRetryPolicyOptions {
 export function systemErrorRetryPolicy(
   options: SystemErrorRetryPolicyOptions = {},
 ): PipelinePolicy {
-  return {
-    name: systemErrorRetryPolicyName,
-    sendRequest: retryPolicy(
-      [
-        exponentialRetryStrategy({
-          ...options,
-          ignoreHttpStatusCodes: true,
-        }),
-      ],
-      {
-        maxRetries: options.maxRetries ?? DEFAULT_RETRY_POLICY_COUNT,
-      },
-    ).sendRequest,
-  };
+  return __systemErrorRetryPolicy(options);
 }

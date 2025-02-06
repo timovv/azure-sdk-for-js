@@ -4,10 +4,10 @@
 import type { PipelineRequest, PipelineResponse, SendRequest } from "../interfaces.js";
 import type { PipelinePolicy } from "../pipeline.js";
 import { delay } from "../util/helpers.js";
-import type { RetryStrategy } from "../retryStrategies/retryStrategy.js";
+import type { RetryInformation, RetryModifiers, RetryStrategy } from "../retryStrategies/retryStrategy.js";
 import type { RestError } from "../restError.js";
 import { AbortError } from "../abort-controller/AbortError.js";
-import type { TypeSpecRuntimeLogger } from "../logger/logger.js";
+import type { TypeSpecRuntimeLogger } from "../logger/index.js";
 import { createClientLogger } from "../logger/logger.js";
 import { DEFAULT_RETRY_POLICY_COUNT } from "../constants.js";
 
@@ -32,6 +32,10 @@ export interface RetryPolicyOptions {
   logger?: TypeSpecRuntimeLogger;
 }
 
+export interface __RetryPolicyDependencies {
+  retryPolicyLogger: TypeSpecRuntimeLogger
+}
+
 /**
  * retryPolicy is a generic policy to enable retrying requests when certain conditions are met
  */
@@ -39,7 +43,45 @@ export function retryPolicy(
   strategies: RetryStrategy[],
   options: RetryPolicyOptions = { maxRetries: DEFAULT_RETRY_POLICY_COUNT },
 ): PipelinePolicy {
-  const logger = options.logger || retryPolicyLogger;
+  return __retryPolicy(strategies, options, { retryPolicyLogger });
+}
+
+// Redeclare these interfaces for internal use to broaden the allowed types of error
+
+/**
+ * Information provided to the retry strategy about the current progress of the retry policy.
+ */
+export interface __RetryInformationLike extends Omit<RetryInformation, "responseError"> {
+  /**
+   * A {@link RestError}, if the last retry attempt failed.
+   */
+  responseError?: Error;
+}
+
+/**
+ * Properties that can modify the behavior of the retry policy.
+ */
+export interface __RetryModifiersLike extends Omit<RetryModifiers, "errorToThrow"> {
+  /**
+   * Indicates to throw this error instead of retrying.
+   */
+  errorToThrow?: Error;
+}
+
+export interface __RetryStrategyLike extends Omit<RetryStrategy, "retry"> {
+  /**
+   * Function that determines how to proceed with the subsequent requests.
+   * @param state - Retry state
+   */
+  retry(state: __RetryInformationLike): __RetryModifiersLike;
+}
+
+export function __retryPolicy(
+  strategies: __RetryStrategyLike[],
+  options: RetryPolicyOptions,
+  __dependencies: __RetryPolicyDependencies,
+): PipelinePolicy {
+  const logger = options.logger || __dependencies.retryPolicyLogger;
   return {
     name: retryPolicyName,
     async sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {

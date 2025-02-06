@@ -8,8 +8,8 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import { assert, describe, it, afterEach, vi } from "vitest";
 import { createEmptyPipeline } from "../../src/pipeline.js";
 import { createHttpHeaders } from "../../src/httpHeaders.js";
-import { createNodeHttpClient } from "../../src/nodeHttpClient.js";
 import { createPipelineFromOptions } from "../../src/createPipelineFromOptions.js";
+import { createDefaultHttpClient } from "../../src/defaultHttpClient.js";
 
 vi.mock("https", async () => {
   const actual = await vi.importActual("https");
@@ -85,7 +85,7 @@ describe("HttpsPipeline", function () {
     it("should create an agent with certificates", async function () {
       const pipeline = createEmptyPipeline();
       const fakePfx = "fakecert";
-      const httpClient: HttpClient = createNodeHttpClient();
+      const httpClient: HttpClient = createDefaultHttpClient();
       vi.mocked(https.request).mockImplementation((request: any) => {
         assert.equal(request.agent.options.pfx, fakePfx);
         throw new Error("ok");
@@ -110,7 +110,7 @@ describe("HttpsPipeline", function () {
     it("should honor tls in request over pipeline options", async function () {
       const pipeline = createEmptyPipeline();
       const fakePfx = "fakecert";
-      const httpClient: HttpClient = createNodeHttpClient();
+      const httpClient: HttpClient = createDefaultHttpClient();
       vi.mocked(https.request).mockImplementation((request: any) => {
         assert.equal(request.agent.options.pfx, "requestPfx");
         throw new Error("ok");
@@ -136,7 +136,7 @@ describe("HttpsPipeline", function () {
     it("should set tls options when only request tls is set", async function () {
       const pipeline = createEmptyPipeline();
       const fakePfx = "fakecert";
-      const httpClient: HttpClient = createNodeHttpClient();
+      const httpClient: HttpClient = createDefaultHttpClient();
       vi.mocked(https.request).mockImplementation((request: any) => {
         assert.equal(request.agent.options.pfx, fakePfx);
         throw new Error("ok");
@@ -162,7 +162,7 @@ describe("HttpsPipeline", function () {
     it("should use cached agent when TLS settings did not change", async function () {
       const pipeline = createEmptyPipeline();
       const fakePfx = "fakecert";
-      const httpClient: HttpClient = createNodeHttpClient();
+      const httpClient: HttpClient = createDefaultHttpClient();
       let cachedAgent: Agent;
       vi.mocked(https.request).mockImplementation((request: any) => {
         assert.equal(request.agent.options.pfx, fakePfx);
@@ -208,7 +208,7 @@ describe("HttpsPipeline", function () {
       const fakePfx = "fakecert";
       const newFakePfx = "newFakeCert";
 
-      const httpClient: HttpClient = createNodeHttpClient();
+      const httpClient: HttpClient = createDefaultHttpClient();
       let cachedAgent: Agent;
       vi.mocked(https.request).mockImplementation((request: any) => {
         if (cachedAgent) {

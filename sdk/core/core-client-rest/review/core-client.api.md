@@ -4,22 +4,22 @@
 
 ```ts
 
-import type { AbortSignalLike } from '@azure/abort-controller';
-import type { HttpClient } from '@azure/core-rest-pipeline';
-import type { KeyCredential } from '@azure/core-auth';
-import type { LogPolicyOptions } from '@azure/core-rest-pipeline';
-import type { OperationTracingOptions } from '@azure/core-tracing';
-import type { Pipeline } from '@azure/core-rest-pipeline';
-import type { PipelineOptions } from '@azure/core-rest-pipeline';
-import type { PipelinePolicy } from '@azure/core-rest-pipeline';
-import type { PipelineRequest } from '@azure/core-rest-pipeline';
-import type { PipelineResponse } from '@azure/core-rest-pipeline';
-import type { RawHttpHeaders } from '@azure/core-rest-pipeline';
-import type { RawHttpHeadersInput } from '@azure/core-rest-pipeline';
-import type { RequestBodyType } from '@azure/core-rest-pipeline';
+import { AbortSignalLike } from '@azure/abort-controller';
+import { HttpClient } from '@azure/core-rest-pipeline';
+import { KeyCredential } from '@azure/core-auth';
+import { LogPolicyOptions } from '@azure/core-rest-pipeline';
+import { OperationTracingOptions } from '@azure/core-tracing';
+import { Pipeline } from '@azure/core-rest-pipeline';
+import { PipelineOptions } from '@azure/core-rest-pipeline';
+import { PipelinePolicy } from '@azure/core-rest-pipeline';
+import { PipelineRequest } from '@azure/core-rest-pipeline';
+import { PipelineResponse } from '@azure/core-rest-pipeline';
+import { RawHttpHeaders } from '@azure/core-rest-pipeline';
+import { RawHttpHeadersInput } from '@azure/core-rest-pipeline';
+import { RequestBodyType } from '@azure/core-rest-pipeline';
 import { RestError } from '@azure/core-rest-pipeline';
-import type { TokenCredential } from '@azure/core-auth';
-import type { TransferProgressEvent } from '@azure/core-rest-pipeline';
+import { TokenCredential } from '@azure/core-auth';
+import { TransferProgressEvent } from '@azure/core-rest-pipeline';
 
 // @public
 export function addCredentialPipelinePolicy(pipeline: Pipeline, endpoint: string, options?: AddCredentialPipelinePolicyOptions): void;
@@ -140,8 +140,7 @@ export interface OperationRequestOptions {
 export type PathParameters<TRoute extends string> = TRoute extends `${infer _Head}/{${infer _Param}}${infer Tail}` ? [
 pathParameter: string | number | PathParameterWithOptions,
 ...pathParameters: PathParameters<Tail>
-] : [
-];
+] : [];
 
 // @public
 export interface PathParameterWithOptions {
@@ -195,5 +194,7 @@ export type StreamableMethod<TResponse = PathUncheckedResponse> = PromiseLike<TR
     asNodeStream: () => Promise<HttpNodeStreamResponse>;
     asBrowserStream: () => Promise<HttpBrowserStreamResponse>;
 };
+
+// (No @packageDocumentation comment for this package)
 
 ```

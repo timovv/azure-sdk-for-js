@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import type { AccessToken, GetTokenOptions, TokenCredential } from "../auth/tokenCredential.js";
-import type { TypeSpecRuntimeLogger } from "../logger/logger.js";
+import type { TypeSpecRuntimeLogger } from "../logger/index.js";
 import type { PipelineRequest, PipelineResponse, SendRequest } from "../interfaces.js";
 import type { PipelinePolicy } from "../pipeline.js";
 import { createTokenCycler } from "../util/tokenCycler.js";

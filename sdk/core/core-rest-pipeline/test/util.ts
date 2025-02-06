@@ -3,8 +3,11 @@
 
 import type { AzureLogger } from "@azure/logger";
 import type { RequestBodyType } from "../src/interfaces.js";
-import { isNodeReadableStream } from "../src/util/typeGuards.js";
 import { assert } from "vitest";
+
+function isNodeReadableStream(x: unknown): x is NodeJS.ReadableStream {
+  return Boolean(x && typeof (x as NodeJS.ReadableStream)["pipe"] === "function");
+}
 
 export function makeTestLogger(): {
   logger: AzureLogger;
