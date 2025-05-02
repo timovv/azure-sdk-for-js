@@ -49,7 +49,7 @@ let tsconfigPath;
 if (existsSync("../../../tsconfig.json")) {
   tsconfigPath = "../../../tsconfig.json";
 } else {
-  console.info(
+  console.error(
     "[dev-tool/register] unable to locate tsconfig.json in repo root. This is expected in min/max tests.",
   );
 }

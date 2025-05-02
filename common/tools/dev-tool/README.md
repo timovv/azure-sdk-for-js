@@ -56,8 +56,15 @@ It provides a place to centralize scripts, resources, and processes for developm
   - `update-snippets`	find README and TSDoc snippets throughout the package and update their contents.
   - `build-package`	build a package for production
   - `vendored` run dev-tool's dependency commands
+- `mcp` (start the Model Context Protocol server for VS Code Copilot integration)
 
 The `dev-tool about` command will print some information about how to use the command. All commands additionally accept the `--help` argument, which will print information about the usage of that specific command. For example, to show help information for the `resolve` command above, issue the command `dev-tool package resolve --help`.
+
+### MCP Server
+
+The `dev-tool mcp` command starts a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that integrates with VS Code Copilot. This allows Copilot to interact with Azure SDK-specific tools and functionality.
+
+The MCP server is configured in the `.vscode/mcp.json` file in the repository root, which makes the server automatically available to VS Code Copilot when working in the Azure SDK for JavaScript repository. The server provides custom tools and context that help Copilot understand and work with the Azure SDK codebase more effectively.
 
 ## Extending the Tool
 

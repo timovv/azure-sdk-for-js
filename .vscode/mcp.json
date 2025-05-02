@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "azure-sdk-dev-tool": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${workspaceFolder}/common/tools/dev-tool/launch.js", "mcp"]
+    }
+  }
+}

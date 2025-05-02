@@ -20,6 +20,7 @@ export const baseCommands = {
   migrate: () => import("./migrate"),
   customization: () => import("./customization"),
   check: () => import("./check"),
+  mcp: () => import("./mcp"),
 } as const;
 
 /**
