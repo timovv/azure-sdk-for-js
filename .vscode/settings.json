@@ -44,5 +44,10 @@
   "vitest.experimentalStaticAstCollect": true,
   "vitest.configSearchPatternExclude": "{**/node_modules/**,**/.*/**,**/*.d.ts,eng/**,samples/**}",
   "vitest.nodeEnv": {},
-  "azure-pipelines.1ESPipelineTemplatesSchemaFile": true
+  "azure-pipelines.1ESPipelineTemplatesSchemaFile": true,
+  "chat.mcp.serverSampling": {
+    "azure-sdk-for-js/.vscode/mcp.json: Azure SDK": {
+      "allowedDuringChat": true
+    }
+  }
 }
