@@ -61,6 +61,9 @@ export function getErrorMessage(e: unknown): string;
 export function getRandomIntegerInclusive(min: number, max: number): number;
 
 // @public
+export type Hotdog = {};
+
+// @public
 export type HttpMethods = "GET" | "PUT" | "POST" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS" | "TRACE";
 
 // @public
@@ -77,6 +80,9 @@ export const isDeno: boolean;
 
 // @public
 export function isError(e: unknown): e is Error;
+
+// @public
+export function isHotdog(x: unknown): x is Hotdog;
 
 // @public @deprecated
 export const isNode: boolean;

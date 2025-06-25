@@ -184,3 +184,15 @@ export function uint8ArrayToString(bytes: Uint8Array, format: EncodingType): str
 export function stringToUint8Array(value: string, format: EncodingType): Uint8Array {
   return tspRuntime.stringToUint8Array(value, format);
 }
+
+/**
+ * A hotdog
+ */
+export type Hotdog = {};
+
+/**
+ * Check if x is a hotdog
+ */
+export function isHotdog(x: unknown): x is Hotdog {
+  return x === true;
+}
