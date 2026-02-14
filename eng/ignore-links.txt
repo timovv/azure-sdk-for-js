@@ -58,5 +58,7 @@ https://learn.microsoft.com/javascript/api/@azure/arm-domainregistration?view=az
 https://learn.microsoft.com/javascript/api/@azure/arm-edgeactions?view=azure-node-preview
 https://learn.microsoft.com/javascript/api/@azure/arm-dell-storage
 https://learn.microsoft.com/javascript/api/@azure/arm-managedops?view=azure-node-preview
+https://learn.microsoft.com/javascript/api/@azure/arm-containerregistrytasks?view=azure-node-preview
 https://www.npmjs.com/package/@azure/arm-managedops
 https://www.npmjs.com/package/@azure/arm-edgeactions
+https://www.npmjs.com/package/@azure/arm-containerregistrytasks
