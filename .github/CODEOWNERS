@@ -1634,6 +1634,9 @@ sdk/managedops/arm-managedops/ @qiaozha @MaryGao @JialinHuang803
 # PRLabel: %Mgmt
 sdk/containerregistry/arm-containerregistrytasks/ @qiaozha @MaryGao @JialinHuang803
 
+# PRLabel: %Mgmt
+sdk/artifactsigning/arm-artifactsigning/ @qiaozha @MaryGao @JialinHuang803
+
 ###########
 # Config
 ###########
