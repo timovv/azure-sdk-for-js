@@ -2,7 +2,6 @@
 // Licensed under the MIT License
 
 import path from "node:path";
-import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import { resolveProject } from "../../util/resolveProject";
 import { createPrinter } from "../../util/printer";
@@ -21,14 +20,19 @@ export default leafCommand(commandInfo, async () => {
   const srcDirectory = path.join(info.path, "src");
   const generatedDirectory = path.join(info.path, "generated");
 
-  if (!existsSync(srcDirectory)) {
+  try {
+    await fs.access(srcDirectory);
+  } catch {
     log("❌ Could not find src/ directory. Nothing to initialize.");
     return false;
   }
 
-  if (existsSync(generatedDirectory)) {
+  try {
+    await fs.access(generatedDirectory);
     log("generated/ folder already exists. Customization is already set up.");
     return true;
+  } catch {
+    // generated/ doesn't exist, proceed with copying
   }
 
   await fs.cp(srcDirectory, generatedDirectory, { recursive: true });
