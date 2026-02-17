@@ -27,8 +27,8 @@ export default leafCommand(commandInfo, async () => {
   }
 
   if (existsSync(generatedDirectory)) {
-    log("❌ A generated/ folder already exists. Customization is already set up.");
-    return false;
+    log("generated/ folder already exists. Customization is already set up.");
+    return true;
   }
 
   await fs.cp(srcDirectory, generatedDirectory, { recursive: true });
