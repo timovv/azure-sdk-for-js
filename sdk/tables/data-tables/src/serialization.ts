@@ -2,10 +2,7 @@
 // Licensed under the MIT License.
 
 import type { EdmTypes, SignedIdentifier, TableEntityQueryOptions } from "./models.js";
-import type {
-  QueryOptions as GeneratedQueryOptions,
-  SignedIdentifier as GeneratedSignedIdentifier,
-} from "./generated/models/index.js";
+import type { SignedIdentifier as GeneratedSignedIdentifier } from "./generated/models/index.js";
 import { base64Decode, base64Encode } from "./utils/bufferSerializer.js";
 import { truncatedISO8061Date } from "./utils/truncateISO8061Date.js";
 
@@ -254,6 +251,15 @@ export function deserializeSignedIdentifier(
       },
     };
   });
+}
+
+import type { OdataMetadataFormat } from "./generated/models/index.js";
+
+interface GeneratedQueryOptions {
+  format?: OdataMetadataFormat;
+  top?: number;
+  select?: string;
+  filter?: string;
 }
 
 export function serializeQueryOptions(query: TableEntityQueryOptions): GeneratedQueryOptions {

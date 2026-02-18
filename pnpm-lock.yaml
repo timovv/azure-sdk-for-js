@@ -30797,6 +30797,9 @@ importers:
 
   sdk/tables/data-tables:
     dependencies:
+      '@azure-rest/core-client':
+        specifier: ^2.3.1
+        version: link:../../core/core-client-rest
       '@azure/core-auth':
         specifier: ^1.9.0
         version: link:../../core/core-auth
@@ -30821,6 +30824,9 @@ importers:
       '@azure/logger':
         specifier: ^1.1.4
         version: link:../../core/logger
+      fast-xml-parser:
+        specifier: ^5.0.7
+        version: 5.3.5
       tslib:
         specifier: ^2.8.1
         version: 2.8.1

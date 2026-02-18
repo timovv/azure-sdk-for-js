@@ -8,11 +8,7 @@ import type {
   SetPropertiesOptions,
   SetPropertiesResponse,
 } from "./generatedModels.js";
-import type {
-  InternalClientPipelineOptions,
-  OperationOptions,
-  ServiceClientOptions,
-} from "@azure/core-client";
+import type { OperationOptions } from "@azure/core-client";
 import type {
   ListTableItemsOptions,
   TableItem,
@@ -22,14 +18,18 @@ import type {
 import type { NamedKeyCredential, SASCredential, TokenCredential } from "@azure/core-auth";
 import { isNamedKeyCredential, isSASCredential, isTokenCredential } from "@azure/core-auth";
 import { COSMOS_SCOPE, STORAGE_SCOPE, TablesLoggingAllowedHeaderNames } from "./utils/constants.js";
-import type { Service, Table } from "./generated/index.js";
+import type { TableOpsOperations } from "./generated/classic/tableOps/index.js";
+import { _getTableOpsOperations } from "./generated/classic/tableOps/index.js";
+import type { ServiceOperations } from "./generated/classic/service/index.js";
+import { _getServiceOperations } from "./generated/classic/service/index.js";
 import {
   injectSecondaryEndpointHeader,
   tablesSecondaryEndpointPolicy,
 } from "./secondaryEndpointPolicy.js";
-import { parseXML, stringifyXML } from "@azure/core-xml";
 
-import { GeneratedClient } from "./generated/generatedClient.js";
+import { createTables } from "./generated/api/tablesContext.js";
+import type { TablesContext } from "./generated/api/tablesContext.js";
+import { _querySend, _queryDeserialize } from "./generated/api/tableOps/operations.js";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import type { TableItemResultPage } from "./models.js";
@@ -38,6 +38,7 @@ import { getClientParamsFromConnectionString } from "./utils/connectionString.js
 import { handleTableAlreadyExists } from "./utils/errorHelpers.js";
 import { isCredential } from "./utils/isCredential.js";
 import { logger } from "./logger.js";
+import { serializeQueryOptions } from "./serialization.js";
 import { setTokenChallengeAuthenticationPolicy } from "./utils/challengeAuthenticationUtils.js";
 import { tablesNamedKeyCredentialPolicy } from "./tablesNamedCredentialPolicy.js";
 import { tablesSASTokenPolicy } from "./tablesSASTokenPolicy.js";
@@ -58,8 +59,9 @@ export class TableServiceClient {
    * Pipelines can have multiple policies to manage manipulating each request before and after it is made to the server.
    */
   public pipeline: Pipeline;
-  private table: Table;
-  private service: Service;
+  private _client: TablesContext;
+  private tableOps: TableOpsOperations;
+  private service: ServiceOperations;
 
   /**
    * Creates a new instance of the TableServiceClient class.
@@ -166,21 +168,14 @@ export class TableServiceClient {
     const clientOptions =
       (!isCredential(credentialOrOptions) ? credentialOrOptions : options) || {};
 
-    const internalPipelineOptions: ServiceClientOptions & InternalClientPipelineOptions = {
+    const client = createTables(this.url, {
       ...clientOptions,
       endpoint: clientOptions.endpoint || this.url,
       loggingOptions: {
         logger: logger.info,
         additionalAllowedHeaderNames: [...TablesLoggingAllowedHeaderNames],
       },
-      deserializationOptions: {
-        parseXML,
-      },
-      serializationOptions: {
-        stringifyXML,
-      },
-    };
-    const client = new GeneratedClient(this.url, internalPipelineOptions);
+    });
     client.pipeline.addPolicy(tablesSecondaryEndpointPolicy);
 
     if (isNamedKeyCredential(credential)) {
@@ -199,8 +194,9 @@ export class TableServiceClient {
     }
 
     this.pipeline = client.pipeline;
-    this.table = client.table;
-    this.service = client.service;
+    this._client = client;
+    this.tableOps = _getTableOpsOperations(client);
+    this.service = _getServiceOperations(client);
   }
 
   /**
@@ -251,7 +247,7 @@ export class TableServiceClient {
       options,
       async (updatedOptions) => {
         try {
-          await this.table.create({ name }, updatedOptions);
+          await this.tableOps.create({ tableName: name }, updatedOptions);
         } catch (e: any) {
           handleTableAlreadyExists(e, { ...updatedOptions, logger, tableName: name });
         }
@@ -270,7 +266,7 @@ export class TableServiceClient {
       options,
       async (updatedOptions) => {
         try {
-          await this.table.delete(name, updatedOptions);
+          await this.tableOps.deleteTable(name, updatedOptions);
         } catch (e: any) {
           if (e.statusCode === 404) {
             logger.info("TableServiceClient.deleteTable: Table doesn't exist");
@@ -360,12 +356,17 @@ export class TableServiceClient {
   }
 
   private async _listTables(options: InternalListTablesOptions = {}): Promise<TableItemResultPage> {
-    const { continuationToken: nextTableName, ...listOptions } = options;
-    const { xMsContinuationNextTableName: continuationToken, value = [] } = await this.table.query({
-      ...listOptions,
+    const { continuationToken: nextTableName, queryOptions, ...restOptions } = options;
+    const serializedQueryOptions = serializeQueryOptions(queryOptions || {});
+    const result = await _querySend(this._client, {
+      ...restOptions,
+      ...serializedQueryOptions,
       nextTableName,
     });
-    return Object.assign([...value], { continuationToken });
+    const continuationToken = result.headers["x-ms-continuation-nexttablename"] || undefined;
+    const { value = [] } = await _queryDeserialize(result);
+    const mappedValue = value.map((v) => ({ name: v.tableName }));
+    return Object.assign([...mappedValue], { continuationToken });
   }
 
   /**
