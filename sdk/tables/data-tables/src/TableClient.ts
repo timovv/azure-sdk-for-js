@@ -55,11 +55,19 @@ import {
   _queryEntitiesDeserialize,
   _queryEntitiesWithPartitionAndRowKeySend,
   _queryEntitiesWithPartitionAndRowKeyDeserialize,
+  _mergeEntitySend,
+  _mergeEntityDeserialize,
+  _updateEntitySend,
+  _updateEntityDeserialize,
+  _deleteEntitySend,
+  _deleteEntityDeserialize,
+  _insertEntitySend,
+  _insertEntityDeserialize,
 } from "./generated/api/tableOps/operations.js";
 import { Uuid } from "./utils/uuid.js";
 import { apiVersionPolicy } from "./utils/apiVersionPolicy.js";
 import { cosmosPatchPolicy } from "./cosmosPathPolicy.js";
-import { escapeQuotes } from "./odata.js";
+import { encodeKeyValue } from "./odata.js";
 import { getClientParamsFromConnectionString } from "./utils/connectionString.js";
 import { handleTableAlreadyExists } from "./utils/errorHelpers.js";
 import { isCosmosEndpoint } from "./utils/isCosmosEndpoint.js";
@@ -69,6 +77,21 @@ import { setTokenChallengeAuthenticationPolicy } from "./utils/challengeAuthenti
 import { tablesNamedKeyCredentialPolicy } from "./tablesNamedCredentialPolicy.js";
 import { tablesSASTokenPolicy } from "./tablesSASTokenPolicy.js";
 import { tracingClient } from "./utils/tracing.js";
+
+/**
+ * Extracts common response headers from a raw PathUncheckedResponse.
+ */
+function extractHeaders(result: any): Record<string, any> {
+  return {
+    clientRequestId: result.headers["x-ms-client-request-id"],
+    requestId: result.headers["x-ms-request-id"],
+    version: result.headers["x-ms-version"],
+    date: result.headers["date"] ? new Date(result.headers["date"]) : undefined,
+    etag: result.headers["etag"],
+    preferenceApplied: result.headers["preference-applied"],
+    contentType: result.headers["content-type"],
+  };
+}
 
 /**
  * A TableClient represents a Client to the Azure Tables service allowing you
@@ -369,8 +392,8 @@ export class TableClient {
       const result = await _queryEntitiesWithPartitionAndRowKeySend(
         this._client,
         this.tableName,
-        escapeQuotes(partitionKey),
-        escapeQuotes(rowKey),
+        encodeKeyValue(partitionKey),
+        encodeKeyValue(rowKey),
         {
           ...getEntityOptions,
           ...serializedQueryOptions,
@@ -557,13 +580,15 @@ export class TableClient {
     entity: TableEntity<T>,
     options: OperationOptions = {},
   ): Promise<CreateTableEntityResponse> {
-    return tracingClient.withSpan("TableClient.createEntity", options, (updatedOptions) => {
+    return tracingClient.withSpan("TableClient.createEntity", options, async (updatedOptions) => {
       const { ...createTableEntity } = updatedOptions || {};
-      return this.tableOps.insertEntity(this.tableName, {
+      const result = await _insertEntitySend(this._client, this.tableName, {
         ...createTableEntity,
         tableEntityProperties: { additionalProperties: serialize(entity) },
         prefer: "return-no-content",
-      }) as Promise<CreateTableEntityResponse>;
+      });
+      await _insertEntityDeserialize(result);
+      return extractHeaders(result);
     });
   }
 
@@ -601,19 +626,22 @@ export class TableClient {
     if (rowKey === undefined || rowKey === null) {
       throw new Error("The entity's rowKey cannot be undefined or null.");
     }
-    return tracingClient.withSpan("TableClient.deleteEntity", options, (updatedOptions) => {
+    return tracingClient.withSpan("TableClient.deleteEntity", options, async (updatedOptions) => {
       const { etag = "*", ...rest } = updatedOptions;
       const deleteOptions: TableOpsDeleteEntityOptionalParams = {
         ...rest,
         requestOptions: { skipUrlEncoding: true },
       };
-      return this.tableOps.deleteEntity(
+      const result = await _deleteEntitySend(
+        this._client,
         this.tableName,
-        escapeQuotes(partitionKey),
-        escapeQuotes(rowKey),
+        encodeKeyValue(partitionKey),
+        encodeKeyValue(rowKey),
         etag,
         deleteOptions,
       );
+      await _deleteEntityDeserialize(result);
+      return extractHeaders(result);
     });
   }
 
@@ -670,25 +698,35 @@ export class TableClient {
       "TableClient.updateEntity",
       options,
       async (updatedOptions) => {
-        const partitionKey = escapeQuotes(entity.partitionKey);
-        const rowKey = escapeQuotes(entity.rowKey);
+        const partitionKey = encodeKeyValue(entity.partitionKey);
+        const rowKey = encodeKeyValue(entity.rowKey);
 
         const { etag = "*", ...updateEntityOptions } = updatedOptions || {};
         if (mode === "Merge") {
-          return this.tableOps.mergeEntity(this.tableName, partitionKey, rowKey, {
+          const result = await _mergeEntitySend(this._client, this.tableName, partitionKey, rowKey, {
             tableEntityProperties: { additionalProperties: serialize(entity) },
             ifMatch: etag,
             ...updateEntityOptions,
             requestOptions: { skipUrlEncoding: true },
           });
+          await _mergeEntityDeserialize(result);
+          return extractHeaders(result);
         }
         if (mode === "Replace") {
-          return this.tableOps.updateEntity(this.tableName, partitionKey, rowKey, {
-            tableEntityProperties: { additionalProperties: serialize(entity) },
-            ifMatch: etag,
-            ...updateEntityOptions,
-            requestOptions: { skipUrlEncoding: true },
-          });
+          const result = await _updateEntitySend(
+            this._client,
+            this.tableName,
+            partitionKey,
+            rowKey,
+            {
+              tableEntityProperties: { additionalProperties: serialize(entity) },
+              ifMatch: etag,
+              ...updateEntityOptions,
+              requestOptions: { skipUrlEncoding: true },
+            },
+          );
+          await _updateEntityDeserialize(result);
+          return extractHeaders(result);
         }
 
         throw new Error(`Unexpected value for update mode: ${mode}`);
@@ -750,23 +788,33 @@ export class TableClient {
           throw new Error("The entity's rowKey cannot be undefined or null.");
         }
 
-        const partitionKey = escapeQuotes(entity.partitionKey);
-        const rowKey = escapeQuotes(entity.rowKey);
+        const partitionKey = encodeKeyValue(entity.partitionKey);
+        const rowKey = encodeKeyValue(entity.rowKey);
 
         if (mode === "Merge") {
-          return this.tableOps.mergeEntity(this.tableName, partitionKey, rowKey, {
+          const result = await _mergeEntitySend(this._client, this.tableName, partitionKey, rowKey, {
             tableEntityProperties: { additionalProperties: serialize(entity) },
             ...updatedOptions,
             requestOptions: { skipUrlEncoding: true },
           });
+          await _mergeEntityDeserialize(result);
+          return extractHeaders(result);
         }
 
         if (mode === "Replace") {
-          return this.tableOps.updateEntity(this.tableName, partitionKey, rowKey, {
-            tableEntityProperties: { additionalProperties: serialize(entity) },
-            ...updatedOptions,
-            requestOptions: { skipUrlEncoding: true },
-          });
+          const result = await _updateEntitySend(
+            this._client,
+            this.tableName,
+            partitionKey,
+            rowKey,
+            {
+              tableEntityProperties: { additionalProperties: serialize(entity) },
+              ...updatedOptions,
+              requestOptions: { skipUrlEncoding: true },
+            },
+          );
+          await _updateEntityDeserialize(result);
+          return extractHeaders(result);
         }
         throw new Error(`Unexpected value for update mode: ${mode}`);
       },

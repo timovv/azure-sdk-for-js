@@ -77,8 +77,19 @@ export type DeleteTableEntityOptions = OperationOptions & {
     etag?: string;
 };
 
-// @public (undocumented)
-export type DeleteTableEntityResponse = void;
+// @public
+export interface DeleteTableEntityResponse {
+    // (undocumented)
+    clientRequestId?: string;
+    // (undocumented)
+    date?: Date;
+    // (undocumented)
+    etag?: string;
+    // (undocumented)
+    requestId?: string;
+    // (undocumented)
+    version?: string;
+}
 
 // @public
 export interface Edm<T extends EdmTypes> {
@@ -405,8 +416,19 @@ export type TransactionAction = CreateDeleteEntityAction | UpdateEntityAction;
 // @public
 export type UpdateEntityAction = ["update" | "upsert", TableEntity] | ["update" | "upsert", TableEntity, "Merge" | "Replace"] | ["update" | "upsert", TableEntity, "Merge" | "Replace", UpdateTableEntityOptions | undefined];
 
-// @public (undocumented)
-export type UpdateEntityResponse = void;
+// @public
+export interface UpdateEntityResponse {
+    // (undocumented)
+    clientRequestId?: string;
+    // (undocumented)
+    date?: Date;
+    // (undocumented)
+    etag?: string;
+    // (undocumented)
+    requestId?: string;
+    // (undocumented)
+    version?: string;
+}
 
 // @public
 export type UpdateMode = "Merge" | "Replace";
@@ -416,8 +438,19 @@ export type UpdateTableEntityOptions = OperationOptions & {
     etag?: string;
 };
 
-// @public (undocumented)
-export type UpsertEntityResponse = void;
+// @public
+export interface UpsertEntityResponse {
+    // (undocumented)
+    clientRequestId?: string;
+    // (undocumented)
+    date?: Date;
+    // (undocumented)
+    etag?: string;
+    // (undocumented)
+    requestId?: string;
+    // (undocumented)
+    version?: string;
+}
 
 // (No @packageDocumentation comment for this package)
 

@@ -343,6 +343,7 @@ export function parseTransactionResponse(
       throw new Error(`Expected sub-response status to be an integer ${subResponseStatus}`);
     }
 
+    // Check for JSON error body
     const bodyMatch = subResponse.match(/\{(.*)\}/);
     if (bodyMatch?.length === 2) {
       handleBodyError(
@@ -351,6 +352,20 @@ export function parseTransactionResponse(
         transactionResponse.request,
         transactionResponse,
       );
+    }
+
+    // Check for XML error body (e.g. TableNotFound returns XML)
+    if (subResponseStatus >= 400) {
+      const codeMatch = subResponse.match(/<code>(.*?)<\/code>/i);
+      const messageMatch = subResponse.match(/<message[^>]*>(.*?)<\/message>/i);
+      if (codeMatch) {
+        throw new RestError(messageMatch?.[1] ?? "Transaction Failed", {
+          code: codeMatch[1],
+          statusCode: subResponseStatus,
+          request: transactionResponse.request,
+          response: transactionResponse,
+        });
+      }
     }
 
     const etagMatch = subResponse.match(/ETag: (.*)/);

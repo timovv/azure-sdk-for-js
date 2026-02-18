@@ -19,9 +19,31 @@ export type { ServiceSetPropertiesOptionalParams as SetPropertiesOptions } from 
 export type GetStatisticsResponse = import("./generated/models/index.js").TableServiceStats;
 export type GetPropertiesResponse = import("./generated/models/index.js").TableServiceProperties;
 export type SetPropertiesResponse = void;
-export type DeleteTableEntityResponse = void;
-export type UpdateEntityResponse = void;
-export type UpsertEntityResponse = void;
+
+/** Response from delete entity operation. */
+export interface DeleteTableEntityResponse {
+  clientRequestId?: string;
+  requestId?: string;
+  version?: string;
+  date?: Date;
+  etag?: string;
+}
+/** Response from update entity operation. */
+export interface UpdateEntityResponse {
+  clientRequestId?: string;
+  requestId?: string;
+  version?: string;
+  date?: Date;
+  etag?: string;
+}
+/** Response from upsert entity operation. */
+export interface UpsertEntityResponse {
+  clientRequestId?: string;
+  requestId?: string;
+  version?: string;
+  date?: Date;
+  etag?: string;
+}
 export type SetAccessPolicyResponse = void;
 
 // Header types no longer exist in the new generated code.
