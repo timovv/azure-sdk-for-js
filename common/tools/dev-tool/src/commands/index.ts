@@ -16,6 +16,7 @@ export const baseCommands = {
   package: () => import("./package"),
   samples: () => import("./samples"),
   "test-proxy": () => import("./test-proxy"),
+  "hello-world": () => import("./hello-world"),
   run: () => import("./run"),
   migrate: () => import("./migrate"),
   customization: () => import("./customization"),
