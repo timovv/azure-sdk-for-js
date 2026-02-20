@@ -13,7 +13,7 @@ tools:
     toolsets: [default]
 safe-outputs:
   create-pull-request:
-    base-branch: ${{ github.ref }}
+    base-branch: ${{ github.ref_name }}
   add-comment:
     max: 1
   noop:
