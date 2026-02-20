@@ -23,10 +23,13 @@
 #
 # Review documentation for inconsistencies with source code and create a PR with fixes
 #
-# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"5a801ae70f5ee5816c99a4eb157fbe63a23f062c4fa056b893215ed298d47918","compiler_version":"v0.47.3"}
+# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"56b9fd1b6d2446e719f9df96079604f30cff72d1a628ac8fedad1bcd80a4f3f3","compiler_version":"v0.47.3"}
 
 name: "Documentation Consistency Check"
-"on": workflow_dispatch
+"on":
+  schedule:
+  - cron: "0 9 * * 1"
+  workflow_dispatch:
 
 permissions: {}
 
@@ -37,8 +40,6 @@ run-name: "Documentation Consistency Check"
 
 jobs:
   activation:
-    needs: pre_activation
-    if: needs.pre_activation.outputs.activated == 'true'
     runs-on: ubuntu-slim
     permissions:
       contents: read
@@ -1005,28 +1006,6 @@ jobs:
           name: threat-detection.log
           path: /tmp/gh-aw/threat-detection/detection.log
           if-no-files-found: ignore
-
-  pre_activation:
-    runs-on: ubuntu-slim
-    outputs:
-      activated: ${{ steps.check_membership.outputs.is_team_member == 'true' }}
-    steps:
-      - name: Setup Scripts
-        uses: github/gh-aw/actions/setup@d07e64c315662818632f5ff0c8c848e3db397d91 # v0.47.3
-        with:
-          destination: /opt/gh-aw/actions
-      - name: Check team membership for workflow
-        id: check_membership
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
-        env:
-          GH_AW_REQUIRED_ROLES: admin,maintainer,write
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { setupGlobals } = require('/opt/gh-aw/actions/setup_globals.cjs');
-            setupGlobals(core, github, context, exec, io);
-            const { main } = require('/opt/gh-aw/actions/check_membership.cjs');
-            await main();
 
   safe_outputs:
     needs:
