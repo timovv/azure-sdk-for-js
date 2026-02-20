@@ -42,7 +42,8 @@ The `@azure/dev-tool` package lives at `common/tools/dev-tool/` in this reposito
 
 4. **If a README update is warranted**, use the `create-pull-request-review-comment` safe output suggest an update to the README.md table:
    - Clearly explain what changed in the CLI (e.g., "A new command `dev-tool admin foo` was added")
-   - Use a suggestion code fence so that the user can easily accept the suggestion.
+   - Your comment should be on the `dev-tool/README.md` file; do not make suggestions to change code.
+   - Use the suggestion ```suggestion code fence syntax so the user can easily adopt your change.
 
 5. **If the CLI changes are purely internal** (no user-facing surface changes), use the `noop` safe output with a message explaining that the changes don't affect the documented CLI surface.
 
