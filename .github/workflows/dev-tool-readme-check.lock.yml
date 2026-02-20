@@ -23,7 +23,7 @@
 #
 # Check that the dev-tool README is updated when CLI commands change
 #
-# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"8f1700775e1bb3298db046b6861984c3307bdbd3e22f9903b0d4dff559fa6ed6","compiler_version":"v0.47.1"}
+# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"b6704e8ceac6dd6d0f2b2b75d95abec585f42384bee7dc44e15bf7a8115fb57d","compiler_version":"v0.47.1"}
 
 name: "Dev-Tool README Update Checker"
 "on":
@@ -1148,7 +1148,7 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           GH_AW_AGENT_OUTPUT: ${{ env.GH_AW_AGENT_OUTPUT }}
-          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":1},\"create_pull_request\":{\"base_branch\":\"${{ github.ref }}\",\"max\":1,\"max_patch_size\":1024},\"missing_data\":{},\"missing_tool\":{}}"
+          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":1},\"create_pull_request\":{\"base_branch\":\"${{ github.ref_name }}\",\"max\":1,\"max_patch_size\":1024},\"missing_data\":{},\"missing_tool\":{}}"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
