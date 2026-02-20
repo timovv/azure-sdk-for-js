@@ -62,8 +62,35 @@ export function buildRequestUrl(
   }
   endpoint = buildBaseUrl(endpoint, options);
   routePath = buildRoutePath(routePath, pathParameters, options);
+
+  // If the endpoint contains a query string (e.g. SAS token), we need to parse it out
+  // and merge it with the route path's query params so the path is correctly placed
+  // before any query parameters.
+  let endpointQuery = "";
+  const qIndex = endpoint.indexOf("?");
+  if (qIndex !== -1) {
+    endpointQuery = endpoint.substring(qIndex + 1);
+    endpoint = endpoint.substring(0, qIndex);
+  }
+
   const requestUrl = appendQueryParams(`${endpoint}/${routePath}`, options);
   const url = new URL(requestUrl);
+
+  // Prepend the original endpoint query params so they appear before operation params
+  if (endpointQuery) {
+    const operationParams = url.search;
+    // Parse endpoint params to rebuild correctly
+    url.search = endpointQuery;
+    if (operationParams) {
+      // Append the operation params after the endpoint params
+      const opParamsStr = operationParams.startsWith("?")
+        ? operationParams.substring(1)
+        : operationParams;
+      if (opParamsStr) {
+        url.search += "&" + opParamsStr;
+      }
+    }
+  }
 
   return (
     url

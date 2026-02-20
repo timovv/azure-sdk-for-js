@@ -293,4 +293,41 @@ describe("urlHelpers", () => {
 
     assert.equal(result, "https://example.org/?bar=aaa&baz=bbb");
   });
+
+  it("should handle endpoint with query string (e.g. SAS token) by placing path before query params", () => {
+    const result = buildRequestUrl(
+      "https://account.table.core.windows.net?sv=2021&sig=fakesig",
+      "/Tables",
+      [],
+    );
+    assert.equal(
+      result,
+      "https://account.table.core.windows.net/Tables?sv=2021&sig=fakesig",
+    );
+  });
+
+  it("should merge endpoint query params with route query params", () => {
+    const result = buildRequestUrl(
+      "https://account.table.core.windows.net?sv=2021&sig=fakesig",
+      "/Tables",
+      [],
+      { queryParameters: { $top: 5 } },
+    );
+    assert.equal(
+      result,
+      "https://account.table.core.windows.net/Tables?sv=2021&sig=fakesig&%24top=5",
+    );
+  });
+
+  it("should handle endpoint query string with path parameters", () => {
+    const result = buildRequestUrl(
+      "https://account.table.core.windows.net?sv=2021&sig=fakesig",
+      "/Tables('{tableName}')",
+      ["myTable"],
+    );
+    assert.equal(
+      result,
+      "https://account.table.core.windows.net/Tables('myTable')?sv=2021&sig=fakesig",
+    );
+  });
 });
