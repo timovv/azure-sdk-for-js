@@ -23,7 +23,7 @@
 #
 # Check that the dev-tool README is updated when CLI commands change
 #
-# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"fa18d5090700c3d05290ba107f523aa43aa105825be6999e6976cd2bfed008cb","compiler_version":"v0.47.1"}
+# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"2c91331416aa2fc319be2c69f5366b14b541e2ab7e8413016bbec863da17aa87","compiler_version":"v0.47.1"}
 
 name: "Dev-Tool README Update Checker"
 "on":
@@ -372,30 +372,54 @@ jobs:
           mkdir -p /tmp/gh-aw/safeoutputs
           mkdir -p /tmp/gh-aw/mcp-logs/safeoutputs
           cat > /opt/gh-aw/safeoutputs/config.json << 'GH_AW_SAFE_OUTPUTS_CONFIG_EOF'
-          {"add_comment":{"max":1},"missing_data":{},"missing_tool":{},"noop":{"max":1}}
+          {"create_pull_request_review_comment":{"max":1},"missing_data":{},"missing_tool":{},"noop":{"max":1}}
           GH_AW_SAFE_OUTPUTS_CONFIG_EOF
           cat > /opt/gh-aw/safeoutputs/tools.json << 'GH_AW_SAFE_OUTPUTS_TOOLS_EOF'
           [
             {
-              "description": "Add a comment to an existing GitHub issue, pull request, or discussion. Use this to provide feedback, answer questions, or add information to an existing conversation. For creating new items, use create_issue, create_discussion, or create_pull_request instead. IMPORTANT: Comments are subject to validation constraints enforced by the MCP server - maximum 65536 characters for the complete comment (including footer which is added automatically), 10 mentions (@username), and 50 links. Exceeding these limits will result in an immediate error with specific guidance. NOTE: By default, this tool requires discussions:write permission. If your GitHub App lacks Discussions permission, set 'discussions: false' in the workflow's safe-outputs.add-comment configuration to exclude this permission. CONSTRAINTS: Maximum 1 comment(s) can be added.",
+              "description": "Create a review comment on a specific line of code in a pull request. Use this for inline code review feedback, suggestions, or questions about specific code changes. For general PR comments not tied to specific lines, use add_comment instead. CONSTRAINTS: Maximum 1 review comment(s) can be created. Comments will be on the RIGHT side of the diff.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
                   "body": {
-                    "description": "The comment text in Markdown format. This is the 'body' field - do not use 'comment_body' or other variations. Provide helpful, relevant information that adds value to the conversation. CONSTRAINTS: The complete comment (your body text + automatically added footer) must not exceed 65536 characters total. Maximum 10 mentions (@username), maximum 50 links (http/https URLs). A footer (~200-500 characters) is automatically appended with workflow attribution, so leave adequate space. If these limits are exceeded, the tool call will fail with a detailed error message indicating which constraint was violated.",
+                    "description": "Review comment content in Markdown. Provide specific, actionable feedback about the code at this location.",
                     "type": "string"
                   },
-                  "item_number": {
-                    "description": "The issue, pull request, or discussion number to comment on. This is the numeric ID from the GitHub URL (e.g., 123 in github.com/owner/repo/issues/123). If omitted, the tool will attempt to resolve the target from the current workflow context (triggering issue, PR, or discussion).",
-                    "type": "number"
+                  "line": {
+                    "description": "Line number for the comment. For single-line comments, this is the target line. For multi-line comments, this is the ending line.",
+                    "type": [
+                      "number",
+                      "string"
+                    ]
+                  },
+                  "path": {
+                    "description": "File path relative to the repository root (e.g., 'src/auth/login.js'). Must be a file that was changed in the PR.",
+                    "type": "string"
+                  },
+                  "side": {
+                    "description": "Side of the diff to comment on: RIGHT for the new version (additions), LEFT for the old version (deletions). Defaults to RIGHT.",
+                    "enum": [
+                      "LEFT",
+                      "RIGHT"
+                    ],
+                    "type": "string"
+                  },
+                  "start_line": {
+                    "description": "Starting line number for multi-line comments. When set, the comment spans from start_line to line. Omit for single-line comments.",
+                    "type": [
+                      "number",
+                      "string"
+                    ]
                   }
                 },
                 "required": [
+                  "path",
+                  "line",
                   "body"
                 ],
                 "type": "object"
               },
-              "name": "add_comment"
+              "name": "create_pull_request_review_comment"
             },
             {
               "description": "Report that a tool or capability needed to complete the task is not available, or share any information you deem important about missing functionality or limitations. Use this when you cannot accomplish what was requested because the required functionality is missing or access is restricted.",
@@ -470,7 +494,7 @@ jobs:
           GH_AW_SAFE_OUTPUTS_TOOLS_EOF
           cat > /opt/gh-aw/safeoutputs/validation.json << 'GH_AW_SAFE_OUTPUTS_VALIDATION_EOF'
           {
-            "add_comment": {
+            "create_pull_request_review_comment": {
               "defaultMax": 1,
               "fields": {
                 "body": {
@@ -479,10 +503,26 @@ jobs:
                   "sanitize": true,
                   "maxLength": 65000
                 },
-                "item_number": {
-                  "issueOrPRNumber": true
+                "line": {
+                  "required": true,
+                  "positiveInteger": true
+                },
+                "path": {
+                  "required": true,
+                  "type": "string"
+                },
+                "side": {
+                  "type": "string",
+                  "enum": [
+                    "LEFT",
+                    "RIGHT"
+                  ]
+                },
+                "start_line": {
+                  "optionalPositiveInteger": true
                 }
-              }
+              },
+              "customValidation": "startLineLessOrEqualLine"
             },
             "missing_tool": {
               "defaultMax": 20,
@@ -793,8 +833,7 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       contents: read
-      discussions: write
-      issues: write
+      pull-requests: write
     outputs:
       noop_message: ${{ steps.noop.outputs.noop_message }}
       tools_reported: ${{ steps.missing_tool.outputs.tools_reported }}
@@ -1009,8 +1048,7 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       contents: read
-      discussions: write
-      issues: write
+      pull-requests: write
     timeout-minutes: 15
     env:
       GH_AW_ENGINE_ID: "copilot"
@@ -1042,7 +1080,7 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           GH_AW_AGENT_OUTPUT: ${{ env.GH_AW_AGENT_OUTPUT }}
-          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":1},\"missing_data\":{},\"missing_tool\":{}}"
+          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"create_pull_request_review_comment\":{\"max\":1,\"side\":\"RIGHT\"},\"missing_data\":{},\"missing_tool\":{}}"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |

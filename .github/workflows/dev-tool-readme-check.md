@@ -12,7 +12,7 @@ tools:
   github:
     toolsets: [default]
 safe-outputs:
-  add-comment:
+  create-pull-request-review-comment:
     max: 1
   noop:
 ---
@@ -40,11 +40,9 @@ The `@azure/dev-tool` package lives at `common/tools/dev-tool/` in this reposito
      - Changes to the command framework that affect CLI help text or argument parsing behavior
    - Ignore changes that do NOT affect the CLI surface (e.g., internal implementation changes within a command handler that don't change its name, description, or options).
 
-4. **If a README update is warranted**, use the `add-comment` safe output to post a helpful review comment on the PR. The comment should:
+4. **If a README update is warranted**, use the `create-pull-request-review-comment` safe output suggest an update to the README.md table:
    - Clearly explain what changed in the CLI (e.g., "A new command `dev-tool admin foo` was added")
-   - Explain what section of the README needs updating (the command tree in the "Usage" section, starting around line 13)
-   - Suggest the specific text to add, remove, or modify in the README command tree
-   - Be polite and constructive
+   - Use a suggestion code fence so that the user can easily accept the suggestion.
 
 5. **If the CLI changes are purely internal** (no user-facing surface changes), use the `noop` safe output with a message explaining that the changes don't affect the documented CLI surface.
 
