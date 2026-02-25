@@ -4,7 +4,6 @@
 import type {
   CreateTableEntityResponse,
   DeleteTableEntityOptions,
-  GetAccessPolicyResponse,
   GetTableEntityOptions,
   GetTableEntityResponse,
   ListTableEntitiesOptions,
@@ -21,19 +20,23 @@ import type {
 } from "./models.js";
 import type {
   DeleteTableEntityResponse,
+  GetAccessPolicyResponse,
   SetAccessPolicyResponse,
   UpdateEntityResponse,
   UpsertEntityResponse,
 } from "./generatedModels.js";
-import type {
-  FullOperationResponse,
-  InternalClientPipelineOptions,
-  OperationOptions,
-  ServiceClient,
-  ServiceClientOptions,
-} from "@azure/core-client";
-import type { TableDeleteEntityOptionalParams } from "./generated/index.js";
-import { GeneratedClient } from "./generated/index.js";
+import type { OperationOptions } from "@azure-rest/core-client";
+import { getClient, createRestError } from "@azure-rest/core-client";
+import type { TableOperations } from "./generated/classic/table/index.js";
+import { _getTableOperations } from "./generated/classic/table/index.js";
+import type { GeneratedContext } from "./generated/api/generatedContext.js";
+import {
+  _$deleteSend,
+  _createSend,
+  _insertEntitySend,
+  _deleteEntitySend,
+} from "./generated/api/table/operations.js";
+import type { TableQueryEntitiesOptionalParams } from "./generated/api/table/options.js";
 import type { NamedKeyCredential, SASCredential, TokenCredential } from "@azure/core-auth";
 import { isNamedKeyCredential, isSASCredential, isTokenCredential } from "@azure/core-auth";
 import { COSMOS_SCOPE, STORAGE_SCOPE, TablesLoggingAllowedHeaderNames } from "./utils/constants.js";
@@ -46,22 +49,19 @@ import {
   serializeQueryOptions,
   serializeSignedIdentifiers,
 } from "./serialization.js";
-import { parseXML, stringifyXML } from "@azure/core-xml";
 
 import { InternalTableTransaction } from "./TableTransaction.js";
 import type { ListEntitiesResponse } from "./utils/internalModels.js";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import type { Pipeline } from "@azure/core-rest-pipeline";
-import type { Table } from "./generated/operationsInterfaces/index.js";
-import type { TableQueryEntitiesOptionalParams } from "./generated/models/index.js";
 import { Uuid } from "./utils/uuid.js";
 import { apiVersionPolicy } from "./utils/apiVersionPolicy.js";
 import { cosmosPatchPolicy } from "./cosmosPathPolicy.js";
-import { escapeQuotes } from "./odata.js";
+import { escapeKeyForUrl } from "./odata.js";
 import { getClientParamsFromConnectionString } from "./utils/connectionString.js";
-import { handleTableAlreadyExists } from "./utils/errorHelpers.js";
 import { isCosmosEndpoint } from "./utils/isCosmosEndpoint.js";
 import { isCredential } from "./utils/isCredential.js";
+import { splitEndpointQuery } from "./utils/splitEndpointQuery.js";
 import { logger } from "./logger.js";
 import { setTokenChallengeAuthenticationPolicy } from "./utils/challengeAuthenticationUtils.js";
 import { tablesNamedKeyCredentialPolicy } from "./tablesNamedCredentialPolicy.js";
@@ -82,8 +82,8 @@ export class TableClient {
    * Pipelines can have multiple policies to manage manipulating each request before and after it is made to the server.
    */
   public pipeline: Pipeline;
-  private table: Table;
-  private generatedClient: ServiceClient;
+  private table: TableOperations;
+  private clientContext: GeneratedContext;
   private credential?: NamedKeyCredential | SASCredential | TokenCredential;
   private clientOptions: TableClientOptions;
   private readonly allowInsecureConnection: boolean;
@@ -229,44 +229,62 @@ export class TableClient {
 
     this.allowInsecureConnection = this.clientOptions.allowInsecureConnection ?? false;
 
-    const internalPipelineOptions: ServiceClientOptions & InternalClientPipelineOptions = {
+    // Strip query params (SAS tokens) from the endpoint URL — @azure-rest/core-client
+    // doesn't handle them correctly in the base URL (appends path after query string)
+    const endpointUrl = this.clientOptions.endpoint || this.url;
+    const { baseUrl, sasQuery } = splitEndpointQuery(endpointUrl);
+
+    const clientContext = getClient(baseUrl, undefined, {
       ...this.clientOptions,
-      endpoint: this.clientOptions.endpoint || this.url,
       loggingOptions: {
         logger: logger.info,
         additionalAllowedHeaderNames: [...TablesLoggingAllowedHeaderNames],
       },
-      deserializationOptions: {
-        parseXML,
-      },
-      serializationOptions: {
-        stringifyXML,
-      },
-    };
+    }) as GeneratedContext;
+    clientContext.apiVersion = "2019-02-02";
+    this.clientContext = clientContext;
 
-    const generatedClient = new GeneratedClient(this.url, internalPipelineOptions);
+    // If the URL had query params (SAS token), add policy to prepend them to each request
+    // They must come before operation-specific params to match the original URL ordering
+    if (sasQuery) {
+      clientContext.pipeline.addPolicy({
+        name: "sasQueryAppendPolicy",
+        sendRequest: async (req, next) => {
+          const qIndex = req.url.indexOf("?");
+          if (qIndex === -1) {
+            req.url = req.url + "?" + sasQuery;
+          } else {
+            // Insert SAS params right after '?' and before existing query params
+            const base = req.url.substring(0, qIndex);
+            const existing = req.url.substring(qIndex + 1);
+            req.url = base + "?" + sasQuery + "&" + existing;
+          }
+          return next(req);
+        },
+      });
+    }
+
     if (isNamedKeyCredential(credential)) {
-      generatedClient.pipeline.addPolicy(tablesNamedKeyCredentialPolicy(credential));
+      clientContext.pipeline.addPolicy(tablesNamedKeyCredentialPolicy(credential));
     } else if (isSASCredential(credential)) {
-      generatedClient.pipeline.addPolicy(tablesSASTokenPolicy(credential));
+      clientContext.pipeline.addPolicy(tablesSASTokenPolicy(credential));
     }
 
     if (isTokenCredential(credential)) {
       const scope = isCosmos ? COSMOS_SCOPE : STORAGE_SCOPE;
-      setTokenChallengeAuthenticationPolicy(generatedClient.pipeline, credential, scope);
+      setTokenChallengeAuthenticationPolicy(clientContext.pipeline, credential, scope);
     }
 
     if (isCosmos) {
-      generatedClient.pipeline.addPolicy(cosmosPatchPolicy());
+      clientContext.pipeline.addPolicy(cosmosPatchPolicy());
     }
 
     if (options.version) {
-      generatedClient.pipeline.addPolicy(apiVersionPolicy(options.version));
+      clientContext.pipeline.addPolicy(apiVersionPolicy(options.version));
     }
 
-    this.generatedClient = generatedClient;
-    this.table = generatedClient.table;
-    this.pipeline = generatedClient.pipeline;
+    this.table = _getTableOperations(clientContext);
+    this.pipeline = clientContext.pipeline;
   }
 
   /**
@@ -291,7 +309,16 @@ export class TableClient {
   public deleteTable(options: OperationOptions = {}): Promise<void> {
     return tracingClient.withSpan("TableClient.deleteTable", options, async (updatedOptions) => {
       try {
-        await this.table.delete(this.tableName, updatedOptions);
+        // Use lower-level send to avoid generated deserializer crash on empty body
+        const result = await _$deleteSend(this.clientContext, this.tableName, updatedOptions);
+        if (result.status === "204") {
+          return;
+        }
+        if (result.status === "404") {
+          logger.info("TableClient.deleteTable: Table doesn't exist");
+          return;
+        }
+        throw createRestError(result);
       } catch (e: any) {
         if (e.statusCode === 404) {
           logger.info("TableClient.deleteTable: Table doesn't exist");
@@ -325,9 +352,26 @@ export class TableClient {
   public createTable(options: OperationOptions = {}): Promise<void> {
     return tracingClient.withSpan("TableClient.createTable", options, async (updatedOptions) => {
       try {
-        await this.table.create({ name: this.tableName }, updatedOptions);
+        // Use lower-level send to avoid generated deserializer crash on empty/unexpected body
+        const result = await _createSend(
+          this.clientContext,
+          { tableName: this.tableName },
+          updatedOptions,
+        );
+        if (result.status === "201" || result.status === "204") {
+          return;
+        }
+        if (result.status === "409" && isTableAlreadyExistsBody(result.body)) {
+          logger.info(`Table ${this.tableName} already Exists`);
+          return;
+        }
+        throw createRestError(result);
       } catch (e: any) {
-        handleTableAlreadyExists(e, { ...updatedOptions, logger, tableName: this.tableName });
+        if (e.statusCode === 409 && isTableAlreadyExistsError(e)) {
+          logger.info(`Table ${this.tableName} already Exists`);
+          return;
+        }
+        throw e;
       }
     });
   }
@@ -367,26 +411,20 @@ export class TableClient {
       throw new Error("The entity's rowKey cannot be undefined or null.");
     }
     return tracingClient.withSpan("TableClient.getEntity", options, async (updatedOptions) => {
-      let parsedBody: any;
-      function onResponse(rawResponse: FullOperationResponse, flatResponse: unknown): void {
-        parsedBody = rawResponse.parsedBody;
-        if (updatedOptions.onResponse) {
-          updatedOptions.onResponse(rawResponse, flatResponse);
-        }
-      }
       const { disableTypeConversion, queryOptions, ...getEntityOptions } = updatedOptions;
-      await this.table.queryEntitiesWithPartitionAndRowKey(
+      const serializedQueryOptions = serializeQueryOptions(queryOptions || {});
+      const rawEntity = await this.table.queryEntitiesWithPartitionAndRowKey(
         this.tableName,
-        escapeQuotes(partitionKey),
-        escapeQuotes(rowKey),
+        escapeKeyForUrl(partitionKey),
+        escapeKeyForUrl(rowKey),
         {
           ...getEntityOptions,
-          queryOptions: serializeQueryOptions(queryOptions || {}),
-          onResponse,
+          ...serializedQueryOptions,
+          requestOptions: { skipUrlEncoding: true },
         },
       );
       const tableEntity = deserialize<TableEntityResult<T>>(
-        parsedBody,
+        rawEntity,
         disableTypeConversion ?? false,
       );
 
@@ -498,10 +536,10 @@ export class TableClient {
     options: InternalListTableEntitiesOptions = {},
   ): Promise<TableEntityResultPage<T>> {
     const { disableTypeConversion = false } = options;
-    const queryOptions = serializeQueryOptions(options.queryOptions || {});
+    const serializedQueryOptions = serializeQueryOptions(options.queryOptions || {});
     const listEntitiesOptions: TableQueryEntitiesOptionalParams = {
       ...options,
-      queryOptions,
+      ...serializedQueryOptions,
     };
 
     // If a continuation token is used, decode it and set the next row and partition key
@@ -511,14 +549,13 @@ export class TableClient {
       listEntitiesOptions.nextPartitionKey = continuationToken.nextPartitionKey;
     }
 
-    const {
-      xMsContinuationNextPartitionKey: nextPartitionKey,
-      xMsContinuationNextRowKey: nextRowKey,
-      value,
-    } = await this.table.queryEntities(tableName, listEntitiesOptions);
+    const result = await this.table.queryEntities(tableName, listEntitiesOptions);
+    const nextPartitionKey = result.nextPartitionKey ?? undefined;
+    const nextRowKey = result.nextRowKey ?? undefined;
+    const value = result.value ?? [];
 
     const tableEntities = deserializeObjectsArray<TableEntityResult<T>>(
-      value ?? [],
+      value,
       disableTypeConversion,
     );
 
@@ -562,13 +599,27 @@ export class TableClient {
     entity: TableEntity<T>,
     options: OperationOptions = {},
   ): Promise<CreateTableEntityResponse> {
-    return tracingClient.withSpan("TableClient.createEntity", options, (updatedOptions) => {
+    return tracingClient.withSpan("TableClient.createEntity", options, async (updatedOptions) => {
       const { ...createTableEntity } = updatedOptions || {};
-      return this.table.insertEntity(this.tableName, {
+      // Use lower-level send to avoid deserializer crash on empty 204 body
+      const result = await _insertEntitySend(this.clientContext, this.tableName, {
         ...createTableEntity,
-        tableEntityProperties: serialize(entity),
-        responsePreference: "return-no-content",
+        tableEntityProperties: serialize(entity) as any,
+        prefer: "return-no-content",
       });
+      const status = Number(result.status);
+      if (status >= 200 && status < 300) {
+        return {
+          clientRequestId: result.headers["x-ms-client-request-id"],
+          contentType: result.headers["content-type"],
+          date: result.headers["date"] ? new Date(result.headers["date"]) : undefined,
+          etag: result.headers["etag"],
+          preferenceApplied: result.headers["preference-applied"],
+          requestId: result.headers["x-ms-request-id"],
+          version: result.headers["x-ms-version"],
+        };
+      }
+      throw createRestError(result);
     });
   }
 
@@ -606,18 +657,26 @@ export class TableClient {
     if (rowKey === undefined || rowKey === null) {
       throw new Error("The entity's rowKey cannot be undefined or null.");
     }
-    return tracingClient.withSpan("TableClient.deleteEntity", options, (updatedOptions) => {
+    return tracingClient.withSpan("TableClient.deleteEntity", options, async (updatedOptions) => {
       const { etag = "*", ...rest } = updatedOptions;
-      const deleteOptions: TableDeleteEntityOptionalParams = {
-        ...rest,
-      };
-      return this.table.deleteEntity(
+      // Use lower-level send to avoid generated deserializer crash on empty error body
+      const result = await _deleteEntitySend(
+        this.clientContext,
         this.tableName,
-        escapeQuotes(partitionKey),
-        escapeQuotes(rowKey),
         etag,
-        deleteOptions,
+        escapeKeyForUrl(partitionKey),
+        escapeKeyForUrl(rowKey),
+        { ...rest, requestOptions: { skipUrlEncoding: true } },
       );
+      if (result.status === "204") {
+        return {
+          clientRequestId: result.headers["x-ms-client-request-id"],
+          date: result.headers["date"] ? new Date(result.headers["date"]) : undefined,
+          requestId: result.headers["x-ms-request-id"],
+          version: result.headers["x-ms-version"],
+        };
+      }
+      throw createRestError(result);
     });
   }
 
@@ -674,23 +733,39 @@ export class TableClient {
       "TableClient.updateEntity",
       options,
       async (updatedOptions) => {
-        const partitionKey = escapeQuotes(entity.partitionKey);
-        const rowKey = escapeQuotes(entity.rowKey);
+        const partitionKey = escapeKeyForUrl(entity.partitionKey);
+        const rowKey = escapeKeyForUrl(entity.rowKey);
 
         const { etag = "*", ...updateEntityOptions } = updatedOptions || {};
         if (mode === "Merge") {
-          return this.table.mergeEntity(this.tableName, partitionKey, rowKey, {
-            tableEntityProperties: serialize(entity),
+          const response = await this.table.mergeEntity(this.tableName, partitionKey, rowKey, {
+            tableEntityProperties: serialize(entity) as any,
             ifMatch: etag,
             ...updateEntityOptions,
+            requestOptions: { skipUrlEncoding: true },
           });
+          return {
+            clientRequestId: response.clientRequestId,
+            date: response.date,
+            etag: response.eTag,
+            requestId: response.requestId,
+            version: response.apiVersion,
+          };
         }
         if (mode === "Replace") {
-          return this.table.updateEntity(this.tableName, partitionKey, rowKey, {
-            tableEntityProperties: serialize(entity),
+          const response = await this.table.updateEntity(this.tableName, partitionKey, rowKey, {
+            tableEntityProperties: serialize(entity) as any,
             ifMatch: etag,
             ...updateEntityOptions,
+            requestOptions: { skipUrlEncoding: true },
           });
+          return {
+            clientRequestId: response.clientRequestId,
+            date: response.date,
+            etag: response.eTag,
+            requestId: response.requestId,
+            version: response.apiVersion,
+          };
         }
 
         throw new Error(`Unexpected value for update mode: ${mode}`);
@@ -752,21 +827,37 @@ export class TableClient {
           throw new Error("The entity's rowKey cannot be undefined or null.");
         }
 
-        const partitionKey = escapeQuotes(entity.partitionKey);
-        const rowKey = escapeQuotes(entity.rowKey);
+        const partitionKey = escapeKeyForUrl(entity.partitionKey);
+        const rowKey = escapeKeyForUrl(entity.rowKey);
 
         if (mode === "Merge") {
-          return this.table.mergeEntity(this.tableName, partitionKey, rowKey, {
-            tableEntityProperties: serialize(entity),
+          const response = await this.table.mergeEntity(this.tableName, partitionKey, rowKey, {
+            tableEntityProperties: serialize(entity) as any,
             ...updatedOptions,
+            requestOptions: { skipUrlEncoding: true },
           });
+          return {
+            clientRequestId: response.clientRequestId,
+            date: response.date,
+            etag: response.eTag,
+            requestId: response.requestId,
+            version: response.apiVersion,
+          };
         }
 
         if (mode === "Replace") {
-          return this.table.updateEntity(this.tableName, partitionKey, rowKey, {
-            tableEntityProperties: serialize(entity),
+          const response = await this.table.updateEntity(this.tableName, partitionKey, rowKey, {
+            tableEntityProperties: serialize(entity) as any,
             ...updatedOptions,
+            requestOptions: { skipUrlEncoding: true },
           });
+          return {
+            clientRequestId: response.clientRequestId,
+            date: response.date,
+            etag: response.eTag,
+            requestId: response.requestId,
+            version: response.apiVersion,
+          };
         }
         throw new Error(`Unexpected value for update mode: ${mode}`);
       },
@@ -788,8 +879,14 @@ export class TableClient {
       "TableClient.getAccessPolicy",
       options,
       async (updatedOptions) => {
-        const signedIdentifiers = await this.table.getAccessPolicy(this.tableName, updatedOptions);
-        return deserializeSignedIdentifier(signedIdentifiers);
+        const result = await this.table.getAccessPolicy(this.tableName, updatedOptions);
+        const identifiers = deserializeSignedIdentifier(result.identifiers ?? []);
+        return Object.assign(identifiers, {
+          clientRequestId: result.clientRequestId,
+          date: result.date,
+          requestId: result.requestId,
+          version: result.apiVersion,
+        });
       },
     );
   }
@@ -803,12 +900,35 @@ export class TableClient {
     tableAcl: SignedIdentifier[],
     options: OperationOptions = {},
   ): Promise<SetAccessPolicyResponse> {
-    return tracingClient.withSpan("TableClient.setAccessPolicy", options, (updatedOptions) => {
-      const serlializedAcl = serializeSignedIdentifiers(tableAcl);
-      return this.table.setAccessPolicy(this.tableName, {
-        ...updatedOptions,
-        tableAcl: serlializedAcl,
-      });
+    return tracingClient.withSpan("TableClient.setAccessPolicy", options, async (updatedOptions) => {
+      const serializedAcl = serializeSignedIdentifiers(tableAcl);
+      // Convert date strings to Date-like objects for the generated XML serializer,
+      // which calls toUTCString() — we override it to return the ISO 8601 string directly
+      const convertedAcl = serializedAcl.map((si: any) => ({
+        ...si,
+        accessPolicy: si.accessPolicy
+          ? {
+              ...si.accessPolicy,
+              ...(si.accessPolicy.start && {
+                start: { toUTCString: () => si.accessPolicy.start },
+              }),
+              ...(si.accessPolicy.expiry && {
+                expiry: { toUTCString: () => si.accessPolicy.expiry },
+              }),
+            }
+          : undefined,
+      }));
+      const result = await this.table.setAccessPolicy(
+        this.tableName,
+        { identifiers: convertedAcl as any },
+        updatedOptions,
+      );
+      return {
+        clientRequestId: result.clientRequestId,
+        date: result.date,
+        requestId: result.requestId,
+        version: result.apiVersion,
+      };
     });
   }
 
@@ -877,10 +997,11 @@ export class TableClient {
       partitionKey,
       transactionId,
       changesetId,
-      this.generatedClient,
+      this.clientContext.pipeline,
       new TableClient(this.url, this.tableName),
       this.credential,
       this.allowInsecureConnection,
+      this.clientOptions.httpClient,
     );
 
     for (const item of actions) {
@@ -948,4 +1069,24 @@ interface InternalListTableEntitiesOptions extends ListTableEntitiesOptions {
    * This option applies for all the properties
    */
   disableTypeConversion?: boolean;
+}
+
+/** Check if a response body indicates TableAlreadyExists */
+function isTableAlreadyExistsBody(body: any): boolean {
+  return (
+    body?.["odata.error"]?.code === "TableAlreadyExists" ||
+    body?.odataError?.code === "TableAlreadyExists" ||
+    body?.code === "TableAlreadyExists"
+  );
+}
+
+/** Check if a RestError indicates TableAlreadyExists */
+function isTableAlreadyExistsError(error: any): boolean {
+  const parsedBody = error?.response?.parsedBody;
+  const details = error?.details;
+  return (
+    isTableAlreadyExistsBody(parsedBody) ||
+    isTableAlreadyExistsBody(details) ||
+    error?.code === "TableAlreadyExists"
+  );
 }

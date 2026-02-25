@@ -3,7 +3,6 @@
 
 import type { EdmTypes, SignedIdentifier, TableEntityQueryOptions } from "./models.js";
 import type {
-  QueryOptions as GeneratedQueryOptions,
   SignedIdentifier as GeneratedSignedIdentifier,
 } from "./generated/models/index.js";
 import { base64Decode, base64Encode } from "./utils/bufferSerializer.js";
@@ -232,7 +231,7 @@ export function serializeSignedIdentifiers(
         ...(serializedStart && { start: serializedStart }),
         ...rest,
       },
-    };
+    } as any;
   });
 }
 
@@ -241,9 +240,13 @@ export function deserializeSignedIdentifier(
 ): SignedIdentifier[] {
   return signedIdentifiers.map((si) => {
     const { id, accessPolicy } = si;
-    const { start, expiry, ...restAcl } = accessPolicy ?? {};
-    const deserializedStart = start ? new Date(start) : undefined;
-    const deserializedExpiry = expiry ? new Date(expiry) : undefined;
+    const { start, expiry, ...restAcl } = accessPolicy ?? ({} as any);
+    const deserializedStart = start
+      ? start instanceof Date ? start : new Date(start)
+      : undefined;
+    const deserializedExpiry = expiry
+      ? expiry instanceof Date ? expiry : new Date(expiry)
+      : undefined;
 
     return {
       id,
@@ -256,9 +259,9 @@ export function deserializeSignedIdentifier(
   });
 }
 
-export function serializeQueryOptions(query: TableEntityQueryOptions): GeneratedQueryOptions {
+export function serializeQueryOptions(query: TableEntityQueryOptions): { select?: string; filter?: string } {
   const { select, ...queryOptions } = query;
-  const mappedQuery: GeneratedQueryOptions = { ...queryOptions };
+  const mappedQuery: { select?: string; filter?: string } = { ...queryOptions };
   // Properties that are always returned by the service but are not allowed in select
   const excludeFromSelect = ["etag", "odata.etag"];
   if (select) {

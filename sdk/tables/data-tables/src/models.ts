@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { CommonClientOptions, OperationOptions } from "@azure/core-client";
+import type { ClientOptions } from "@azure-rest/core-client";
+import type { OperationOptions } from "@azure-rest/core-client";
 import type {
-  TableGetAccessPolicyHeaders,
   TableInsertEntityHeaders,
-} from "./generated/models/index.js";
+} from "./generatedModels.js";
 
 /**
  * Represents the Create or Delete Entity operation to be included in a Transaction request
@@ -28,7 +28,7 @@ export type TransactionAction = CreateDeleteEntityAction | UpdateEntityAction;
 /**
  * Client options used to configure Tables Api requests
  */
-export type TableServiceClientOptions = CommonClientOptions & {
+export type TableServiceClientOptions = ClientOptions & {
   endpoint?: string;
   version?: string;
 };
@@ -294,5 +294,4 @@ export interface AccessPolicy {
   permission?: string;
 }
 
-/** Contains response data for the getAccessPolicy operation. */
-export type GetAccessPolicyResponse = TableGetAccessPolicyHeaders & SignedIdentifier[];
+

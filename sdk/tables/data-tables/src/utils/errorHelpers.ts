@@ -1,10 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { OperationOptions, OperationRequest } from "@azure/core-client";
+import type { OperationOptions } from "@azure-rest/core-client";
 import type { PipelineResponse, RestError } from "@azure/core-rest-pipeline";
 import type { AzureLogger } from "@azure/logger";
-import type { TableServiceError } from "../generated/index.js";
 
 export type TableServiceErrorResponse = PipelineResponse & {
   /**
@@ -14,11 +13,7 @@ export type TableServiceErrorResponse = PipelineResponse & {
   /**
    * The response body as parsed JSON or XML.
    */
-  parsedBody: TableServiceError;
-  /**
-   * The request that generated the response.
-   */
-  request: OperationRequest;
+  parsedBody: any;
 };
 
 export function handleTableAlreadyExists(
@@ -29,7 +24,7 @@ export function handleTableAlreadyExists(
   if (
     responseError &&
     responseError.status === 409 &&
-    responseError.parsedBody.odataError?.code === "TableAlreadyExists"
+    getOdataErrorCode(responseError.parsedBody) === "TableAlreadyExists"
   ) {
     options.logger?.info(`Table ${options.tableName} already Exists`);
 
@@ -41,6 +36,18 @@ export function handleTableAlreadyExists(
   }
 }
 
+function getOdataErrorCode(body: any): string | undefined {
+  // New generated TableServiceError has flat code/message.
+  // But the wire format has odata.error nesting. Check both patterns.
+  if (body?.["odata.error"]?.code) {
+    return body["odata.error"].code;
+  }
+  if (body?.odataError?.code) {
+    return body.odataError.code;
+  }
+  return body?.code;
+}
+
 function getErrorResponse(error: unknown): TableServiceErrorResponse | undefined {
   if (!isRestError(error)) {
     return undefined;
@@ -48,7 +55,7 @@ function getErrorResponse(error: unknown): TableServiceErrorResponse | undefined
 
   const errorResponse: TableServiceErrorResponse = error.response as TableServiceErrorResponse;
 
-  if (!errorResponse || !isTableServiceErrorResponse(errorResponse.parsedBody)) {
+  if (!errorResponse || !errorResponse.parsedBody) {
     return undefined;
   }
 
@@ -57,10 +64,4 @@ function getErrorResponse(error: unknown): TableServiceErrorResponse | undefined
 
 function isRestError(error: unknown): error is RestError {
   return (error as RestError).name === "RestError";
-}
-
-function isTableServiceErrorResponse(
-  errorResponseBody: any,
-): errorResponseBody is TableServiceError {
-  return Boolean(errorResponseBody?.odataError);
 }

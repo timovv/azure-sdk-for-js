@@ -6,10 +6,9 @@
 
 import { AzureNamedKeyCredential } from '@azure/core-auth';
 import { AzureSASCredential } from '@azure/core-auth';
-import type { CommonClientOptions } from '@azure/core-client';
-import * as coreClient from '@azure/core-client';
+import type { ClientOptions } from '@azure-rest/core-client';
 import { NamedKeyCredential } from '@azure/core-auth';
-import type { OperationOptions } from '@azure/core-client';
+import type { OperationOptions } from '@azure-rest/core-client';
 import type { PagedAsyncIterableIterator } from '@azure/core-paging';
 import type { Pipeline } from '@azure/core-rest-pipeline';
 import { RestError } from '@azure/core-rest-pipeline';
@@ -216,7 +215,7 @@ export interface ServiceSetPropertiesHeaders {
 export type SetAccessPolicyResponse = TableSetAccessPolicyHeaders;
 
 // @public
-export interface SetPropertiesOptions extends coreClient.OperationOptions {
+export interface SetPropertiesOptions extends OperationOptions {
     requestId?: string;
     timeout?: number;
 }
@@ -392,7 +391,7 @@ export class TableServiceClient {
 }
 
 // @public
-export type TableServiceClientOptions = CommonClientOptions & {
+export type TableServiceClientOptions = ClientOptions & {
     endpoint?: string;
     version?: string;
 };

@@ -10,11 +10,10 @@ import type {
   UpdateMode,
   UpdateTableEntityOptions,
 } from "./models.js";
+import type { OperationOptions } from "@azure-rest/core-client";
+import type { HttpClient, Pipeline, PipelineRequest, PipelineResponse } from "@azure/core-rest-pipeline";
+import { RestError, createHttpHeaders, createPipelineRequest, createDefaultHttpClient } from "@azure/core-rest-pipeline";
 import type { NamedKeyCredential, SASCredential, TokenCredential } from "@azure/core-auth";
-import type { OperationOptions, ServiceClient } from "@azure/core-client";
-import { serializationPolicy, serializationPolicyName } from "@azure/core-client";
-import type { Pipeline, PipelineRequest, PipelineResponse } from "@azure/core-rest-pipeline";
-import { RestError, createHttpHeaders, createPipelineRequest } from "@azure/core-rest-pipeline";
 import {
   getInitialTransactionBody,
   getTransactionHttpRequestBody,
@@ -27,7 +26,6 @@ import {
 } from "./TablePolicies.js";
 
 import type { TableClientLike } from "./utils/internalModels.js";
-import type { TableServiceErrorOdataError } from "./generated/index.js";
 import { cosmosPatchPolicy } from "./cosmosPathPolicy.js";
 import { getTransactionHeaders } from "./utils/transactionHeaders.js";
 import { isCosmosEndpoint } from "./utils/isCosmosEndpoint.js";
@@ -117,6 +115,20 @@ export class TableTransaction {
   }
 }
 
+/** Interface for sending requests through a pipeline */
+interface SendableClient {
+  sendRequest(request: PipelineRequest): Promise<PipelineResponse>;
+}
+
+const defaultHttpClient = createDefaultHttpClient();
+
+function createSendableClient(pipeline: Pipeline, httpClient?: HttpClient): SendableClient {
+  const client = httpClient ?? defaultHttpClient;
+  return {
+    sendRequest: (request: PipelineRequest) => pipeline.sendRequest(client, request),
+  };
+}
+
 /**
  * TableTransaction collects sub-operations that can be submitted together via submitTransaction
  */
@@ -137,7 +149,7 @@ export class InternalTableTransaction {
   };
   private interceptClient: TableClientLike;
   private allowInsecureConnection: boolean;
-  private client: ServiceClient;
+  private client: SendableClient;
 
   /**
    * @param url - Tables account url
@@ -150,12 +162,13 @@ export class InternalTableTransaction {
     transactionId: string,
     changesetId: string,
     // eslint-disable-next-line @azure/azure-sdk/ts-use-interface-parameters
-    client: ServiceClient,
+    client: Pipeline,
     interceptClient: TableClientLike,
     credential?: NamedKeyCredential | SASCredential | TokenCredential,
     allowInsecureConnection: boolean = false,
+    httpClient?: HttpClient,
   ) {
-    this.client = client;
+    this.client = createSendableClient(client, httpClient);
     this.url = url;
     this.interceptClient = interceptClient;
     this.allowInsecureConnection = allowInsecureConnection;
@@ -388,7 +401,7 @@ function handleBodyError(
   let code: string | undefined;
   // Only transaction sub-responses return body
   if (parsedError && parsedError["odata.error"]) {
-    const error: TableServiceErrorOdataError = parsedError["odata.error"];
+    const error = parsedError["odata.error"];
     message = error.message?.value ?? message;
     code = error.code;
   }
@@ -423,13 +436,12 @@ export function prepateTransactionPipeline(
   // With the clear state we now initialize the pipelines required for intercepting the requests.
   // Use transaction assemble policy to assemble request and intercept request from going to wire
 
-  pipeline.addPolicy(serializationPolicy(), { phase: "Serialize" });
   pipeline.addPolicy(transactionHeaderFilterPolicy());
   pipeline.addPolicy(transactionRequestAssemblePolicy(bodyParts, changesetId));
   if (isCosmos) {
     pipeline.addPolicy(cosmosPatchPolicy(), {
       afterPolicies: [transactionHeaderFilterPolicyName],
-      beforePolicies: [serializationPolicyName, transactionRequestAssemblePolicyName],
+      beforePolicies: [transactionRequestAssemblePolicyName],
     });
   }
 }
