@@ -8,11 +8,8 @@ import type {
   SetPropertiesOptions,
   SetPropertiesResponse,
 } from "./generatedModels.js";
-import type {
-  InternalClientPipelineOptions,
-  OperationOptions,
-  ServiceClientOptions,
-} from "@azure/core-client";
+import type { OperationOptions } from "@azure-rest/core-client";
+import { getClient, createRestError } from "@azure-rest/core-client";
 import type {
   ListTableItemsOptions,
   TableItem,
@@ -22,20 +19,20 @@ import type {
 import type { NamedKeyCredential, SASCredential, TokenCredential } from "@azure/core-auth";
 import { isNamedKeyCredential, isSASCredential, isTokenCredential } from "@azure/core-auth";
 import { COSMOS_SCOPE, STORAGE_SCOPE, TablesLoggingAllowedHeaderNames } from "./utils/constants.js";
-import type { Service, Table } from "./generated/index.js";
+import type { ServiceOperations } from "./generated/classic/service/index.js";
+import { _getServiceOperations } from "./generated/classic/service/index.js";
+import type { GeneratedContext } from "./generated/api/generatedContext.js";
+import { _querySend, _queryDeserialize, _queryDeserializeHeaders, _$deleteSend, _createSend } from "./generated/api/table/operations.js";
 import {
   injectSecondaryEndpointHeader,
   tablesSecondaryEndpointPolicy,
 } from "./secondaryEndpointPolicy.js";
-import { parseXML, stringifyXML } from "@azure/core-xml";
 
-import { GeneratedClient } from "./generated/generatedClient.js";
 import type { PagedAsyncIterableIterator } from "@azure/core-paging";
 import type { Pipeline } from "@azure/core-rest-pipeline";
 import type { TableItemResultPage } from "./models.js";
 import { apiVersionPolicy } from "./utils/apiVersionPolicy.js";
 import { getClientParamsFromConnectionString } from "./utils/connectionString.js";
-import { handleTableAlreadyExists } from "./utils/errorHelpers.js";
 import { isCredential } from "./utils/isCredential.js";
 import { logger } from "./logger.js";
 import { setTokenChallengeAuthenticationPolicy } from "./utils/challengeAuthenticationUtils.js";
@@ -43,6 +40,7 @@ import { tablesNamedKeyCredentialPolicy } from "./tablesNamedCredentialPolicy.js
 import { tablesSASTokenPolicy } from "./tablesSASTokenPolicy.js";
 import { tracingClient } from "./utils/tracing.js";
 import { isCosmosEndpoint } from "./utils/isCosmosEndpoint.js";
+import { splitEndpointQuery } from "./utils/splitEndpointQuery.js";
 
 /**
  * A TableServiceClient represents a Client to the Azure Tables service allowing you
@@ -58,8 +56,8 @@ export class TableServiceClient {
    * Pipelines can have multiple policies to manage manipulating each request before and after it is made to the server.
    */
   public pipeline: Pipeline;
-  private table: Table;
-  private service: Service;
+  private service: ServiceOperations;
+  private clientContext: GeneratedContext;
 
   /**
    * Creates a new instance of the TableServiceClient class.
@@ -166,41 +164,60 @@ export class TableServiceClient {
     const clientOptions =
       (!isCredential(credentialOrOptions) ? credentialOrOptions : options) || {};
 
-    const internalPipelineOptions: ServiceClientOptions & InternalClientPipelineOptions = {
+    // Strip query params (SAS tokens) from the endpoint URL — @azure-rest/core-client
+    // doesn't handle them correctly in the base URL (appends path after query string)
+    const endpointUrl = clientOptions.endpoint || this.url;
+    const { baseUrl, sasQuery } = splitEndpointQuery(endpointUrl);
+
+    const clientContext = getClient(baseUrl, undefined, {
       ...clientOptions,
-      endpoint: clientOptions.endpoint || this.url,
       loggingOptions: {
         logger: logger.info,
         additionalAllowedHeaderNames: [...TablesLoggingAllowedHeaderNames],
       },
-      deserializationOptions: {
-        parseXML,
-      },
-      serializationOptions: {
-        stringifyXML,
-      },
-    };
-    const client = new GeneratedClient(this.url, internalPipelineOptions);
-    client.pipeline.addPolicy(tablesSecondaryEndpointPolicy);
+    }) as GeneratedContext;
+    clientContext.apiVersion = "2019-02-02";
+    this.clientContext = clientContext;
+
+    // If the URL had query params (SAS token), add policy to prepend them to each request
+    // They must come before operation-specific params to match the original URL ordering
+    if (sasQuery) {
+      clientContext.pipeline.addPolicy({
+        name: "sasQueryAppendPolicy",
+        sendRequest: async (req, next) => {
+          const qIndex = req.url.indexOf("?");
+          if (qIndex === -1) {
+            req.url = req.url + "?" + sasQuery;
+          } else {
+            // Insert SAS params right after '?' and before existing query params
+            const base = req.url.substring(0, qIndex);
+            const existing = req.url.substring(qIndex + 1);
+            req.url = base + "?" + sasQuery + "&" + existing;
+          }
+          return next(req);
+        },
+      });
+    }
+
+    clientContext.pipeline.addPolicy(tablesSecondaryEndpointPolicy);
 
     if (isNamedKeyCredential(credential)) {
-      client.pipeline.addPolicy(tablesNamedKeyCredentialPolicy(credential));
+      clientContext.pipeline.addPolicy(tablesNamedKeyCredentialPolicy(credential));
     } else if (isSASCredential(credential)) {
-      client.pipeline.addPolicy(tablesSASTokenPolicy(credential));
+      clientContext.pipeline.addPolicy(tablesSASTokenPolicy(credential));
     }
 
     if (isTokenCredential(credential)) {
       const scope = isCosmos ? COSMOS_SCOPE : STORAGE_SCOPE;
-      setTokenChallengeAuthenticationPolicy(client.pipeline, credential, scope);
+      setTokenChallengeAuthenticationPolicy(clientContext.pipeline, credential, scope);
     }
 
     if (options?.version) {
-      client.pipeline.addPolicy(apiVersionPolicy(options.version));
+      clientContext.pipeline.addPolicy(apiVersionPolicy(options.version));
     }
 
-    this.pipeline = client.pipeline;
-    this.table = client.table;
-    this.service = client.service;
+    this.pipeline = clientContext.pipeline;
+    this.service = _getServiceOperations(clientContext);
   }
 
   /**
@@ -209,9 +226,16 @@ export class TableServiceClient {
    * @param options - The options parameters.
    */
   public async getStatistics(options: OperationOptions = {}): Promise<GetStatisticsResponse> {
-    return tracingClient.withSpan("TableServiceClient.getStatistics", options, (updatedOptions) =>
-      this.service.getStatistics(injectSecondaryEndpointHeader(updatedOptions)),
-    );
+    return tracingClient.withSpan("TableServiceClient.getStatistics", options, async (updatedOptions) => {
+      const result = await this.service.getStatistics(injectSecondaryEndpointHeader(updatedOptions));
+      return {
+        geoReplication: result.geoReplication,
+        clientRequestId: result.clientRequestId,
+        date: result.date,
+        requestId: result.requestId,
+        version: result.apiVersion,
+      };
+    });
   }
 
   /**
@@ -220,9 +244,18 @@ export class TableServiceClient {
    * @param options - The options parameters.
    */
   public getProperties(options: OperationOptions = {}): Promise<GetPropertiesResponse> {
-    return tracingClient.withSpan("TableServiceClient.getProperties", options, (updatedOptions) =>
-      this.service.getProperties(updatedOptions),
-    );
+    return tracingClient.withSpan("TableServiceClient.getProperties", options, async (updatedOptions) => {
+      const result = await this.service.getProperties(updatedOptions);
+      return {
+        logging: result.logging,
+        hourMetrics: result.hourMetrics,
+        minuteMetrics: result.minuteMetrics,
+        cors: result.cors,
+        clientRequestId: result.clientRequestId,
+        requestId: result.requestId,
+        version: result.apiVersion,
+      };
+    });
   }
 
   /**
@@ -235,9 +268,14 @@ export class TableServiceClient {
     properties: ServiceProperties,
     options: SetPropertiesOptions = {},
   ): Promise<SetPropertiesResponse> {
-    return tracingClient.withSpan("TableServiceClient.setProperties", options, (updatedOptions) =>
-      this.service.setProperties(properties, updatedOptions),
-    );
+    return tracingClient.withSpan("TableServiceClient.setProperties", options, async (updatedOptions) => {
+      const result = await this.service.setProperties(properties, updatedOptions);
+      return {
+        clientRequestId: result.clientRequestId,
+        requestId: result.requestId,
+        version: result.apiVersion,
+      };
+    });
   }
 
   /**
@@ -251,9 +289,26 @@ export class TableServiceClient {
       options,
       async (updatedOptions) => {
         try {
-          await this.table.create({ name }, updatedOptions);
+          // Use lower-level send to avoid generated deserializer crash on empty/unexpected body
+          const result = await _createSend(
+            this.clientContext,
+            { tableName: name },
+            updatedOptions,
+          );
+          if (result.status === "201" || result.status === "204") {
+            return;
+          }
+          if (result.status === "409" && isTableAlreadyExistsBody(result.body)) {
+            logger.info(`Table ${name} already Exists`);
+            return;
+          }
+          throw createRestError(result);
         } catch (e: any) {
-          handleTableAlreadyExists(e, { ...updatedOptions, logger, tableName: name });
+          if (e.statusCode === 409 && isTableAlreadyExistsError(e)) {
+            logger.info(`Table ${name} already Exists`);
+            return;
+          }
+          throw e;
         }
       },
     );
@@ -269,15 +324,16 @@ export class TableServiceClient {
       "TableServiceClient.deleteTable",
       options,
       async (updatedOptions) => {
-        try {
-          await this.table.delete(name, updatedOptions);
-        } catch (e: any) {
-          if (e.statusCode === 404) {
-            logger.info("TableServiceClient.deleteTable: Table doesn't exist");
-          } else {
-            throw e;
-          }
+        // Use lower-level send to avoid generated deserializer crash on empty body
+        const result = await _$deleteSend(this.clientContext, name, updatedOptions);
+        if (result.status === "204") {
+          return;
         }
+        if (result.status === "404") {
+          logger.info("TableServiceClient.deleteTable: Table doesn't exist");
+          return;
+        }
+        throw createRestError(result);
       },
     );
   }
@@ -360,11 +416,17 @@ export class TableServiceClient {
   }
 
   private async _listTables(options: InternalListTablesOptions = {}): Promise<TableItemResultPage> {
-    const { continuationToken: nextTableName, ...listOptions } = options;
-    const { xMsContinuationNextTableName: continuationToken, value = [] } = await this.table.query({
-      ...listOptions,
+    const { continuationToken: nextTableName, queryOptions, ...restOptions } = options;
+    const result = await _querySend(this.clientContext, {
+      ...restOptions,
       nextTableName,
+      filter: queryOptions?.filter,
+      top: queryOptions?.top,
     });
+    const deserialized = await _queryDeserialize(result);
+    const headers = _queryDeserializeHeaders(result);
+    const continuationToken = headers.nextTableName ?? undefined;
+    const value: TableItem[] = (deserialized.value ?? []).map((tp) => ({ name: tp.tableName }));
     return Object.assign([...value], { continuationToken });
   }
 
@@ -407,3 +469,23 @@ type InternalListTablesOptions = ListTableItemsOptions & {
    */
   continuationToken?: string;
 };
+
+/** Check if a response body indicates TableAlreadyExists */
+function isTableAlreadyExistsBody(body: any): boolean {
+  return (
+    body?.["odata.error"]?.code === "TableAlreadyExists" ||
+    body?.odataError?.code === "TableAlreadyExists" ||
+    body?.code === "TableAlreadyExists"
+  );
+}
+
+/** Check if a RestError indicates TableAlreadyExists */
+function isTableAlreadyExistsError(error: any): boolean {
+  const parsedBody = error?.response?.parsedBody;
+  const details = error?.details;
+  return (
+    isTableAlreadyExistsBody(parsedBody) ||
+    isTableAlreadyExistsBody(details) ||
+    error?.code === "TableAlreadyExists"
+  );
+}

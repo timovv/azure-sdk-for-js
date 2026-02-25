@@ -5,7 +5,7 @@ import type { Pipeline } from "@azure/core-rest-pipeline";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
 
 import type { TokenCredential } from "@azure/core-auth";
-import { authorizeRequestOnTenantChallenge } from "@azure/core-client";
+import { authorizeRequestOnTenantChallenge } from "./authorizeRequestOnTenantChallenge.js";
 
 /**
  * @internal

@@ -18,6 +18,16 @@ export function escapeQuotes(input: string): string {
   return input.replace(/'/g, "''");
 }
 
+/**
+ * Escapes a key value for use in URL path segments.
+ * Encodes percent signs as %25 so that literal `%` in keys (e.g. `%bar`)
+ * is not misinterpreted as a percent-encoded sequence by the HTTP pipeline.
+ * Also escapes single quotes for OData syntax.
+ */
+export function escapeKeyForUrl(input: string): string {
+  return escapeQuotes(input).replace(/%/g, "%25");
+}
+
 function encodeDate(input: unknown): string | unknown {
   return input instanceof Date ? `datetime'${input.toISOString()}'` : input;
 }

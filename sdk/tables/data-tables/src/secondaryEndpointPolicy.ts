@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import type { OperationOptions } from "@azure/core-client";
+import type { OperationOptions } from "@azure-rest/core-client";
 import type { PipelinePolicy } from "@azure/core-rest-pipeline";
 
 /**
@@ -39,8 +39,8 @@ export function injectSecondaryEndpointHeader(options: OperationOptions): Operat
     ...options,
     requestOptions: {
       ...options.requestOptions,
-      customHeaders: {
-        ...options.requestOptions?.customHeaders,
+      headers: {
+        ...(options.requestOptions?.headers as Record<string, string> | undefined),
         ...headerToInject,
       },
     },
