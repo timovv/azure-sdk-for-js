@@ -3,6 +3,7 @@
 
 import { SpawnOptions, spawn } from "node:child_process";
 import { createPrinter } from "./printer";
+import os from "node:os";
 
 export interface RunOptions extends SpawnOptions {
   captureOutput?: boolean;
@@ -25,7 +26,7 @@ export interface RunResultWithOutput extends RunResult {
 const log = createPrinter("run");
 
 /**
- * Run the given command as a child process.
+ * Run the given command as a child process in a pnpm context (i.e. using `pnpm exec`).
  *
  * @param command - the command to run. If an array of strings is passed, the first element will be the executable to run and the remaining elements will be the arguments. If a string is passed, it will be split on space (' ') and
  *                  then treated the same as a string array (quoting etc will not work for escaping).
@@ -33,7 +34,7 @@ const log = createPrinter("run");
 export async function run(command: string[] | string): Promise<RunResult>;
 
 /**
- * Run the given command as a child process.
+ * Run the given command as a child process in a pnpm context (i.e. using `pnpm exec`).
  *
  * @param command - the command to run. If an array of strings is passed, the first element will be the executable to run and the remaining elements will be the arguments. If a string is passed, it will be split on space (' ') and
  *                  then treated the same as a string array (quoting etc will not work for escaping).
@@ -45,7 +46,7 @@ export async function run(
 ): Promise<RunResultWithOutput>;
 
 /**
- * Run the given command as a child process.
+ * Run the given command as a child process in a pnpm context (i.e. using `pnpm exec`).
  *
  * @param command - the command to run. If an array of strings is passed, the first element will be the executable to run and the remaining elements will be the arguments. If a string is passed, it will be split on space (' ') and
  *                  then treated the same as a string array (quoting etc will not work for escaping).
@@ -60,13 +61,15 @@ export async function run(
   command: string[] | string,
   options: RunOptions = {},
 ): Promise<RunResult | RunResultWithOutput> {
-  const [executable, ...argv] = typeof command === "string" ? command.split(" ") : command;
+  const argv = typeof command === "string" ? command.split(" ") : command;
 
   let output = "";
 
+  const pnpm = os.platform() === "win32" ? "pnpm.cmd" : "pnpm";
+
   const exitCode = await new Promise<number>((resolve, reject) => {
-    const proc = spawn(executable, argv, options);
-    log.debug(`Running command: ${[executable, ...argv].join(" ")}`);
+    const proc = spawn(pnpm, ["exec", ...argv], options);
+    log.debug(`Running command: ${[pnpm, "exec", ...argv].join(" ")}`);
 
     proc.stderr?.setEncoding("utf8");
     proc.on("exit", (exitCode, signal) => {
@@ -79,8 +82,6 @@ export async function run(
         resolve(exitCode);
       }
     });
-
-    proc.on("error", reject);
 
     if (options.captureOutput) {
       proc.stdout?.on("data", (data) => {
