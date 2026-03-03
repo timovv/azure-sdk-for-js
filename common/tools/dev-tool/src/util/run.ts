@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 import { SpawnOptions, spawn } from "node:child_process";
+import os from "node:os";
 import { createPrinter } from "./printer";
 
 export interface RunOptions extends SpawnOptions {
@@ -20,6 +21,21 @@ export interface RunResult {
 
 export interface RunResultWithOutput extends RunResult {
   output: string;
+}
+
+export function escapeWin32Arg(arg: string): string {
+  // https://flatt.tech/research/posts/batbadbut-you-cant-securely-execute-commands-on-windows/
+
+  // 1. replace % with some wacky substitution to prevent variable expansion (see link above for details)
+  let escaped = arg.replaceAll("%", "%%cd:~,%")
+  // 2. if a double quote is preceded by a backslash, escape the backslash with another backslash
+  escaped = escaped.replaceAll('\\"', '\\\\"');
+  // 3. escape all double quotes by doubling them
+  escaped = escaped.replaceAll('"', '""');
+  // 4. remove newlines to prevent command injection
+  escaped = escaped.replaceAll("\n", "");
+  // 5. surround the whole thing in quotes.
+  return `"${escaped}"`;
 }
 
 const log = createPrinter("run");
@@ -65,7 +81,7 @@ export async function run(
   let output = "";
 
   const exitCode = await new Promise<number>((resolve, reject) => {
-    const proc = spawn(executable, argv, options);
+    const proc = os.platform() === "win32" ? spawn("cmd.exe", ["/V:OFF", "/E:ON", "/C", [executable, ...argv.map(escapeWin32Arg)].join(' ')]) : spawn(executable, argv, options);
     log.debug(`Running command: ${[executable, ...argv].join(" ")}`);
 
     proc.stderr?.setEncoding("utf8");
