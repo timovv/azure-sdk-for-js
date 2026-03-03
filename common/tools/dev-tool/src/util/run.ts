@@ -81,6 +81,8 @@ export async function run(
   let output = "";
 
   const exitCode = await new Promise<number>((resolve, reject) => {
+    console.log(argv);
+    console.log(argv.map(escapeWin32Arg).join(" "));
     const proc = os.platform() === "win32" ? spawn("cmd.exe", ["/V:OFF", "/E:ON", "/C", [executable, ...argv.map(escapeWin32Arg)].join(' ')]) : spawn(executable, argv, options);
     log.debug(`Running command: ${[executable, ...argv].join(" ")}`);
 
