@@ -23,7 +23,7 @@ export interface RunResultWithOutput extends RunResult {
   output: string;
 }
 
-export function escapeWin32Arg(arg: string): string {
+export function escapeCmdArg(arg: string): string {
   // https://flatt.tech/research/posts/batbadbut-you-cant-securely-execute-commands-on-windows/
 
   // 1. replace % with some wacky substitution to prevent variable expansion (see link above for details)
@@ -82,8 +82,8 @@ export async function run(
 
   const exitCode = await new Promise<number>((resolve, reject) => {
     console.log(argv);
-    console.log(argv.map(escapeWin32Arg).join(" "));
-    const proc = os.platform() === "win32" ? spawn("cmd.exe", ["/V:OFF", "/E:ON", "/C", [executable, ...argv.map(escapeWin32Arg)].join(' ')]) : spawn(executable, argv, options);
+    console.log(argv.map(escapeCmdArg).join(" "));
+    const proc = os.platform() === "win32" ? spawn("cmd.exe", ["/V:OFF", "/E:ON", "/C", executable, ...argv.map(escapeCmdArg)]) : spawn(executable, argv, options);
     log.debug(`Running command: ${[executable, ...argv].join(" ")}`);
 
     proc.stderr?.setEncoding("utf8");
