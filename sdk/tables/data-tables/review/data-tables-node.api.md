@@ -7,9 +7,9 @@
 import { AzureNamedKeyCredential } from '@azure/core-auth';
 import { AzureSASCredential } from '@azure/core-auth';
 import type { CommonClientOptions } from '@azure/core-client';
-import * as coreClient from '@azure/core-client';
 import { NamedKeyCredential } from '@azure/core-auth';
 import type { OperationOptions } from '@azure/core-client';
+import { OperationOptions as OperationOptions_2 } from '@azure-rest/core-client';
 import type { PagedAsyncIterableIterator } from '@azure/core-paging';
 import type { Pipeline } from '@azure/core-rest-pipeline';
 import { RestError } from '@azure/core-rest-pipeline';
@@ -78,7 +78,18 @@ export type DeleteTableEntityOptions = OperationOptions & {
 };
 
 // @public
-export type DeleteTableEntityResponse = TableDeleteEntityHeaders;
+export interface DeleteTableEntityResponse {
+    // (undocumented)
+    clientRequestId?: string;
+    // (undocumented)
+    date?: Date;
+    // (undocumented)
+    etag?: string;
+    // (undocumented)
+    requestId?: string;
+    // (undocumented)
+    version?: string;
+}
 
 // @public
 export interface Edm<T extends EdmTypes> {
@@ -102,16 +113,16 @@ export interface GeoReplication {
 }
 
 // @public
-export type GeoReplicationStatusType = string;
+export type GeoReplicationStatusType = "live" | "bootstrap" | "unavailable";
 
 // @public
 export type GetAccessPolicyResponse = TableGetAccessPolicyHeaders & SignedIdentifier[];
 
-// @public
-export type GetPropertiesResponse = ServiceGetPropertiesHeaders & ServiceProperties;
+// @public (undocumented)
+export type GetPropertiesResponse = ServiceProperties;
 
-// @public
-export type GetStatisticsResponse = ServiceGetStatisticsHeaders & TableServiceStats;
+// @public (undocumented)
+export type GetStatisticsResponse = TableServiceStats;
 
 // @public
 export type GetTableEntityOptions = OperationOptions & {
@@ -122,15 +133,12 @@ export type GetTableEntityOptions = OperationOptions & {
 // @public
 export type GetTableEntityResponse<T extends object> = TableEntityResult<T>;
 
-// @public
-export enum KnownGeoReplicationStatusType {
-    // (undocumented)
-    Bootstrap = "bootstrap",
-    // (undocumented)
-    Live = "live",
-    // (undocumented)
-    Unavailable = "unavailable"
-}
+// @public @deprecated (undocumented)
+export const KnownGeoReplicationStatusType: {
+    Live: "live";
+    Bootstrap: "bootstrap";
+    Unavailable: "unavailable";
+};
 
 // @public
 export type ListTableEntitiesOptions = OperationOptions & {
@@ -155,7 +163,7 @@ export interface Logging {
 // @public
 export interface Metrics {
     enabled: boolean;
-    includeAPIs?: boolean;
+    includeApis?: boolean;
     retentionPolicy?: RetentionPolicy;
     version?: string;
 }
@@ -182,19 +190,12 @@ export interface SasIPRange {
 // @public
 export type SasProtocol = "https" | "https,http";
 
-// @public
+// @public @deprecated (undocumented)
 export interface ServiceGetPropertiesHeaders {
-    clientRequestId?: string;
-    requestId?: string;
-    version?: string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface ServiceGetStatisticsHeaders {
-    clientRequestId?: string;
-    date?: Date;
-    requestId?: string;
-    version?: string;
 }
 
 // @public
@@ -205,24 +206,21 @@ export interface ServiceProperties {
     minuteMetrics?: Metrics;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface ServiceSetPropertiesHeaders {
-    clientRequestId?: string;
-    requestId?: string;
-    version?: string;
 }
 
-// @public
-export type SetAccessPolicyResponse = TableSetAccessPolicyHeaders;
+// @public (undocumented)
+export type SetAccessPolicyResponse = void;
 
 // @public
-export interface SetPropertiesOptions extends coreClient.OperationOptions {
-    requestId?: string;
+export interface SetPropertiesOptions extends OperationOptions_2 {
+    clientRequestId?: string;
     timeout?: number;
 }
 
-// @public
-export type SetPropertiesResponse = ServiceSetPropertiesHeaders;
+// @public (undocumented)
+export type SetPropertiesResponse = void;
 
 // @public
 export interface SignedIdentifier {
@@ -253,29 +251,16 @@ export class TableClient {
     url: string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface TableCreateHeaders {
-    clientRequestId?: string;
-    date?: Date;
-    preferenceApplied?: string;
-    requestId?: string;
-    version?: string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface TableDeleteEntityHeaders {
-    clientRequestId?: string;
-    date?: Date;
-    requestId?: string;
-    version?: string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface TableDeleteHeaders {
-    clientRequestId?: string;
-    date?: Date;
-    requestId?: string;
-    version?: string;
 }
 
 // @public
@@ -303,23 +288,18 @@ export type TableEntityResultPage<T> = Array<TableEntityResult<T>> & {
     continuationToken?: string;
 };
 
-// @public
+// @public @deprecated (undocumented)
 export interface TableGetAccessPolicyHeaders {
-    clientRequestId?: string;
-    date?: Date;
-    requestId?: string;
-    version?: string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface TableInsertEntityHeaders {
-    clientRequestId?: string;
+    // (undocumented)
     contentType?: string;
-    date?: Date;
+    // (undocumented)
     etag?: string;
+    // (undocumented)
     preferenceApplied?: string;
-    requestId?: string;
-    version?: string;
 }
 
 // @public
@@ -332,13 +312,8 @@ export interface TableItemResultPage extends Array<TableItem> {
     continuationToken?: string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface TableMergeEntityHeaders {
-    clientRequestId?: string;
-    date?: Date;
-    etag?: string;
-    requestId?: string;
-    version?: string;
 }
 
 // @public
@@ -402,12 +377,8 @@ export interface TableServiceStats {
     geoReplication?: GeoReplication;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface TableSetAccessPolicyHeaders {
-    clientRequestId?: string;
-    date?: Date;
-    requestId?: string;
-    version?: string;
 }
 
 // @public
@@ -435,13 +406,8 @@ export interface TableTransactionResponse {
     subResponses: TableTransactionEntityResponse[];
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface TableUpdateEntityHeaders {
-    clientRequestId?: string;
-    date?: Date;
-    etag?: string;
-    requestId?: string;
-    version?: string;
 }
 
 // @public
@@ -451,7 +417,18 @@ export type TransactionAction = CreateDeleteEntityAction | UpdateEntityAction;
 export type UpdateEntityAction = ["update" | "upsert", TableEntity] | ["update" | "upsert", TableEntity, "Merge" | "Replace"] | ["update" | "upsert", TableEntity, "Merge" | "Replace", UpdateTableEntityOptions | undefined];
 
 // @public
-export type UpdateEntityResponse = TableUpdateEntityHeaders;
+export interface UpdateEntityResponse {
+    // (undocumented)
+    clientRequestId?: string;
+    // (undocumented)
+    date?: Date;
+    // (undocumented)
+    etag?: string;
+    // (undocumented)
+    requestId?: string;
+    // (undocumented)
+    version?: string;
+}
 
 // @public
 export type UpdateMode = "Merge" | "Replace";
@@ -462,7 +439,18 @@ export type UpdateTableEntityOptions = OperationOptions & {
 };
 
 // @public
-export type UpsertEntityResponse = TableMergeEntityHeaders;
+export interface UpsertEntityResponse {
+    // (undocumented)
+    clientRequestId?: string;
+    // (undocumented)
+    date?: Date;
+    // (undocumented)
+    etag?: string;
+    // (undocumented)
+    requestId?: string;
+    // (undocumented)
+    version?: string;
+}
 
 // (No @packageDocumentation comment for this package)
 

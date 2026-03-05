@@ -11,7 +11,7 @@ import type {
   UpdateTableEntityOptions,
 } from "./models.js";
 import type { NamedKeyCredential, SASCredential, TokenCredential } from "@azure/core-auth";
-import type { OperationOptions, ServiceClient } from "@azure/core-client";
+import type { OperationOptions } from "@azure/core-client";
 import { serializationPolicy, serializationPolicyName } from "@azure/core-client";
 import type { Pipeline, PipelineRequest, PipelineResponse } from "@azure/core-rest-pipeline";
 import { RestError, createHttpHeaders, createPipelineRequest } from "@azure/core-rest-pipeline";
@@ -27,7 +27,7 @@ import {
 } from "./TablePolicies.js";
 
 import type { TableClientLike } from "./utils/internalModels.js";
-import type { TableServiceErrorOdataError } from "./generated/index.js";
+import type { TableServiceOdataError } from "./generated/index.js";
 import { cosmosPatchPolicy } from "./cosmosPathPolicy.js";
 import { getTransactionHeaders } from "./utils/transactionHeaders.js";
 import { isCosmosEndpoint } from "./utils/isCosmosEndpoint.js";
@@ -137,7 +137,7 @@ export class InternalTableTransaction {
   };
   private interceptClient: TableClientLike;
   private allowInsecureConnection: boolean;
-  private client: ServiceClient;
+  private client: { sendRequest: (request: PipelineRequest) => Promise<PipelineResponse> };
 
   /**
    * @param url - Tables account url
@@ -150,7 +150,7 @@ export class InternalTableTransaction {
     transactionId: string,
     changesetId: string,
     // eslint-disable-next-line @azure/azure-sdk/ts-use-interface-parameters
-    client: ServiceClient,
+    client: { sendRequest: (request: PipelineRequest) => Promise<PipelineResponse> },
     interceptClient: TableClientLike,
     credential?: NamedKeyCredential | SASCredential | TokenCredential,
     allowInsecureConnection: boolean = false,
@@ -343,6 +343,7 @@ export function parseTransactionResponse(
       throw new Error(`Expected sub-response status to be an integer ${subResponseStatus}`);
     }
 
+    // Check for JSON error body
     const bodyMatch = subResponse.match(/\{(.*)\}/);
     if (bodyMatch?.length === 2) {
       handleBodyError(
@@ -351,6 +352,20 @@ export function parseTransactionResponse(
         transactionResponse.request,
         transactionResponse,
       );
+    }
+
+    // Check for XML error body (e.g. TableNotFound returns XML)
+    if (subResponseStatus >= 400) {
+      const codeMatch = subResponse.match(/<code>(.*?)<\/code>/i);
+      const messageMatch = subResponse.match(/<message[^>]*>(.*?)<\/message>/i);
+      if (codeMatch) {
+        throw new RestError(messageMatch?.[1] ?? "Transaction Failed", {
+          code: codeMatch[1],
+          statusCode: subResponseStatus,
+          request: transactionResponse.request,
+          response: transactionResponse,
+        });
+      }
     }
 
     const etagMatch = subResponse.match(/ETag: (.*)/);
@@ -388,7 +403,7 @@ function handleBodyError(
   let code: string | undefined;
   // Only transaction sub-responses return body
   if (parsedError && parsedError["odata.error"]) {
-    const error: TableServiceErrorOdataError = parsedError["odata.error"];
+    const error: TableServiceOdataError = parsedError["odata.error"];
     message = error.message?.value ?? message;
     code = error.code;
   }

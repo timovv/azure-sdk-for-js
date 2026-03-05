@@ -46,7 +46,18 @@ function getErrorResponse(error: unknown): TableServiceErrorResponse | undefined
     return undefined;
   }
 
-  const errorResponse: TableServiceErrorResponse = error.response as TableServiceErrorResponse;
+  // Handle new TypeSpec-generated error shape where details are set separately
+  const restError = error as RestError & { details?: TableServiceError };
+  if (restError.details && isTableServiceErrorResponse(restError.details)) {
+    const response = restError.response ?? ({} as any);
+    return Object.assign(response, {
+      status: restError.statusCode ?? response.status,
+      parsedBody: restError.details,
+    }) as TableServiceErrorResponse;
+  }
+
+  const errorResponse: TableServiceErrorResponse = (error as RestError)
+    .response as TableServiceErrorResponse;
 
   if (!errorResponse || !isTableServiceErrorResponse(errorResponse.parsedBody)) {
     return undefined;
