@@ -1,7 +1,7 @@
 ---
 on:
   pull_request_target:
-    types: [synchronize]
+    types: [opened, synchronize]
     paths:
       - "sdk/**/src/**"
       - "sdk/**/package.json"

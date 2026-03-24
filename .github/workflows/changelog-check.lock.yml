@@ -22,7 +22,7 @@
 #
 # Check for missing CHANGELOG entries and suggest additions for affected packages
 #
-# gh-aw-metadata: {"schema_version":"v3","frontmatter_hash":"cb959d44acd5639a5bee76c0d918d2f54decaef06aab1a75e233b0803fece738","compiler_version":"v0.63.1","strict":true,"agent_id":"copilot"}
+# gh-aw-metadata: {"schema_version":"v3","frontmatter_hash":"027a96615c223a90e83028933df89f8aa8e8531c3bf8a01753314677cb1a2434","compiler_version":"v0.63.1","strict":true,"agent_id":"copilot"}
 
 name: "CHANGELOG Entry Checker"
 "on":
@@ -31,6 +31,7 @@ name: "CHANGELOG Entry Checker"
     - sdk/**/src/**
     - sdk/**/package.json
     types:
+    - opened
     - synchronize
 
 permissions: {}
