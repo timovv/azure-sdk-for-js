@@ -6,6 +6,8 @@
 
 ### Breaking Changes
 
+- Renamed the public property `vaultUrl` to `_vaultUrl` on `KeyClient` as part of a naming convention update. ([PR #16](https://github.com/timovv/azure-sdk-for-js/pull/16))
+
 ### Bugs Fixed
 
 ### Other Changes
