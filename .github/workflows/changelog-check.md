@@ -92,14 +92,15 @@ For each affected package that is missing a CHANGELOG update:
 
 ## Step 4 — Post Comment
 
-Post your suggestions as a comment on the PR using `add-comment`.
+There are two cases:
 
-If a previous comment from this workflow already exists, it will be
-automatically minimized (hidden) and replaced with the new one.
+### Case A — Missing CHANGELOG entries found
+
+Post a comment on the PR using `add-comment` with the suggestions.
+Any previous comment from this workflow will be automatically minimized
+(hidden) and replaced.
 
 Format the comment body as follows:
-
----
 
 📝 **CHANGELOG Entry Suggestions**
 
@@ -120,13 +121,37 @@ corresponding CHANGELOG update in this PR:
 Replace `<head-branch>` with the PR's head branch name obtained from the
 GitHub API (the `head.ref` field of the pull request object).
 
----
+Repeat the package section for each package that needs an entry.
+List all packages in a single comment.
 
-Repeat the section above for each package that needs an entry.
-
-If multiple packages are affected, list them all in a single comment.
-
-## Step 5 — No Action Needed
+### Case B — All CHANGELOG entries are present
 
 If every affected package either has no `CHANGELOG.md` or already
-includes a CHANGELOG update in this PR, call `noop` and do nothing.
+includes a CHANGELOG update in this PR, post a comment using
+`add-comment` confirming the entries are present. The previous comment
+(with the suggestions) will be automatically hidden.
+
+Format the comment body as follows:
+
+✅ **All CHANGELOG entries provided**
+
+All affected packages have corresponding CHANGELOG updates in this PR.
+
+<details>
+<summary>Previous suggestions (resolved)</summary>
+
+<previous suggestions content — reproduce the full suggestion text
+from Step 3 here so the author can still reference it>
+
+</details>
+
+To generate the collapsed section, re-run the CHANGELOG suggestion
+logic from Step 3 as though entries were still missing, and include
+the generated suggestions inside the `<details>` block. This way the
+author can still see what was originally suggested.
+
+## Step 5 — No Affected Packages
+
+If there are no affected packages at all (no packages with a
+`CHANGELOG.md` had qualifying `src/` or `package.json` changes),
+call `noop` and do nothing.
