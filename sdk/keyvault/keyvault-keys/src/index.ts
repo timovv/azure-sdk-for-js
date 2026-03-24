@@ -212,13 +212,13 @@ export class KeyClient {
   /**
    * A reference to the auto-generated Key Vault HTTP client.
    */
-  private readonly client: KeyVaultClient;
+  private readonly _client: KeyVaultClient;
 
   /**
    * A reference to the credential that was used to construct this client.
    * Later used to instantiate a {@link CryptographyClient} with the same credential.
    */
-  private readonly credential: TokenCredential;
+  private readonly _credential: TokenCredential;
 
   /**
    * Creates an instance of KeyClient.
@@ -272,13 +272,13 @@ export class KeyClient {
       },
     };
 
-    this.credential = credential;
-    this.client = new KeyVaultClient(vaultUrl, credential, internalPipelineOptions);
+    this._credential = credential;
+    this._client = new KeyVaultClient(vaultUrl, credential, internalPipelineOptions);
 
-    this.client.pipeline.removePolicy({ name: bearerTokenAuthenticationPolicyName });
-    this.client.pipeline.addPolicy(keyVaultAuthenticationPolicy(credential, pipelineOptions));
+    this._client.pipeline.removePolicy({ name: bearerTokenAuthenticationPolicyName });
+    this._client.pipeline.addPolicy(keyVaultAuthenticationPolicy(credential, pipelineOptions));
     // Workaround for: https://github.com/Azure/azure-sdk-for-js/issues/31843
-    this.client.pipeline.addPolicy({
+    this._client.pipeline.addPolicy({
       name: "ContentTypePolicy",
       sendRequest(request, next) {
         const contentType = request.headers.get("Content-Type") ?? "";
@@ -322,7 +322,7 @@ export class KeyClient {
     options: CreateKeyOptions = {},
   ): Promise<KeyVaultKey> {
     return tracingClient.withSpan("KeyClient.createKey", options, async (updatedOptions) => {
-      const response = await this.client.createKey(
+      const response = await this._client.createKey(
         name,
         {
           kty: keyType,
@@ -494,7 +494,7 @@ export class KeyClient {
         releasePolicy,
         tags,
       };
-      const response = await this.client.importKey(name, parameters, updatedOptions);
+      const response = await this._client.importKey(name, parameters, updatedOptions);
       return getKeyFromKeyBundle(response);
     });
   }
@@ -535,11 +535,11 @@ export class KeyClient {
     // In order to avoid publicly exposing the pipeline we will pass in the underlying client as an undocumented
     // property to the constructor so that crypto providers downstream can use it.
     const constructorOptions: CryptographyClientOptions & { generatedClient: KeyVaultClient } = {
-      generatedClient: this.client,
+      generatedClient: this._client,
     };
     const cryptoClient = new CryptographyClient(
       keyUrl.toString(),
-      this.credential,
+      this._credential,
       constructorOptions,
     );
     return cryptoClient;
@@ -580,7 +580,7 @@ export class KeyClient {
   ): Promise<PollerLike<PollOperationState<DeletedKey>, DeletedKey>> {
     const poller = new DeleteKeyPoller({
       name,
-      client: this.client,
+      client: this._client,
       intervalInMs: options.intervalInMs,
       resumeFrom: options.resumeFrom,
       operationOptions: options,
@@ -667,7 +667,7 @@ export class KeyClient {
       `KeyClient.updateKeyProperties`,
       options,
       async (updatedOptions) => {
-        const response = await this.client.updateKey(
+        const response = await this._client.updateKey(
           name,
           keyVersion,
           {
@@ -735,7 +735,7 @@ export class KeyClient {
    */
   public getKey(name: string, options: GetKeyOptions = {}): Promise<KeyVaultKey> {
     return tracingClient.withSpan(`KeyClient.getKey`, options, async (updatedOptions) => {
-      const response = await this.client.getKey(name, options.version || "", updatedOptions);
+      const response = await this._client.getKey(name, options.version || "", updatedOptions);
       return getKeyFromKeyBundle(response);
     });
   }
@@ -778,7 +778,7 @@ export class KeyClient {
       `KeyClient.getKeyAttestation`,
       options,
       async (updatedOptions) => {
-        const response = await this.client.getKeyAttestation(
+        const response = await this._client.getKeyAttestation(
           name,
           updatedOptions.version ?? "",
           updatedOptions,
@@ -814,7 +814,7 @@ export class KeyClient {
    */
   public getDeletedKey(name: string, options: GetDeletedKeyOptions = {}): Promise<DeletedKey> {
     return tracingClient.withSpan(`KeyClient.getDeletedKey`, options, async (updatedOptions) => {
-      const response = await this.client.getDeletedKey(name, updatedOptions);
+      const response = await this._client.getDeletedKey(name, updatedOptions);
       return getKeyFromKeyBundle(response);
     });
   }
@@ -849,7 +849,7 @@ export class KeyClient {
    */
   public purgeDeletedKey(name: string, options: PurgeDeletedKeyOptions = {}): Promise<void> {
     return tracingClient.withSpan(`KeyClient.purgeDeletedKey`, options, async (updatedOptions) => {
-      await this.client.purgeDeletedKey(name, updatedOptions);
+      await this._client.purgeDeletedKey(name, updatedOptions);
     });
   }
 
@@ -891,7 +891,7 @@ export class KeyClient {
   ): Promise<PollerLike<PollOperationState<DeletedKey>, DeletedKey>> {
     const poller = new RecoverDeletedKeyPoller({
       name,
-      client: this.client,
+      client: this._client,
       intervalInMs: options.intervalInMs,
       resumeFrom: options.resumeFrom,
       operationOptions: options,
@@ -927,7 +927,7 @@ export class KeyClient {
    */
   public backupKey(name: string, options: BackupKeyOptions = {}): Promise<Uint8Array | undefined> {
     return tracingClient.withSpan(`KeyClient.backupKey`, options, async (updatedOptions) => {
-      const response = await this.client.backupKey(name, updatedOptions);
+      const response = await this._client.backupKey(name, updatedOptions);
       return response.value;
     });
   }
@@ -963,7 +963,7 @@ export class KeyClient {
     options: RestoreKeyBackupOptions = {},
   ): Promise<KeyVaultKey> {
     return tracingClient.withSpan(`KeyClient.restoreKeyBackup`, options, async (updatedOptions) => {
-      const response = await this.client.restoreKey({ keyBundleBackup: backup }, updatedOptions);
+      const response = await this._client.restoreKey({ keyBundleBackup: backup }, updatedOptions);
       return getKeyFromKeyBundle(response);
     });
   }
@@ -991,7 +991,7 @@ export class KeyClient {
    */
   public getRandomBytes(count: number, options: GetRandomBytesOptions = {}): Promise<Uint8Array> {
     return tracingClient.withSpan("KeyClient.getRandomBytes", options, async (updatedOptions) => {
-      const response = await this.client.getRandomBytes({ count }, updatedOptions);
+      const response = await this._client.getRandomBytes({ count }, updatedOptions);
       return response.value!;
     });
   }
@@ -1038,7 +1038,7 @@ export class KeyClient {
    */
   public rotateKey(name: string, options: RotateKeyOptions = {}): Promise<KeyVaultKey> {
     return tracingClient.withSpan("KeyClient.rotateKey", options, async (updatedOptions) => {
-      const key = await this.client.rotateKey(name, updatedOptions);
+      const key = await this._client.rotateKey(name, updatedOptions);
       return getKeyFromKeyBundle(key);
     });
   }
@@ -1076,7 +1076,7 @@ export class KeyClient {
   ): Promise<ReleaseKeyResult> {
     return tracingClient.withSpan("KeyClient.releaseKey", options, async (updatedOptions) => {
       const { nonce, algorithm, ...rest } = updatedOptions;
-      const result = await this.client.release(
+      const result = await this._client.release(
         name,
         options?.version || "",
         {
@@ -1121,7 +1121,7 @@ export class KeyClient {
     options: GetKeyRotationPolicyOptions = {},
   ): Promise<KeyRotationPolicy> {
     return tracingClient.withSpan("KeyClient.getKeyRotationPolicy", options, async () => {
-      const policy = await this.client.getKeyRotationPolicy(keyName);
+      const policy = await this._client.getKeyRotationPolicy(keyName);
       return keyRotationTransformations.generatedToPublic(policy);
     });
   }
@@ -1162,7 +1162,7 @@ export class KeyClient {
       "KeyClient.updateKeyRotationPolicy",
       options,
       async (updatedOptions) => {
-        const result = await this.client.updateKeyRotationPolicy(
+        const result = await this._client.updateKeyRotationPolicy(
           keyName,
           keyRotationTransformations.propertiesToGenerated(policy),
           updatedOptions,
@@ -1211,7 +1211,7 @@ export class KeyClient {
   ): PagedAsyncIterableIterator<KeyProperties> {
     return mapPagedAsyncIterable(
       options,
-      (mappedOptions) => this.client.getKeyVersions(name, mappedOptions),
+      (mappedOptions) => this._client.getKeyVersions(name, mappedOptions),
       getKeyPropertiesFromKeyItem,
     );
   }
@@ -1254,7 +1254,7 @@ export class KeyClient {
   ): PagedAsyncIterableIterator<KeyProperties> {
     return mapPagedAsyncIterable(
       options,
-      this.client.getKeys.bind(this.client),
+      this._client.getKeys.bind(this._client),
       getKeyPropertiesFromKeyItem,
     );
   }
@@ -1297,7 +1297,7 @@ export class KeyClient {
   ): PagedAsyncIterableIterator<DeletedKey> {
     return mapPagedAsyncIterable(
       options,
-      this.client.getDeletedKeys.bind(this.client),
+      this._client.getDeletedKeys.bind(this._client),
       getDeletedKeyFromDeletedKeyItem,
     );
   }
