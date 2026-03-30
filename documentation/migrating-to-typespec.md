@@ -237,19 +237,19 @@ Delete the following files that are no longer needed:
 1. **Generate and apply customizations:**
 
    ```bash
-   npm run generate:client
+   pnpm run generate:client
    ```
 
 2. **Build the package:**
 
    ```bash
-   npm run build
+   pnpm run build
    ```
 
 3. **Run tests:**
 
    ```bash
-   npm run test
+   pnpm run test
    ```
 
 4. **Validate the API surface:** Use API Extractor to ensure your public API hasn't changed unexpectedly.
@@ -268,8 +268,8 @@ Delete the following files that are no longer needed:
 After migration, your development workflow becomes:
 
 1. **Update TypeSpec definitions** in azure-rest-api-specs
-2. **Generate new code:** `npm run generate:client`
-3. **Build and test:** `npm run build && npm run test`
+2. **Generate new code:** `pnpm run generate:client`
+3. **Build and test:** `pnpm run build && pnpm run test`
 
 ### Version Management
 
