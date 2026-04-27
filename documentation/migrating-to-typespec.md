@@ -22,7 +22,7 @@ Before starting the migration, ensure you have:
 
 1. **TypeSpec definitions ready**: Your service's TypeSpec definitions should be complete and merged into the main branch of the [Azure REST API specs repository](https://github.com/Azure/azure-rest-api-specs)
 2. **Local development environment**:
-   - [Node.js LTS version](https://nodejs.org/en/about/releases/)
+   - Node.js 20 or later
    - Local clone of your fork of [azure-sdk-for-js](https://github.com/Azure/azure-sdk-for-js)
    - Local clone of your fork of [azure-rest-api-specs](https://github.com/Azure/azure-rest-api-specs)
 3. **Understanding of your current SDK**: Know which packages in azure-sdk-for-js belong to your service

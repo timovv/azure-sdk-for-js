@@ -14,11 +14,11 @@ If you're looking to be onboarded to the asset-sync workflow to push out the tes
 
 ## Commands - to run the tests inside the package directory
 
-| script name            | command(usually)                     |
-|:-----------------------|:-------------------------------------|
-| `npm run test:browser` | `dev-tool run test:vitest --browser` |
-| `npm run test:node`    | `dev-tool run test:vitest`           |
-|                        |                                      |
+| script name               | command(usually)                     |
+|:--------------------------|:-------------------------------------|
+| `pnpm test:browser`       | `dev-tool run test:vitest --browser` |
+| `pnpm test:node`          | `dev-tool run test:vitest`           |
+|                           |                                      |
 
 ## After migrating to asset-sync
 
@@ -62,17 +62,17 @@ export default mergeConfig(
 ```ts
    it.only("test title...")
 ```
-Run the test command such as `npm run unit-test:node` to run the test
+Run the test command such as `pnpm unit-test:node` to run the test
 
 [powershell]: https://github.com/PowerShell/PowerShell
 
 ## [Method 2] --testNamePattern
 ```bash
-npm run integration-test:node -- --testNamePattern "simple"
+pnpm integration-test:node -- --testNamePattern "simple"
 ```
 Reference - [Filtering Tests — Introduction to Testing JavaScript with Vitest](https://stevekinney.net/courses/testing/filtering-tests)
 
 ## [Method 3] -- test file
 ```bash
-npm run test:node -- test/public/metricsClient.spec.ts
+pnpm test:node -- test/public/metricsClient.spec.ts
 ```

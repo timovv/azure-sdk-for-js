@@ -27,12 +27,10 @@ To add perf tests for the `sdk/<service>/<service-sdk>` package, follow the step
 
 1.  Create a new folder for the perf tests.
 
-    Path- `sdk/<service>/perf-tests/<service-sdk>`
+    Path- `sdk/<service>/<service-sdk>-perf-tests`
 
-    (Create the `perf-tests` folder if that doesn't exist)
-
-3.  Tests will live under `sdk/<service>/perf-tests/<service-sdk>/src`
-4.  Add a `package.json` such as [example-perf-package.json](https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/storage/storage-file-datalake-perf-tests/package.json) at `sdk/<service>/perf-tests/<service-sdk>` folder.
+3.  Tests will live under `sdk/<service>/<service-sdk>-perf-tests/src`
+4.  Add a `package.json` such as [example-perf-package.json](https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/storage/storage-file-datalake-perf-tests/package.json) at `sdk/<service>/<service-sdk>-perf-tests` folder.
 
     Make sure to import your `<service-sdk>` and the `test-perf` project.
 
@@ -54,7 +52,7 @@ To add perf tests for the `sdk/<service>/<service-sdk>` package, follow the step
     ```
 
 5.  Run `pnpm install` and commit the changes to the `pnpm-lock` file.
-6.  Copy the `tsconfig.json`, `sample.env`(and `.env`) files that are present at the `sdk/<service>/<service-sdk>` to `sdk/<service>/perf-tests/<service-sdk>`.
+6.  Copy the `tsconfig.json`, `sample.env`(and `.env`) files that are present at the `sdk/<service>/<service-sdk>` to `sdk/<service>/<service-sdk>-perf-tests`.
 
     TSCONFIG
 
@@ -81,11 +79,11 @@ To add perf tests for the `sdk/<service>/<service-sdk>` package, follow the step
 
 (_Skip this section if your service does not have or does not care about a track-1 version._)
 
-1. If there is an old major version of your package that needs to be compared, create the folder as `sdk/<service>/perf-tests/<service-sdk>-track-1`
+1. If there is an old major version of your package that needs to be compared, create the folder as `sdk/<service>/<service-sdk>-perf-tests-track-1`
 
 2. It is expected that the track-1 perf tests are counterparts of track-2 tests, so they need to have the same names as specified in the track-2 tests for convenience.
 
-3. Add a `package.json` such as [example-track-1-perf-package.json](https://github.com/Azure/azure-sdk-for-js/blob/fe9b1e5a50946f53b6491d7f67b2420d8ee1b229/sdk/storage/perf-tests/storage-blob-track-1/package.json) at `sdk/<service>/perf-tests/<service-sdk>` folder.
+3. Add a `package.json` such as [example-track-1-perf-package.json](https://github.com/Azure/azure-sdk-for-js/blob/fe9b1e5a50946f53b6491d7f67b2420d8ee1b229/sdk/storage/perf-tests/storage-blob-track-1/package.json) at `sdk/<service>/<service-sdk>-perf-tests-track-1` folder.
 
    Make sure to import your `<service-sdk>` and the `test-perf` project.
 
@@ -237,9 +235,9 @@ export class `ServiceNameAPIName`Test extends ServiceNameTest<`ServiceNameAPINam
 
 ### [Command to run](#command-to-run)
 
-To run a particular test, use `npm run perf-test:node` - takes the test class name as the argument along with the command line arguments you may provide.
+To run a particular test, use `pnpm perf-test:node` - takes the test class name as the argument along with the command line arguments you may provide.
 
-- Run `npm run perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
+- Run `pnpm perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
 
 ### [Adding Readme/Instructions](#adding-readme/instructions)
 
@@ -251,9 +249,9 @@ Example: Currently `@azure/<service-sdk>` is at 12.4.0 on master and you want to
 
 - In the track 2 perf tests project, update dependency `@azure/<service-sdk>` version in `package.json` to `12.2.0`
 - `pnpm install` (generates a new pnpm-lock file)
-- Navigate to `sdk\storage\perf-tests\<service-sdk>`
+- Navigate to `sdk\storage\<service-sdk>-perf-tests`
 - `pnpm build --filter @azure-tests/perf-<service-sdk>...`
-- Run the tests as suggested before, example `npm run perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
+- Run the tests as suggested before, example `pnpm perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
 
 ## [Using Proxy Tool](#using-proxy-tool)
 
