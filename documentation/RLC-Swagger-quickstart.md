@@ -110,7 +110,7 @@ We are working on to automatically generate everything right now, but currently,
 
     ```shell
     pnpm update
-    pnpm build --filter=<your-package-name>...
+    pnpm turbo build --filter=<your-package-name>...
     cd <your-sdk-folder>
     pnpm pack
     ```
@@ -140,7 +140,7 @@ See the [JavaScript Codegen Quick Start for Test](https://github.com/Azure/azure
     Then, we need to generate a `assets.json` file. If your package is new or has never been pushed before, you could use below commands:
 
     ```shell
-    npx dev-tool test-proxy init # this will generate assets.json file, you will get some info in this file.
+    pnpm exec dev-tool test-proxy init # this will generate assets.json file, you will get some info in this file.
     ```
 
 1. **Write the test**
@@ -155,14 +155,14 @@ See the [JavaScript Codegen Quick Start for Test](https://github.com/Azure/azure
     On Linux, you could use `export` to set env variable:
 
     ```shell
-    pnpm build --filter=${PACKAGE_NAME}...
+    pnpm turbo build --filter=${PACKAGE_NAME}...
     export TEST_MODE=record && pnpm test # this will run live test and generate a recordings folder, you will need to submit it in the PR.
     ```
 
     On Windows, you could use `SET`:
 
     ```shell
-    pnpm build --filter=${PACKAGE_NAME}...
+    pnpm turbo build --filter=${PACKAGE_NAME}...
     SET TEST_MODE=record&& pnpm test # this will run live test and generate a recordings folder, you will need to submit it in the PR.
     ```
 
@@ -171,14 +171,14 @@ See the [JavaScript Codegen Quick Start for Test](https://github.com/Azure/azure
     On Linux, you could use below commands:
 
     ```shell
-    pnpm build --filter=${PACKAGE_NAME}...
+    pnpm turbo build --filter=${PACKAGE_NAME}...
     export TEST_MODE=playback && pnpm test # this will run live test and generate a recordings folder, you will need to submit it in the PR.
     ```
 
     On Windows, you can use:
 
     ```shell
-    pnpm build --filter=${PACKAGE_NAME}...
+    pnpm turbo build --filter=${PACKAGE_NAME}...
     SET TEST_MODE=playback&& pnpm test # this will run live test and generate a recordings folder, you will need to submit it in the PR.
     ```
 
@@ -194,7 +194,7 @@ See the [JavaScript Codegen Quick Start for Test](https://github.com/Azure/azure
     Here is the command to push:
 
     ```shell
-    npx dev-tool test-proxy push
+    pnpm exec dev-tool test-proxy push
     ```
 
     After above command finished, you can find your local recording files in `./azure-sdk-for-js/.assets`.
@@ -228,7 +228,7 @@ Now, you can generate both JavaScript and TypeScript workable samples with the f
 
 ```shell
 cd ${PROJECT_ROOT}
-npx dev-tool samples publish -f
+pnpm exec dev-tool samples publish -f
 ```
 
 You will see the workable samples in the `${PROJECT_ROOT}/samples` folder.
@@ -265,7 +265,7 @@ Now, we can use the exact same steps to build an releasable artifact.
 
 ```shell
 pnpm install
-pnpm build --filter=<your-package-name>...
+pnpm turbo build --filter=<your-package-name>...
 cd <your-sdk-folder>
 export TEST_MODE=record && pnpm test
 pnpm pack

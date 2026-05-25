@@ -129,11 +129,11 @@ After writing your test cases you need to run your test cases and record the tes
 
 ## Run tests in record mode
 
-Before running tests, it's advised to update the dependencies and build our project by running the command `pnpm install && pnpm build --filter=<package-name>...`. Please notice this command is time-consuming and it will take around 10 mins, you could refer [here](https://github.com/Azure/azure-sdk-for-js/blob/main/CONTRIBUTING.md#resolving-dependency-version-conflicts) for more details.
+Before running tests, it's advised to update the dependencies and build our project by running the command `pnpm install && pnpm turbo build --filter=<package-name>...`. Please notice this command is time-consuming and it will take around 10 mins, you could refer [here](https://github.com/Azure/azure-sdk-for-js/blob/main/CONTRIBUTING.md#resolving-dependency-version-conflicts) for more details.
 
 ```Shell
 > pnpm install
-> pnpm build --filter=@azure-rest/purview-datamap...
+> pnpm turbo build --filter=@azure-rest/purview-datamap...
 ```
 
 Then, we could go to the project folder to run the tests. By default, if you don't specify `TEST_MODE`, it will run previously recorded tests.
@@ -217,7 +217,7 @@ This section assumes that your package is new to the JS repo and that you're try
 Generate an `sdk/<service-folder>/<package-name>/assets.json` file by running the following command.
 
 ```bash
-npx dev-tool test-proxy init
+pnpm exec dev-tool test-proxy init
 ```
 
 Note: If you [install `dev-tool` globally](https://github.com/Azure/azure-sdk-for-js/tree/main/common/tools/dev-tool#installation), you don't need `npx` prefix in the above command
@@ -250,7 +250,7 @@ With asset sync enabled, there is one extra step that must be taken before you c
 `Notice`: the tests have to be recorded using the `TEST_MODE=record` environment variable in order for the recording files to be generated, then you can push them to `assets repo`
 
 ```bash
-npx dev-tool test-proxy push
+pnpm exec dev-tool test-proxy push
 ```
 
 This command will:

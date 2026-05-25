@@ -31,7 +31,13 @@ Before starting the migration, ensure you have:
 
 ### Step 1: Install Required Tools
 
-Install the TypeSpec client generator CLI globally:
+Install the TypeSpec client generator CLI:
+
+```bash
+npm --prefix eng/common/tsp-client ci
+```
+
+Or install globally following the [TypeSpec Client Generator CLI documentation](https://aka.ms/azsdk/tsp-client):
 
 ```bash
 npm install -g @azure-tools/typespec-client-generator-cli
