@@ -1,6 +1,6 @@
 # Reviewer Agents
 
-This repository includes seven specialized AI reviewer agents that can review
+This repository includes specialized AI reviewer agents that can review
 pull requests for specific quality dimensions. Each agent is an expert in its
 domain and produces targeted, actionable feedback.
 
@@ -12,6 +12,7 @@ domain and produces targeted, actionable feedback.
 | **Dash** | `performance-review-needed` | Runtime performance — latency, memory, bundle size, async patterns |
 | **Dexter** | `dependency-review-needed` | Dependency management — version ranges, workspace protocol, new deps |
 | **Mgmt-review** | `mgmt-review-needed` | Management-plane SDKs — API design guidelines, tooling validation |
+| **Mgmt-breaking-change-analysis** | (on-demand) | ARM SDK breaking changes — categorize, trace root causes, generate reports |
 | **Scribe** | `docs-review-needed` | Documentation — README, CHANGELOG, TSDoc, snippets, samples |
 | **Sentinel** | `security-review-needed` | Security — credential exposure, injection, unsafe patterns, supply chain |
 | **Tester** | `test-review-needed` | Testing — coverage, recorder setup, test quality, browser tests |
@@ -136,9 +137,11 @@ Agent definitions and their detailed review guidelines are stored in:
 ```
 .github/
 ├── agents/                          # Agent identity and checklist
+│   ├── agentic-workflows.agent.md
 │   ├── archie.agent.md
 │   ├── dash.agent.md
 │   ├── dexter.agent.md
+│   ├── mgmt-breaking-change-analysis.agent.md
 │   ├── mgmt-review.agent.md
 │   ├── scribe.agent.md
 │   ├── sentinel.agent.md
