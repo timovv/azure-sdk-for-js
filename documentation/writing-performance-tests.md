@@ -243,7 +243,7 @@ To run a particular test, use `npm run perf-test:node` - takes the test class na
 
 ### [Adding Readme/Instructions](#adding-readme/instructions)
 
-Refer to [storage-blob-perf-tests-readme](https://github.com/Azure/azure-sdk-for-js/blob/fe9b1e5a50946f53b6491d7f67b2420d8ee1b229/sdk/storage/perf-tests/storage-blob/README.md) and [storage-blob-perf-tests-readme-track-1](https://github.com/Azure/azure-sdk-for-js/blob/fe9b1e5a50946f53b6491d7f67b2420d8ee1b229/sdk/storage/perf-tests/storage-blob-track-1/README.md) and have similar set of instructions for your perf project.
+Refer to [storage-blob-perf-tests-readme](https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/storage/storage-blob-perf-tests/README.md) and have similar set of instructions for your perf project.
 
 ### [Testing an older track 2 version](#testing-an-older-track-2-version)
 
@@ -251,8 +251,8 @@ Example: Currently `@azure/<service-sdk>` is at 12.4.0 on master and you want to
 
 - In the track 2 perf tests project, update dependency `@azure/<service-sdk>` version in `package.json` to `12.2.0`
 - `pnpm install` (generates a new pnpm-lock file)
-- Navigate to `sdk\storage\perf-tests\<service-sdk>`
-- `pnpm build --filter @azure-tests/perf-<service-sdk>...`
+- Navigate to `sdk\storage\<service-sdk>-perf-tests`
+- `pnpm turbo build --filter @azure-tests/perf-<service-sdk>...`
 - Run the tests as suggested before, example `npm run perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
 
 ## [Using Proxy Tool](#using-proxy-tool)

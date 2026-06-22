@@ -133,7 +133,7 @@ Before running tests, it's advised to update the dependencies and build our proj
 
 ```Shell
 > pnpm install
-> pnpm build --filter=@azure-rest/purview-datamap...
+> pnpm turbo build --filter=@azure-rest/purview-datamap...
 ```
 
 Then, we could go to the project folder to run the tests. By default, if you don't specify `TEST_MODE`, it will run previously recorded tests.
