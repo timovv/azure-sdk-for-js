@@ -275,9 +275,6 @@ to the URI of your web application. You must also make sure to specify the same
 URI in the `redirectUri` field of the `InteractiveBrowserCredentialOptions` when
 creating an `InteractiveBrowserCredential`.
 
-> NOTE: At this time, this credential can only be used in the browser but
-> Node.js support will be added in the future (see issue [#4774](https://github.com/Azure/azure-sdk-for-js/issues/4774)).
-
 ### DeviceCodeCredential
 
 The `DeviceCodeCredential` follows the [device code authorization

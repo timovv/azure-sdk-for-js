@@ -8,6 +8,8 @@ In this document we'll outline a few options available to you when a transitive 
 
 ## Example scenario
 
+> **Note:** The example below references `@azure/core-http`, which has since been deprecated and replaced by `@azure/core-rest-pipeline`. The dependency tree shown is historical and used purely for illustration; modern Azure SDK packages no longer depend on `@azure/core-http`. The mitigation techniques described (e.g., `npm audit fix`, `npm update`) apply equally to any transitive dependency in your project.
+
 Let's assume that a vulnerability has been found in [node-fetch] version 2.6.6 and that you use `@azure/keyvault-keys` directly. Your security scan identified this vulnerability and asks to upgrade to 2.6.7 or higher.
 
 The outputs below assume you're using `npm v8.1.2` with a lockfile, but we will provide instructions for Yarn as well.
