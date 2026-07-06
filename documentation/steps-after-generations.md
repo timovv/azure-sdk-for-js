@@ -9,7 +9,7 @@ After this finishes, you will see the generated code in `src` folder in your **{
 
 ```shell
 pnpm install
-pnpm build --filter=<your-package-name>...
+pnpm turbo build --filter=<your-package-name>...
 ```
 
 # Customizing the generated code
@@ -155,7 +155,7 @@ Now, we can use the exact same steps to build a releasable artifact.
 
 ```shell
 pnpm update
-pnpm build --filter=<your-package-name>...
+pnpm turbo build --filter=<your-package-name>...
 cd <your-sdk-folder>
 export TEST_MODE=record && pnpm test
 pnpm pack
