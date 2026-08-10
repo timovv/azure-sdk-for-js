@@ -110,7 +110,7 @@ We are working on to automatically generate everything right now, but currently,
 
     ```shell
     pnpm update
-    pnpm build --filter=<your-package-name>...
+    pnpm turbo build --filter=<your-package-name>...
     cd <your-sdk-folder>
     pnpm pack
     ```
@@ -265,7 +265,7 @@ Now, we can use the exact same steps to build an releasable artifact.
 
 ```shell
 pnpm install
-pnpm build --filter=<your-package-name>...
+pnpm turbo build --filter=<your-package-name>...
 cd <your-sdk-folder>
 export TEST_MODE=record && pnpm test
 pnpm pack
