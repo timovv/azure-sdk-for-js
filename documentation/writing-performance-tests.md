@@ -237,13 +237,13 @@ export class `ServiceNameAPIName`Test extends ServiceNameTest<`ServiceNameAPINam
 
 ### [Command to run](#command-to-run)
 
-To run a particular test, use `npm run perf-test:node` - takes the test class name as the argument along with the command line arguments you may provide.
+To run a particular test, use `pnpm run perf-test:node` - takes the test class name as the argument along with the command line arguments you may provide.
 
-- Run `npm run perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
+- Run `pnpm run perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
 
 ### [Adding Readme/Instructions](#adding-readme/instructions)
 
-Refer to [storage-blob-perf-tests-readme](https://github.com/Azure/azure-sdk-for-js/blob/fe9b1e5a50946f53b6491d7f67b2420d8ee1b229/sdk/storage/perf-tests/storage-blob/README.md) and [storage-blob-perf-tests-readme-track-1](https://github.com/Azure/azure-sdk-for-js/blob/fe9b1e5a50946f53b6491d7f67b2420d8ee1b229/sdk/storage/perf-tests/storage-blob-track-1/README.md) and have similar set of instructions for your perf project.
+Refer to [storage-blob-perf-tests-readme](https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/storage/storage-blob-perf-tests/README.md) and [storage-blob-perf-tests-readme-track-1](https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/storage/storage-blob-perf-tests/README.md) and have similar set of instructions for your perf project.
 
 ### [Testing an older track 2 version](#testing-an-older-track-2-version)
 
@@ -252,8 +252,8 @@ Example: Currently `@azure/<service-sdk>` is at 12.4.0 on master and you want to
 - In the track 2 perf tests project, update dependency `@azure/<service-sdk>` version in `package.json` to `12.2.0`
 - `pnpm install` (generates a new pnpm-lock file)
 - Navigate to `sdk\storage\perf-tests\<service-sdk>`
-- `pnpm build --filter @azure-tests/perf-<service-sdk>...`
-- Run the tests as suggested before, example `npm run perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
+- `pnpm turbo build --filter @azure-tests/perf-<service-sdk>...`
+- Run the tests as suggested before, example `pnpm run perf-test:node -- TestClassName --warmup 2 --duration 7 --iterations 2 --parallel 50`
 
 ## [Using Proxy Tool](#using-proxy-tool)
 
@@ -287,14 +287,14 @@ To use the proxy-tool in your test pass this option in cli `--test-proxy http://
 
 Sample command(using storage-blob perf tests as example (Core-v1)!)
 
-> npm run perf-test:node -- StorageBlobDownloadTest --warmup 2 --duration 7 --iterations 2 --test-proxy http://localhost:5000
+> pnpm run perf-test:node -- StorageBlobDownloadTest --warmup 2 --duration 7 --iterations 2 --test-proxy http://localhost:5000
 
-> npm run perf-test:node -- StorageBlobDownloadTest --warmup 2 --duration 7 --iterations 2 --parallel 2 --test-proxy http://localhost:5000
+> pnpm run perf-test:node -- StorageBlobDownloadTest --warmup 2 --duration 7 --iterations 2 --parallel 2 --test-proxy http://localhost:5000
 
 Sample command(using data-tables perf tests as example (Core-v2)!)
 
-> npm run perf-test:node -- ListComplexEntitiesTest --duration 7 --iterations 2 --parallel 2 --test-proxy http://localhost:5000
+> pnpm run perf-test:node -- ListComplexEntitiesTest --duration 7 --iterations 2 --parallel 2 --test-proxy http://localhost:5000
 
-> npm run perf-test:node -- ListComplexEntitiesTest --duration 7 --iterations 2 --parallel 2
+> pnpm run perf-test:node -- ListComplexEntitiesTest --duration 7 --iterations 2 --parallel 2
 
 **Using proxy-tool** part is still under construction. Please reach out to the owners/team if you face issues.
