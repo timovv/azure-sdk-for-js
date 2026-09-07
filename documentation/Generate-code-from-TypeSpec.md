@@ -49,9 +49,10 @@ SDK module would be generated under the SDK project folder at `sdk/<service>/<mo
 Install dependencies to use code-gen-pipeline,  
 ```ps
 npm --prefix eng/common/tsp-client ci
-npm install -g pnpm
 npm --prefix eng/tools/js-sdk-release-tools ci
 ```
+
+Install pnpm via the [pnpm installation instructions](https://pnpm.io/installation).
 
 Create a local json file named generatedInput.json with content similar to that shown below
 ```
