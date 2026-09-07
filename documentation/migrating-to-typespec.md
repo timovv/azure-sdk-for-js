@@ -140,7 +140,7 @@ Run the TypeSpec client generation:
 
 ```bash
 cd sdk/your-service/your-package
-npm run generate:client
+pnpm run generate:client
 ```
 
 ### Step 7: Apply Customizations
@@ -237,13 +237,13 @@ Delete the following files that are no longer needed:
 1. **Generate and apply customizations:**
 
    ```bash
-   npm run generate:client
+   pnpm run generate:client
    ```
 
 2. **Build the package:**
 
    ```bash
-   pnpm build
+   pnpm turbo build --filter=<your-package-name>...
    ```
 
 3. **Run tests:**
@@ -268,8 +268,8 @@ Delete the following files that are no longer needed:
 After migration, your development workflow becomes:
 
 1. **Update TypeSpec definitions** in azure-rest-api-specs
-2. **Generate new code:** `npm run generate:client`
-3. **Build and test:** `pnpm build && pnpm test`
+2. **Generate new code:** `pnpm run generate:client`
+3. **Build and test:** `pnpm turbo build --filter=<your-package-name>... && pnpm test`
 
 ### Version Management
 
