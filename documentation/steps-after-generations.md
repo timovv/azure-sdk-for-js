@@ -154,7 +154,7 @@ cd ${PROJECT_ROOT} && pnpm lint:fix
 Now, we can use the exact same steps to build a releasable artifact.
 
 ```shell
-pnpm update
+pnpm install
 pnpm build --filter=<your-package-name>...
 cd <your-sdk-folder>
 export TEST_MODE=record && pnpm test
