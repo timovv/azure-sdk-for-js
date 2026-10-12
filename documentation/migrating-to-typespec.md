@@ -31,10 +31,10 @@ Before starting the migration, ensure you have:
 
 ### Step 1: Install Required Tools
 
-Install the TypeSpec client generator CLI globally:
+The repository includes the `tsp-client` tool under `eng/common/tsp-client`. Install its dependencies from the repo root:
 
 ```bash
-npm install -g @azure-tools/typespec-client-generator-cli
+npm --prefix eng/common/tsp-client ci
 ```
 
 For more information on tsp-client, see the [TypeSpec Client Generator CLI documentation](https://aka.ms/azsdk/tsp-client)
@@ -148,7 +148,7 @@ npm run generate:client
 Use the dev-tool customization command to copy generated files to `src/` and merge with existing customizations:
 
 ```bash
-npx dev-tool customization apply-v2 --skip index.ts
+pnpm exec dev-tool customization apply-v2 --skip index.ts
 ```
 
 This command:
