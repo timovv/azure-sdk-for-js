@@ -264,7 +264,7 @@ TypeScript or JavaScript
 ```typescript
 async function listResourceGroup() {
   const result_list = new Array();
-  for await (let item of resourceClient.resourceGroups.list()) {
+  for await (let item of resourcesClient.resourceGroups.list()) {
     result_list.push(item);
   }
   console.log(result_list);
@@ -276,7 +276,7 @@ TypeScript
 
 ```typescript
 async function getResourceGroup(resourceGroupName: string) {
-  const get_result = await resourceClient.resourceGroups.get(resourceGroupName);
+  const get_result = await resourcesClient.resourceGroups.get(resourceGroupName);
   console.log(get_result);
 }
 ```
@@ -285,7 +285,7 @@ JavaScript
 
 ```javascript
 async function getResourceGroup(resourceGroupName) {
-  const get_result = await resourceClient.resourceGroups.get(resourceGroupName);
+  const get_result = await resourcesClient.resourceGroups.get(resourceGroupName);
   console.log(get_result);
 }
 ```

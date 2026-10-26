@@ -43,8 +43,6 @@ To add perf tests for the `sdk/<service>/<service-sdk>` package, follow the step
        }
     ```
 
-    _Note: `"@azure-tools/test-perf"` is not a published npm package._
-
     Set the name of the package and mark it as private.
 
     ```json
@@ -92,7 +90,7 @@ To add perf tests for the `sdk/<service>/<service-sdk>` package, follow the step
    ```json
      "dependencies": {
         "@azure/<service-sdk>": "^<latest-track-1-version>",
-        "@azure-tools/test-perf": "file:../../../test-utils/perf/azure-test-utils-perf-1.0.0.tgz",
+        "@azure-tools/test-perf": "^1.0.0",
       }
    ```
 
